@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "misc.corlib", "src\misc.corlib\misc.corlib.csproj", "{D35292DA-AD44-4DC1-B960-6166B9EDED7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "misc.corlib.Tests", "tests\misc.corlib.Tests\misc.corlib.Tests.csproj", "{11154108-3190-40A3-A1B3-0E6C1084B46F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D35292DA-AD44-4DC1-B960-6166B9EDED7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D35292DA-AD44-4DC1-B960-6166B9EDED7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D35292DA-AD44-4DC1-B960-6166B9EDED7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D35292DA-AD44-4DC1-B960-6166B9EDED7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11154108-3190-40A3-A1B3-0E6C1084B46F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11154108-3190-40A3-A1B3-0E6C1084B46F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11154108-3190-40A3-A1B3-0E6C1084B46F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11154108-3190-40A3-A1B3-0E6C1084B46F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
