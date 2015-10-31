@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>misc.corlib</id>
+		<version>1.0.0</version>
+		<title>misc.corlib</title>
+		<authors>Jim Kropa</authors>
+		<owners>Jim Kropa</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Assorted utilities and extensions for "mscorlib" types.</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2015 Jim Kropa, licensed under Apache 2</copyright>
+	</metadata>
+	<files>
+		<file src="bin\Release\misc.corlib.dll" target="lib\net\" />
+		<file src="bin\Release\misc.corlib.pdb" target="lib\net\" />
+		<file src="bin\Release\misc.corlib.xml" target="lib\net\" />
+		<!-- TODO: Add CHM documentation
+			1) Use continuous integration or post-build script to Sandcastle to generate CHM help file
+			2) Copy help file into .NET project output directory, bin\Release\misc.corlib
+			3) Include here in the nuspec file.
+		-->
+	</files>
+</package>
