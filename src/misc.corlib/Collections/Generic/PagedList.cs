@@ -39,7 +39,9 @@
 			: base(collection)
 		{
 			Contract.Requires<ArgumentNullException>(collection != null);
-			Contract.Requires<ArgumentException>(pagingInfo.CurrentPage.IsValid);
+			Contract.Requires<ArgumentException>(
+				pagingInfo.CurrentPage.IsValid,
+				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
 
 			this.pagingInfo = pagingInfo;
 		}
@@ -60,8 +62,10 @@
 		public PagedList(int capacity, PagingInfo pagingInfo)
 			: base(capacity)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(capacity > 0);
-			Contract.Requires<ArgumentException>(pagingInfo.CurrentPage.IsValid);
+			Contract.Requires<ArgumentOutOfRangeException>(capacity >= 0);
+			Contract.Requires<ArgumentException>(
+				pagingInfo.CurrentPage.IsValid,
+				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
 
 			this.pagingInfo = pagingInfo;
 		}

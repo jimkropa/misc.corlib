@@ -82,7 +82,7 @@
 		public PagingInfo(PageNumberAndSize requestedPage, int totalItems)
 		{
 			Contract.Requires<ArgumentException>(
-				(requestedPage.IsValid), "The current page must have a value. \"Unbounded\" is an acceptable value.");
+				requestedPage.IsValid, "The current page must have a value. \"Unbounded\" is an acceptable value.");
 			Contract.Requires<ArgumentOutOfRangeException>(
 				(totalItems >= 0), "The number of items in the list must not be negative!");
 
@@ -93,6 +93,8 @@
 			////			"totalItems", totalItems, "The number of items in the list must not be negative!");
 			////	}
 
+			this.TotalItems = totalItems;
+
 			if (requestedPage.IsUnbounded)
 			{
 				// This is the case where all of the items are returned on
@@ -102,9 +104,8 @@
 				// Beware of division by zero!
 				// There are no calculations here based on the page size!
 				this.CurrentPage = PageNumberAndSize.Unbounded;
-				this.TotalItems = totalItems;
 				this.TotalPages = 1;
-				this.FirstItemNumber = ((totalItems > 0) ? 1 : 0);
+				this.FirstItemNumber = ((this.TotalItems > 0) ? 1 : 0);
 				this.LastItemNumber = this.TotalItems;
 				this.IsFirstPage = true;
 				this.IsLastPage = true;
@@ -116,15 +117,23 @@
 			else
 			{
 				this.CurrentPage = requestedPage;
-				this.TotalItems = totalItems;
 
 				if ((this.TotalItems > 0) && (this.CurrentPage.Size > 0))
 				{
+					// This calculation is part of the calculation of total pages,
+					// which will produce an invalid value if the number of total items
+					// plus the page size exceeds the capacity of a 32-bit integer.
+					int extendedTotalItems = (this.TotalItems + this.CurrentPage.Size - 1);
+					if (extendedTotalItems <= 0)
+					{
+						throw new OverflowException("There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
+					}
+
 					// There is no division by zero here, due to validation and logic
 					// above and within the PageNumberAndSize struct itself.
 					// The method of calculating total pages is shown here:
 					// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
-					this.TotalPages = ((this.TotalItems + this.CurrentPage.Size - 1) / this.CurrentPage.Size);
+					this.TotalPages = (extendedTotalItems / this.CurrentPage.Size);
 
 					// Handle the situation if someone turns past the last page.
 					if (this.CurrentPage.Number > this.TotalPages)
@@ -134,7 +143,7 @@
 					}
 
 					this.LastItemNumber = (this.CurrentPage.Number * this.CurrentPage.Size);
-					this.FirstItemNumber = (this.LastItemNumber - requestedPage.Size + 1);
+					this.FirstItemNumber = (this.LastItemNumber - this.CurrentPage.Size + 1);
 					this.IsFirstPage = (this.CurrentPage.Number == PageNumberAndSize.FirstPageNumber);
 					this.IsLastPage = (this.CurrentPage.Number == this.TotalPages);
 
@@ -261,7 +270,9 @@
 				(pageNumber >= PageNumberAndSize.FirstPageNumber),
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 
-			return new PageNumberAndSize(pageNumber, this.CurrentPage.Size);
+			// Always return the unbounded page if the current page is unbounded.
+			return this.CurrentPage.IsUnbounded ? PageNumberAndSize.Unbounded
+				: new PageNumberAndSize(pageNumber, this.CurrentPage.Size);
 		}
 	}
 }

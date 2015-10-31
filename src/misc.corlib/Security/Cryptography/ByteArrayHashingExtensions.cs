@@ -12,19 +12,21 @@
 	{
 		/// <summary>
 		/// When a string is passed to the overload of
-		/// <see cref="CalculateHash{T}(byte[],string)"/>
+		/// <see cref="ComputeHash{T}(byte[],string)"/>
 		/// to be used as the <see cref="KeyedHashAlgorithm.Key"/>
 		/// for a <see cref="KeyedHashAlgorithm"/>, unless
 		/// another <see cref="Encoding"/> is provided,
 		/// the string key is presumed to be encoded
 		/// as <see cref="Encoding.ASCII"/>.
 		/// </summary>
-		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
+		public static readonly Encoding DefaultHashKeyEncoding = Encoding.ASCII;
 
-		public static byte[] CalculateHash<T>([NotNull] this byte[] bytes)
+		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes)
 			where T : HashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
+
+			byte[] hashedBytes;
 
 			// Use an abstract factory to create an instance
 			// of a specific given type of HashAlgorithm.
@@ -35,18 +37,22 @@
 
 				if (hasher == null)
 				{
-					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a hash algorithm!"));
+					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a cryptographic hash algorithm!"));
 				}
 
-				return hasher.ComputeHash(bytes);
+				hashedBytes = hasher.ComputeHash(bytes);
 			}
+
+			return hashedBytes;
 		}
 
-		public static byte[] CalculateHash<T>([NotNull] this byte[] bytes, [NotNull] byte[] key)
+		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes, [NotNull] byte[] key)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
 			Contract.Requires<ArgumentNullException>(key != null);
+
+			byte[] hashedBytes;
 
 			// Use an abstract factory to create an instance
 			// of a specific given type of KeyedHashAlgorithm.
@@ -57,13 +63,15 @@
 
 				if (hasher == null)
 				{
-					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a keyed hash algorithm!"));
+					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a keyed cryptographic hash algorithm!"));
 				}
 
 				hasher.Key = key;
 
-				return hasher.ComputeHash(bytes);
+				hashedBytes = hasher.ComputeHash(bytes);
 			}
+
+			return hashedBytes;
 		}
 
 		/// <summary>
@@ -78,23 +86,23 @@
 		/// specified as <typeparamref name="T"/>.
 		/// </param>
 		/// <returns></returns>
-		public static byte[] CalculateHash<T>([NotNull] this byte[] bytes, [NotNull] string key)
+		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes, [NotNull] string key)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
 			Contract.Requires<ArgumentNullException>(key != null);
 
-			return CalculateHash<T>(bytes, key, DefaultKeyEncoding);
+			return ComputeHash<T>(bytes, key, DefaultHashKeyEncoding);
 		}
 
-		public static byte[] CalculateHash<T>([NotNull] this byte[] bytes, [NotNull] string key, Encoding keyEncoding)
+		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes, [NotNull] string key, [NotNull] Encoding keyEncoding)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
 			Contract.Requires<ArgumentNullException>(key != null);
 			Contract.Requires<ArgumentNullException>(keyEncoding != null);
 
-			return CalculateHash<T>(bytes, keyEncoding.GetBytes(key));
+			return ComputeHash<T>(bytes, keyEncoding.GetBytes(key));
 		}
 	}
 }
