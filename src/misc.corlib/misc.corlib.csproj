@@ -96,9 +96,10 @@
     <Compile Include="Collections\PageNumberAndSize.cs" />
     <Compile Include="Collections\PagingInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\Cryptography\ByteArrayEncryptionExtensions.cs" />
-    <Compile Include="Security\Cryptography\ByteArrayHashingExtensions.cs" />
-    <Compile Include="Security\Cryptography\StringHashingExtensions.cs" />
+    <Compile Include="Security\Cryptography\ByteArrayEncryption.cs" />
+    <Compile Include="Security\Cryptography\ByteArrayHashing.cs" />
+    <Compile Include="Security\Cryptography\StringEncryption.cs" />
+    <Compile Include="Security\Cryptography\StringHashing.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="misc.corlib.nuspec" />

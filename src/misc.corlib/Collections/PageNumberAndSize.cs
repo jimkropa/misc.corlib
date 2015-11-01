@@ -25,6 +25,12 @@
 		internal const byte DefaultPageSize = 10;
 		internal const int MinimumPageSize = 1;
 
+		/// <summary>
+		/// A value of <see cref="PageNumberAndSize"/>
+		/// with its <see cref="Number"/> set to the value
+		/// of <see cref="FirstPageNumber"/> and its
+		/// <see cref="Size"/> set to a default value of ten.
+		/// </summary>
 		public static readonly PageNumberAndSize Default
 			= new PageNumberAndSize(FirstPageNumber, DefaultPageSize);
 

@@ -7,8 +7,7 @@
 
 	using JetBrains.Annotations;
 
-	[CLSCompliant(true)]
-	public static class ByteArrayEncryptionExtensions
+	public static class ByteArrayEncryption
 	{
 		/// <summary>
 		/// When a string is passed to the overload of

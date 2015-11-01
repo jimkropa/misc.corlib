@@ -5,8 +5,7 @@
 	using System.Security.Cryptography;
 	using System.Text;
 
-	[CLSCompliant(true)]
-	public static class StringHashingExtensions
+	public static class StringHashing
 	{
 		/// <summary>
 		/// Unless a different <see cref="Encoding"/> is specified,

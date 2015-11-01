@@ -50,7 +50,7 @@
 			public void ThrowsExceptionForNullString()
 			{
 				Assert.Throws<ArgumentNullException>(
-					() => StringHashingExtensions.HashToHexadecimalString<SHA1>(null));
+					() => StringHashing.HashToHexadecimalString<SHA1>(null));
 			}
 		}
 
@@ -85,7 +85,7 @@
 			public void ThrowsExceptionForNullString()
 			{
 				Assert.Throws<ArgumentNullException>(
-					() => StringHashingExtensions.HashToBase64String<SHA1>(null));
+					() => StringHashing.HashToBase64String<SHA1>(null));
 			}
 		}
 	}

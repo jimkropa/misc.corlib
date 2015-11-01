@@ -6,7 +6,6 @@
 
 	using JetBrains.Annotations;
 
-	[CLSCompliant(true)]
 	public static class ByteArrayExtensions
 	{
 		public static string ToBase64String([NotNull] this byte[] inArray)

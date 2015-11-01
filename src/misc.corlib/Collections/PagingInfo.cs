@@ -224,6 +224,8 @@
 
 		#endregion
 
+		#region [ Public TurnToPage Method ]
+
 		/// <summary>
 		/// Calculates a <see cref="PageNumberAndSize"/> for an
 		/// arbitrary page <see cref="PageNumberAndSize.Number"/>
@@ -274,5 +276,7 @@
 			return this.CurrentPage.IsUnbounded ? PageNumberAndSize.Unbounded
 				: new PageNumberAndSize(pageNumber, this.CurrentPage.Size);
 		}
+
+		#endregion
 	}
 }

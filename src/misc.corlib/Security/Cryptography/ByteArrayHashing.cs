@@ -7,8 +7,7 @@
 
 	using JetBrains.Annotations;
 
-	[CLSCompliant(true)]
-	public static class ByteArrayHashingExtensions
+	public static class ByteArrayHashing
 	{
 		/// <summary>
 		/// When a string is passed to the overload of
