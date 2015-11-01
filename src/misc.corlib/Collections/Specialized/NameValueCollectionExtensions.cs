@@ -5,6 +5,8 @@ namespace MiscCorLib.Collections.Specialized
 	using System.Collections.Specialized;
 	using System.ComponentModel;
 
+	using MiscCorLib.Collections.Generic;
+
 	/// <summary>
 	/// A set of static methods for extracting values from
 	/// <see cref="NameValueCollection"/> objects.
@@ -1099,7 +1101,7 @@ namespace MiscCorLib.Collections.Specialized
 
 			Type type = obj.GetType();
 
-			if (!type.Equals(underlyingType))
+			if (!(type == underlyingType))
 			{
 				result = zero;
 				return false;
@@ -1212,108 +1214,6 @@ namespace MiscCorLib.Collections.Specialized
 			}
 
 			return result;
-		}
-
-		#endregion
-
-		#region [ Public Static GetSearchInfo Overloads ]
-
-		/// <summary>
-		/// Retrieves a <see cref="SearchInfo"/> with
-		/// values set from query string parameters using
-		/// the <see cref="SearchInfo.DefaultKeys"/>.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <returns>
-		/// An instance of <see cref="SearchInfo"/>
-		/// with values set from query string parameters.
-		/// </returns>
-		public static SearchInfo GetSearchInfo(this NameValueCollection collection)
-		{
-			return SearchInfo.ParseFromCollection(
-				collection,
-				SearchInfo.DefaultKeys.SearchIdKey,
-				SearchInfo.DefaultKeys.SortKey,
-				SearchInfo.DefaultKeys.PageNumberKey,
-				SearchInfo.DefaultKeys.PageSizeKey);
-		}
-
-		/// <summary>
-		/// Retrieves a <see cref="SearchInfo"/> with
-		/// values set from query string parameters using
-		/// the names of properties in a specified instance
-		/// of <see cref="ISearchInfoKeys"/>.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <param name="keys">
-		/// An instance of <see cref="ISearchInfoKeys"/> with
-		/// properties specifying the names of query string parameters.
-		/// </param>
-		/// <returns>
-		/// An instance of <see cref="SearchInfo"/>
-		/// with values set from query string parameters.
-		/// </returns>
-		public static SearchInfo GetSearchInfo(this NameValueCollection collection, ISearchInfoKeys keys)
-		{
-			if (keys == null)
-			{
-				throw new ArgumentNullException("keys", "The instance of ISearchInfoKeys is a null reference!");
-			}
-
-			return SearchInfo.ParseFromCollection(
-				collection,
-				keys.SearchIdKey,
-				keys.SortKey,
-				keys.PageNumberKey,
-				keys.PageSizeKey);
-		}
-
-		/// <summary>
-		/// Retrieves a <see cref="SearchInfo"/> with
-		/// values set from query string parameters
-		/// having the specified names.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <param name="searchIdKey">
-		/// The indexer for the <see cref="NameValueCollection"/>
-		/// for the <see cref="SearchInfo.SearchId"/> value.
-		/// </param>
-		/// <param name="sortKey">
-		/// The indexer for the <see cref="NameValueCollection"/>
-		/// for the <see cref="SearchInfo.Sort"/> value.
-		/// </param>
-		/// <param name="pageNumberKey">
-		/// The indexer for the <see cref="NameValueCollection"/>
-		/// for the <see cref="SearchInfo.PageIndex"/> value, which is
-		/// automatically converted from one-based to zero-based indexing.
-		/// </param>
-		/// <param name="pageSizeKey">
-		/// The indexer for the <see cref="NameValueCollection"/>
-		/// for the <see cref="SearchInfo.PageSize"/> value.
-		/// </param>
-		/// <returns>
-		/// An instance of <see cref="SearchInfo"/>
-		/// with values set from query string parameters.
-		/// </returns>
-		public static SearchInfo GetSearchInfo(
-			this NameValueCollection collection,
-			string searchIdKey,
-			string sortKey,
-			string pageNumberKey,
-			string pageSizeKey)
-		{
-			return SearchInfo.ParseFromCollection(
-				collection,
-				searchIdKey,
-				sortKey,
-				pageNumberKey,
-				pageSizeKey);
 		}
 
 		#endregion

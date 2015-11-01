@@ -3,7 +3,7 @@ namespace MiscCorLib
 	using System;
 	using System.Collections.Generic;
 	using Collections;
-	using Reflection;
+	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
 	/// A set of static method for converting an
@@ -481,82 +481,6 @@ namespace MiscCorLib
 			return true;
 		}
 
-		/// <summary>
-		/// This method takes a string and attempts to return the enumeration value.
-		/// If the conversion is not possible the function returns false,
-		/// and the default enumeration is returned via the output parameter.
-		/// otherwise true is returned from the function and the converted value is returned.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
-		/// </param>
-		/// <param name="useEnumInfoAttributes">
-		/// Indication of whether to use the
-		/// <see cref="EnumInfoAttribute.Name"/>
-		/// property of an <see cref="EnumInfoAttribute"/>
-		/// instead of the enumeration's name to parse.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
-		/// Otherwise, returns zero.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="enumValue"/>
-		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
-		/// </returns>
-		public static bool TryParse<TEnum>(this string enumValue, bool useEnumInfoAttributes, out TEnum enumOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			VerifyIsEnumType<TEnum>();
-
-			Type enumType = typeof(TEnum);
-
-			if (string.IsNullOrEmpty(enumValue))
-			{
-				enumOut = default(TEnum);
-				return false;
-			}
-
-			if (Enum.IsDefined(enumType, enumValue))
-			{
-				enumOut = (TEnum)Enum.Parse(enumType, enumValue);
-				return true;
-			}
-
-			foreach (string enumName in Enum.GetNames(enumType))
-			{
-				if (string.Equals(enumName, enumValue, StringComparison.InvariantCultureIgnoreCase))
-				{
-					enumOut = (TEnum)Enum.Parse(enumType, enumName, true);
-					return true;
-				}
-			}
-
-			if (useEnumInfoAttributes)
-			{
-				foreach (object enumValueToMatch in Enum.GetValues(typeof(TEnum)))
-				{
-					EnumInfoAttribute enumInfoValue = EnumInfoAttribute.GetEnumInfo(enumValueToMatch);
-					if ((enumInfoValue != null) && (!string.IsNullOrEmpty(enumInfoValue.Name)) &&
-						enumInfoValue.Name.Equals(enumValue, StringComparison.InvariantCultureIgnoreCase))
-					{
-						enumOut = (TEnum)enumValueToMatch;
-						return true;
-					}
-				}
-			}
-
-			enumOut = default(TEnum);
-			return false;
-		}
-
 		#endregion
 
 		#region [ TryParse Methods For Enums with the Flags Attribute ]
@@ -704,7 +628,7 @@ namespace MiscCorLib
 			ICollection<TEnum> enumsOut = new List<TEnum>();
 			foreach (TEnum actualEnumValue in Enum.GetValues(typeof(TEnum)))
 			{
-				if (IsSet(enumValue, actualEnumValue))
+				if ((enumValue & actualEnumValue) == actualEnumValue))
 				{
 					enumsOut.Add(actualEnumValue);
 				}
@@ -775,99 +699,6 @@ namespace MiscCorLib
 			}
 
 			return false;
-		}
-
-		#endregion
-
-		#region [ IsSet method to check for the presence of a bit ]
-
-		/// <summary>
-		/// Checks whether the given <paramref name="flags"/> bits
-		/// are enabled in the given <paramref name="value"/>.
-		/// </summary>
-		/// <typeparam name="T">
-		/// An enumeration type.
-		/// </typeparam>
-		/// <param name="value">
-		/// A bitwise enumeration value which may or may not contain
-		/// the bits in the given <paramref name="flags"/> value.
-		/// </param>
-		/// <param name="flags">
-		/// A bit or set of bits which may be or may not be
-		/// enabled in the given <paramref name="value"/>.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="flags"/> value is
-		/// contained in the <paramref name="value"/>.
-		/// Otherwise, false.
-		/// </returns>
-		/// <remarks>
-		/// <example>
-		/// Authority MyAuthority = Authority.FileSystemAdmin | Authority.SqlServerAdmin;
-		/// returns True : MyAuthority.IsSet(Authority.FileSystemAdmin);
-		/// returns False : MyAuthority.IsSet(Authority.IISAdmin);
-		/// </example>
-		/// <a href="http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums/">http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums/</a>
-		/// </remarks>
-		public static bool IsSet<T>(this T value, T flags) where T : struct, IComparable, IFormattable
-		{
-			Type type = typeof(T);
-
-			// only works with enums
-			if (!type.IsEnum)
-			{
-				throw new ArgumentException("The type parameter T must be an enum type.");
-			}
-
-			// handle each underlying type
-			Type numberType = Enum.GetUnderlyingType(type);
-
-			if (numberType.Equals(typeof(int)))
-			{
-				return BoxUnbox<int>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(sbyte)))
-			{
-				return BoxUnbox<sbyte>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(byte)))
-			{
-				return BoxUnbox<byte>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(short)))
-			{
-				return BoxUnbox<short>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(ushort)))
-			{
-				return BoxUnbox<ushort>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(uint)))
-			{
-				return BoxUnbox<uint>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(long)))
-			{
-				return BoxUnbox<long>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(ulong)))
-			{
-				return BoxUnbox<ulong>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			if (numberType.Equals(typeof(char)))
-			{
-				return BoxUnbox<char>(value, flags, (a, b) => (a & b) == b);
-			}
-
-			throw new ArgumentException(string.Format("Unknown enum underlying type {0}.", numberType.Name));
 		}
 
 		#endregion
@@ -1108,46 +939,9 @@ namespace MiscCorLib
 
 			T enumValue = (T)value;
 
-			EnumInfoAttribute enumInfo = EnumInfoAttribute.GetEnumInfo(enumValue);
-
-			if ((enumInfo != null) && (!string.IsNullOrEmpty(enumInfo.Name)))
-			{
-				name = enumInfo.Name;
-			}
-			else
-			{
-				name = Enum.GetName(enumType, value).Replace("_", " ");
-			}
+			name = Enum.GetName(enumType, value).Replace("_", " ");
 
 			return true;
-		}
-
-		/// <summary>
-		/// Helper function for handling the value types.
-		/// Boxes the params to object so that the cast can be called on them.
-		/// </summary>
-		/// <typeparam name="T">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="value">
-		/// A value which is the first parameter given to
-		/// the <paramref name="op"/> delegate method.
-		/// </param>
-		/// <param name="flags">
-		/// A value which is the second parameter given to
-		/// the <paramref name="op"/> delegate method.
-		/// </param>
-		/// <param name="op">
-		/// A delegate which accepts two parameters.
-		/// </param>
-		/// <returns>
-		/// The value returned from the
-		/// <paramref name="op"/> delegate method.
-		/// </returns>
-		private static bool BoxUnbox<T>(object value, object flags, Func<T, T, bool> op)
-			where T : struct, IComparable
-		{
-			return op((T)value, (T)flags);
 		}
 
 		#endregion

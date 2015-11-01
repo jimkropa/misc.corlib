@@ -4,16 +4,17 @@ namespace MiscCorLib.Collections
 	using System.Collections;
 	using System.Collections.Generic;
 
+	using MiscCorLib.Collections.Generic;
+
 	/// <summary>
 	/// Extension methods for <see cref="IEnumerable"/>.
 	/// </summary>
 	/// <remarks>
 	/// Many of these methods support static methods
-	/// of the <see cref="ConvertCollection"/> and
-	/// <see cref="ConvertObjectCollection"/> classes.
+	/// of the <see cref="ConvertCollection"/> class.
 	/// </remarks>
 	[CLSCompliant(true)]
-	public static class IEnumerableExtensions
+	public static class EnumerableExtensions
 	{
 		#region [ GetItemByIndex Method ]
 
@@ -146,9 +147,9 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// A comma-delimited string.
 		/// </returns>
-		public static string ToString(this IEnumerable collection)
+		public static string ToDelimitedString(this IEnumerable collection)
 		{
-			return ToString(collection, ConvertStrings.DefaultPreserveDuplicates);
+			return ToDelimitedString(collection, ConvertStrings.DefaultPreserveDuplicates);
 		}
 
 		/// <summary>
@@ -167,9 +168,9 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// A comma-delimited string.
 		/// </returns>
-		public static string ToString(this IEnumerable collection, bool preserveDuplicates)
+		public static string ToDelimitedString(this IEnumerable collection, bool preserveDuplicates)
 		{
-			return ToString(collection, ConvertString.DefaultSeparator, preserveDuplicates);
+			return ToDelimitedString(collection, ConvertString.DefaultSeparator, preserveDuplicates);
 		}
 
 		/// <summary>
@@ -189,9 +190,9 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// A <paramref name="separator"/>-delimited string.
 		/// </returns>
-		public static string ToString(this IEnumerable collection, string separator)
+		public static string ToDelimitedString(this IEnumerable collection, string separator)
 		{
-			return ToString(collection, separator, ConvertStrings.DefaultPreserveDuplicates);
+			return ToDelimitedString(collection, separator, ConvertStrings.DefaultPreserveDuplicates);
 		}
 
 		/// <summary>
@@ -214,7 +215,7 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// A <paramref name="separator"/>-delimited string.
 		/// </returns>
-		public static string ToString(this IEnumerable collection, string separator, bool preserveDuplicates)
+		public static string ToDelimitedString(this IEnumerable collection, string separator, bool preserveDuplicates)
 		{
 			return string.Join(separator, ToStringArray(collection, preserveDuplicates));
 		}

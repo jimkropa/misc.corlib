@@ -1,4 +1,4 @@
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Generic
 {
 	using System;
 	using System.Collections;
@@ -194,7 +194,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ ToStringArray and ToString Methods for IEnumerable, pass thru to IEnumerableExtensions ]
+		#region [ ToStringArray and ToString Methods for IEnumerable, pass thru to EnumerableExtensions ]
 
 		/// <summary>
 		/// Converts a collection to a
@@ -211,7 +211,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToStringArray(IEnumerable)"/>.
+		/// <see cref="EnumerableExtensions.ToStringArray(IEnumerable)"/>.
 		/// </remarks>
 		public static string[] ToStringArray(IEnumerable collection)
 		{
@@ -236,7 +236,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToStringArray(IEnumerable,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToStringArray(IEnumerable,bool)"/>.
 		/// </remarks>
 		public static string[] ToStringArray(IEnumerable collection, bool preserveDuplicates)
 		{
@@ -258,11 +258,11 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToString(IEnumerable)"/>.
+		/// <see cref="EnumerableExtensions.ToString(IEnumerable)"/>.
 		/// </remarks>
-		public static string ToString(IEnumerable collection)
+		public static string ToDelimitedString(IEnumerable collection)
 		{
-			return IEnumerableExtensions.ToString(collection);
+			return collection.ToDelimitedString();
 		}
 
 		/// <summary>
@@ -283,11 +283,11 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToString(IEnumerable,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToString(IEnumerable,bool)"/>.
 		/// </remarks>
-		public static string ToString(IEnumerable collection, bool preserveDuplicates)
+		public static string ToDelimitedString(IEnumerable collection, bool preserveDuplicates)
 		{
-			return collection.ToString(preserveDuplicates);
+			return collection.ToDelimitedString(preserveDuplicates);
 		}
 
 		/// <summary>
@@ -309,11 +309,11 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToString(IEnumerable,string)"/>.
+		/// <see cref="EnumerableExtensions.ToString(IEnumerable,string)"/>.
 		/// </remarks>
-		public static string ToString(IEnumerable collection, string separator)
+		public static string ToDelimitedString(IEnumerable collection, string separator)
 		{
-			return collection.ToString(separator);
+			return collection.ToDelimitedString(separator);
 		}
 
 		/// <summary>
@@ -338,16 +338,16 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToString(IEnumerable,string,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToDelimitedString(IEnumerable,string,bool)"/>.
 		/// </remarks>
-		public static string ToString(IEnumerable collection, string separator, bool preserveDuplicates)
+		public static string ToDelimitedString(IEnumerable collection, string separator, bool preserveDuplicates)
 		{
-			return collection.ToString(separator, preserveDuplicates);
+			return collection.ToDelimitedString(separator, preserveDuplicates);
 		}
 
 		#endregion
 
-		#region [ Overloads of Public Static ToArray<T> Method, pass thru to IEnumerableExtensions ]
+		#region [ Overloads of Public Static ToArray<T> Method, pass thru to EnumerableExtensions ]
 
 		/// <summary>
 		/// Returns a typed array from any collection,
@@ -368,7 +368,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToArray{T}(IEnumerable)"/>.
+		/// <see cref="EnumerableExtensions.ToArray{T}(IEnumerable)"/>.
 		/// </remarks>
 		public static T[] ToArray<T>(IEnumerable values) where T : IComparable
 		{
@@ -400,7 +400,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToArray{T}(IEnumerable,bool,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToArray{T}(IEnumerable,bool,bool)"/>.
 		/// </remarks>
 		public static T[] ToArray<T>(IEnumerable values, bool preserveDuplicates, bool sort) where T : IComparable
 		{
@@ -409,7 +409,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ Overloads of Public Static ToEnumerable<T> Method, pass thru to IEnumerableExtensions ]
+		#region [ Overloads of Public Static ToEnumerable<T> Method, pass thru to EnumerableExtensions ]
 
 		/// <summary>
 		/// Returns a typed collection from any collection,
@@ -430,7 +430,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToEnumerable{T}(IEnumerable)"/>.
+		/// <see cref="EnumerableExtensions.ToEnumerable{T}(IEnumerable)"/>.
 		/// </remarks>
 		public static IEnumerable<T> ToEnumerable<T>(IEnumerable values) where T : IComparable
 		{
@@ -462,7 +462,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToEnumerable{T}(IEnumerable,bool,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToEnumerable{T}(IEnumerable,bool,bool)"/>.
 		/// </remarks>
 		public static IEnumerable<T> ToEnumerable<T>(IEnumerable values, bool preserveDuplicates, bool sort)
 			where T : IComparable
@@ -472,7 +472,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ Overloads of Public Static ToList<T> Method, pass thru to IEnumerableExtensions ]
+		#region [ Overloads of Public Static ToList<T> Method, pass thru to EnumerableExtensions ]
 
 		/// <summary>
 		/// Returns a typed list from any collection,
@@ -493,7 +493,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToList{T}(IEnumerable)"/>.
+		/// <see cref="EnumerableExtensions.ToList{T}(IEnumerable)"/>.
 		/// </remarks>
 		public static IList<T> ToList<T>(IEnumerable values) where T : IComparable
 		{
@@ -525,7 +525,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="IEnumerableExtensions.ToList{T}(IEnumerable,bool,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToList{T}(IEnumerable,bool,bool)"/>.
 		/// </remarks>
 		public static IList<T> ToList<T>(IEnumerable values, bool preserveDuplicates, bool sort) where T : IComparable
 		{
