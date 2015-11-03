@@ -6,7 +6,7 @@
 
 	using JetBrains.Annotations;
 
-	public static class ByteArrayExtensions
+	public static class ConvertByteArray
 	{
 		public static string ToBase64String([NotNull] this byte[] inArray)
 		{
@@ -52,5 +52,37 @@
 			// Return the hexadecimal string.
 			return hashedStringBuilder.ToString().ToLowerInvariant();
 		}
+
+		public static string ToText([NotNull] this byte[] inArray, Encoding encoding)
+		{
+			// Simple double-dispatch.
+			// TODO: Loop over buffer if array is large.
+			return encoding.GetString(inArray);
+		}
+
+		// Below works for syntactic sugar, but abstract factory
+		// is not efficient for looking up singleton Encoding types.
+		// Better to send parameter, as above.
+		/*
+			public static string ToText<T>([NotNull] this byte[] inArray)
+				where T : Encoding
+			{
+				return CreateEncoding<T>().GetString(inArray);
+			}
+
+			private static T CreateEncoding<T>()
+				where T : Encoding
+			{
+				Contract.Ensures(Contract.Result<T>() != null);
+
+				T encoding = Encoding.GetEncoding((typeof(T)).ToString()) as T;
+				if (encoding == null)
+				{
+					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not an encoding!"));
+				}
+
+				return encoding;
+			}
+		*/
 	}
 }

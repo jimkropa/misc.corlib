@@ -89,7 +89,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ByteArrayExtensions.cs" />
+    <Compile Include="ConvertByteArray.cs" />
     <Compile Include="Collections\Generic\ConvertCollection.cs" />
     <Compile Include="Collections\Generic\ConvertString.cs" />
     <Compile Include="Collections\Generic\ConvertStrings.cs" />
@@ -104,8 +104,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Cryptography\ByteArrayEncryption.cs" />
     <Compile Include="Security\Cryptography\ByteArrayHashing.cs" />
+    <Compile Include="Security\Cryptography\Decryptor.cs" />
+    <Compile Include="Security\Cryptography\Encryptor.cs" />
+    <Compile Include="Security\Cryptography\Hasher.cs" />
     <Compile Include="Security\Cryptography\StringEncryption.cs" />
     <Compile Include="Security\Cryptography\StringHashing.cs" />
+    <Compile Include="Security\Cryptography\SymmetricTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="misc.corlib.nuspec" />

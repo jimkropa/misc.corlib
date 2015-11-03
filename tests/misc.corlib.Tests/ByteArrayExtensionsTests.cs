@@ -15,7 +15,7 @@
 			{
 				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
-					() => ByteArrayExtensions.ToBase64String(null));
+					() => ConvertByteArray.ToBase64String(null));
 			}
 		}
 
@@ -27,7 +27,7 @@
 			{
 				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
-					() => ByteArrayExtensions.ToHexadecimalString(null));
+					() => ConvertByteArray.ToHexadecimalString(null));
 			}
 		}
 	}

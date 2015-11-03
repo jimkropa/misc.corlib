@@ -16,52 +16,6 @@ namespace MiscCorLib.Collections
 	[CLSCompliant(true)]
 	public static class EnumerableExtensions
 	{
-		#region [ GetItemByIndex Method ]
-
-		/// <summary>
-		/// Uses an internal counter to retrieve an item from an
-		/// <see cref="IEnumerable"/> based on a specified index.
-		/// </summary>
-		/// <param name="enumerable">
-		/// The instance of <see cref="IEnumerable"/>
-		/// in which to locate an item by index.
-		/// </param>
-		/// <param name="index">
-		/// The zero-based position of an item
-		/// in the underlying colleciton.
-		/// </param>
-		/// <returns>
-		/// The item whose position in the underlying
-		/// collection matches <paramref name="index"/>.
-		/// </returns>
-		public static object GetItemByIndex(this IEnumerable enumerable, int index)
-		{
-			if (enumerable == null)
-			{
-				throw new ArgumentNullException("enumerable", "The instance of IEnumerable is a null reference!");
-			}
-
-			if (index < 0)
-			{
-				throw new ArgumentOutOfRangeException("index", "The index must be a positive integer.");
-			}
-
-			int count = 0;
-			foreach (object item in enumerable)
-			{
-				if (count == index)
-				{
-					return item;
-				}
-
-				count++;
-			}
-
-			throw new IndexOutOfRangeException("The instance of IEnumerable does not enumerate to the specified index.");
-		}
-
-		#endregion
-
 		#region [ ToStringArray and ToString Methods for IEnumerable ]
 
 		/// <summary>

@@ -9,12 +9,6 @@ namespace MiscCorLib.Collections.Generic
 	/// of <see cref="ValueType"/>s into string arrays and
 	/// delimited strings, optionally removing duplicate entries.
 	/// </summary>
-	/// <remarks>
-	/// This static class is for converting "value types" such
-	/// as numbers, identifiers and dates. For converting
-	/// "reference types" including stings and any objects,
-	/// use the <see cref="ConvertObjectCollection"/> class.
-	/// </remarks>
 	[CLSCompliant(true)]
 	public static class ConvertCollection
 	{
@@ -258,7 +252,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="EnumerableExtensions.ToString(IEnumerable)"/>.
+		/// <see cref="EnumerableExtensions.ToDelimitedString(IEnumerable)"/>.
 		/// </remarks>
 		public static string ToDelimitedString(IEnumerable collection)
 		{
@@ -283,7 +277,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="EnumerableExtensions.ToString(IEnumerable,bool)"/>.
+		/// <see cref="EnumerableExtensions.ToDelimitedString(IEnumerable,bool)"/>.
 		/// </remarks>
 		public static string ToDelimitedString(IEnumerable collection, bool preserveDuplicates)
 		{
@@ -309,7 +303,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		/// <remarks>
 		/// This method is simply an invocation of
-		/// <see cref="EnumerableExtensions.ToString(IEnumerable,string)"/>.
+		/// <see cref="EnumerableExtensions.ToDelimitedString(IEnumerable,string)"/>.
 		/// </remarks>
 		public static string ToDelimitedString(IEnumerable collection, string separator)
 		{

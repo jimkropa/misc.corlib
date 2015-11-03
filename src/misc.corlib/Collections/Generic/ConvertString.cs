@@ -293,26 +293,5 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Converts a string to an ASCII encoded byte array.
-		/// </summary>
-		/// <param name="input">
-		/// An input string which needs to be converted to a byte array.
-		/// </param>
-		/// <returns>
-		/// A byte array.
-		/// </returns>
-		public static byte[] ToASCIIEncodedByteArray(string input)
-		{
-			if (string.IsNullOrEmpty(input))
-			{
-				throw new ArgumentException("The input string cannot be null or empty.");
-			}
-
-			ASCIIEncoding encoding = new ASCIIEncoding();
-
-			return encoding.GetBytes(input);
-		}
 	}
 }

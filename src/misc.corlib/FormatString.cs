@@ -1,7 +1,6 @@
 namespace MiscCorLib
 {
 	using System;
-	using System.Text;
 	using System.Text.RegularExpressions;
 
 	/// <summary>
@@ -277,68 +276,6 @@ namespace MiscCorLib
 
 			// Replace invalid characters with empty strings.
 			return Regex.Replace(value, @"[^\w]", string.Empty).Replace("_", string.Empty);
-		}
-
-		/// <summary>
-		/// Encodes a string to be represented as a string literal. The format
-		/// is essentially a JSON string.
-		/// The string returned includes outer quotes
-		/// Example Output: "Hello \"World\"!".
-		/// see http://www.west-wind.com/weblog/posts/114530.aspx.
-		/// </summary>
-		/// <param name="value">
-		/// A string that needs to be encoded for use in Javascript.
-		/// </param>
-		/// <returns>
-		/// Returns a encoded string to be used in javascript.
-		/// </returns>
-		public static string ToJsEncodedString(this string value)
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.Append("\"");
-			foreach (char c in value)
-			{
-				switch (c)
-				{
-					case '\"':
-						sb.Append("\\\"");
-						break;
-					case '\\':
-						sb.Append("\\\\");
-						break;
-					case '\b':
-						sb.Append("\\b");
-						break;
-					case '\f':
-						sb.Append("\\f");
-						break;
-					case '\n':
-						sb.Append("\\n");
-						break;
-					case '\r':
-						sb.Append("\\r");
-						break;
-					case '\t':
-						sb.Append("\\t");
-						break;
-					default:
-						int i = c;
-						if (i < 32 || i > 127)
-						{
-							sb.AppendFormat("\\u{0:X04}", i);
-						}
-						else
-						{
-							sb.Append(c);
-						}
-
-						break;
-				}
-			}
-
-			sb.Append("\"");
-
-			return sb.ToString();
 		}
 	}
 }

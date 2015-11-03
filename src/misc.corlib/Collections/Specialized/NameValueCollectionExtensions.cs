@@ -79,11 +79,6 @@ namespace MiscCorLib.Collections.Specialized
 			}
 
 			TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
-			if (converter == null)
-			{
-				result = default(T);
-				return false;
-			}
 
 			try
 			{
@@ -186,37 +181,6 @@ namespace MiscCorLib.Collections.Specialized
 			return GetValue(collection, name, default(T));
 		}
 
-		/*
-			/// <summary>
-			/// Retrieves a value from the <see cref="NameValueCollection"/>,
-			/// or returns an empty string if no corresponding value could be found.
-			/// </summary>
-			/// <param name="collection">
-			/// An instance of <see cref="NameValueCollection"/> to check for the value.
-			/// </param>
-			/// <param name="name">
-			/// The indexer for the <see cref="NameValueCollection"/>.
-			/// </param>
-			/// <returns>
-			/// The value from the <see cref="NameValueCollection"/>
-			/// corresponding to the <paramref name="name"/> parameter,
-			/// or an empty string if none could be found.
-			/// </returns>
-			public static string GetValueOrEmpty(this NameValueCollection collection, string name)
-			{
-				if (string.IsNullOrEmpty(name))
-				{
-					return string.Empty;
-				}
-
-				if (string.IsNullOrEmpty(collection[name]))
-				{
-					return string.Empty;
-				}
-
-				return collection[name];
-			}
-		*/
 		#endregion
 
 		#region [ Public Static TryGetString and GetString Overloads ]
@@ -1214,93 +1178,6 @@ namespace MiscCorLib.Collections.Specialized
 			}
 
 			return result;
-		}
-
-		#endregion
-
-		#region [ Public Static ApplyFilter Method ]
-
-		/// <summary>
-		/// Selects a subset of a given <see cref="NameValueCollection"/>,
-		/// which includes only the name and value pairs with names included
-		/// in the <paramref name="namesToPreserve"/> parameter, case insensitive.
-		/// </summary>
-		/// <param name="collection">
-		/// A <see cref="NameValueCollection"/> to filter.
-		/// </param>
-		/// <param name="namesToPreserve">
-		/// A list of names to preserve, not sensitive to case.
-		/// </param>
-		/// <returns>
-		/// A new <see cref="NameValueCollection"/> whose names are those
-		/// given in the <paramref name="namesToPreserve"/> parameter,
-		/// if they exist in the original <paramref name="collection"/>,
-		/// with the other values removed.
-		/// </returns>
-		public static IEnumerable<KeyValuePair<string, string>> ApplyFilter(
-			this NameValueCollection collection, IEnumerable<string> namesToPreserve)
-		{
-			if (collection == null)
-			{
-				throw new ArgumentNullException("collection", "The instance of NameValueCollection is a null reference!");
-			}
-
-			if (namesToPreserve == null)
-			{
-				throw new ArgumentNullException("namesToPreserve", "The list of names to preserve is a null reference!");
-			}
-
-			// If there are no items, exit now!
-			if (!(collection.Count > 0))
-			{
-				return new Dictionary<string, string>();
-			}
-
-			// Use of a dictionary allows the returned collection
-			// to have its names normalized to how they are
-			// given in the namesToPreserve parameter.
-			IDictionary<string, string> dict = new Dictionary<string, string>();
-			foreach (string name in namesToPreserve)
-			{
-				if (string.IsNullOrEmpty(name))
-				{
-					continue;
-				}
-
-				string nameLowered = name.ToLowerInvariant();
-				if (dict.ContainsKey(nameLowered))
-				{
-					continue;
-				}
-
-				dict.Add(nameLowered, name);
-			}
-
-			// If there are no items to preserve, exit!
-			if (!(dict.Count > 0))
-			{
-				return new Dictionary<string, string>();
-			}
-
-			// Use of a dictionary allows the returned collection
-			// to have its names normalized to how they are
-			// given in the namesToPreserve parameter.
-			IDictionary<string, string> filteredCollection = new Dictionary<string, string>();
-			foreach (string name in collection.AllKeys)
-			{
-				string nameLowered = name.ToLowerInvariant();
-				if (dict.ContainsKey(nameLowered))
-				{
-					// Remove empty values from the collection.
-					string value = collection.Get(name);
-					if (!string.IsNullOrEmpty(value))
-					{
-						filteredCollection.Add(dict[nameLowered], value);
-					}
-				}
-			}
-
-			return filteredCollection;
 		}
 
 		#endregion
