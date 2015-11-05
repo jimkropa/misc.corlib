@@ -66,7 +66,9 @@
     <Compile Include="Collections\PageNumberAndSizeTests.cs" />
     <Compile Include="Collections\PagingInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Cryptography\EncryptorTests.cs" />
     <Compile Include="Security\Cryptography\StringHashingExtensionsTests.cs" />
+    <Compile Include="Security\Cryptography\TestObjectFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

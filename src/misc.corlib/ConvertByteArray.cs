@@ -8,6 +8,8 @@
 
 	public static class ConvertByteArray
 	{
+		private const string NullBytesString = @"(null)";
+
 		public static string ToBase64String([NotNull] this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
@@ -20,6 +22,16 @@
 			////	}
 
 			return Convert.ToBase64String(inArray);
+		}
+
+		public static string ToBase64String(this byte[] inArray, bool allowNulls)
+		{
+			if (allowNulls && (inArray == null))
+			{
+				return NullBytesString;
+			}
+
+			return inArray.ToBase64String();
 		}
 
 		public static string ToHexadecimalString([NotNull] this byte[] inArray)

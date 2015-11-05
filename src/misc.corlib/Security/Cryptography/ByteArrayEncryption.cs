@@ -40,7 +40,7 @@
 			Contract.Requires<ArgumentNullException>(salt != null);
 
 			byte[] encryptedBytes;
-			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey, salt))
+			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey))
 			{
 				encryptedBytes = encryptor.Encrypt(plaintextBytes);
 			}
