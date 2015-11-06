@@ -28,26 +28,48 @@
 	public abstract class SymmetricTransformer<T> : IDisposable
 		where T : SymmetricAlgorithm
 	{
-		private readonly bool preserveAlgorithm;
+		private readonly bool isEncryptor;
 		private readonly byte[] encryptionKey;
 		private readonly byte[] initializationVector;
+		private readonly bool preserveAlgorithm;
+
 		private T algorithm;
 		private ICryptoTransform transform;
 
-		public bool IsEncryptor { get { return (this.initializationVector == null); } }
+		public bool IsEncryptor { get { return this.isEncryptor; } }
 
 		public bool IsDecryptor { get { return !this.IsEncryptor; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="algorithm"></param>
+		/// <param name="isEncryptor"></param>
+		/// <param name="encryptionKey"></param>
+		/// <param name="initializationVector"></param>
+		/// <remarks>
+		/// <para>
+		/// Beware of side effects. If a <see cref="SymmetricAlgorithm"/>
+		/// instanceis passed to this constructor, the values of
+		/// its <see cref="SymmetricAlgorithm.Key"/>
+		/// and <see cref="SymmetricAlgorithm.IV"/>
+		/// properties will be changed by code inside
+		/// the constructor.
+		/// </para>
+		/// </remarks>
 		protected SymmetricTransformer(
-			[NotNull] T algorithm, byte[] encryptionKey, byte[] initializationVector)
-			: this(encryptionKey, initializationVector)
+			[NotNull] T algorithm, bool isEncryptor, byte[] encryptionKey, byte[] initializationVector)
+			: this(isEncryptor, encryptionKey, initializationVector)
 		{
 			Contract.Requires(algorithm != null);
+			Contract.Requires(encryptionKey != null);
 
-			ValidateKeySize(algorithm, this.encryptionKey);
-
-			this.preserveAlgorithm = true;
 			this.algorithm = algorithm;
+			this.preserveAlgorithm = true;
+
+			ValidateKeySize(this.algorithm, this.encryptionKey);
+
+			this.algorithm.Key = this.encryptionKey;
 
 			if (initializationVector == null)
 			{
@@ -56,20 +78,25 @@
 				// encrypted by this instance.
 				this.algorithm.GenerateIV();
 			}
+			else
+			{
+				ValidateBlockSize(this.algorithm, this.initializationVector);
+
+				this.algorithm.IV = this.initializationVector;
+			}
 		}
 
 		protected SymmetricTransformer(
-			byte[] encryptionKey, byte[] initializationVector)
+			bool isEncryptor, byte[] encryptionKey, byte[] initializationVector)
 		{
 			Contract.Requires(encryptionKey != null);
 
-			// If no initialization vector is given,
-			// then this is an encryptor.
+			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
 			this.initializationVector = initializationVector;
 		}
 
-		protected T Algorithm
+		protected internal T Algorithm
 		{
 			get
 			{
@@ -88,8 +115,8 @@
 				return LazyInitializer.EnsureInitialized(
 					ref this.transform,
 					() => this.IsEncryptor
-						? this.Algorithm.CreateEncryptor(this.encryptionKey, this.Algorithm.IV)
-						: this.Algorithm.CreateDecryptor(this.encryptionKey, this.initializationVector));
+						? this.Algorithm.CreateEncryptor()
+						: this.Algorithm.CreateDecryptor());
 			}
 		}
 
@@ -117,6 +144,7 @@
 			return Transform(encoding.GetBytes(plaintext));
 		}
 
+		// Method for lazy initialization of algorithm field.
 		private T CreateValidAlgorithm()
 		{
 			T validAlgorithm = CreateAlgorithm();
@@ -125,10 +153,18 @@
 
 			validAlgorithm.Key = this.encryptionKey;
 
-			if (this.initializationVector != null)
+			if (this.initializationVector == null)
 			{
+				// If encrypting, use a different initialization vector
+				// for each instance of an encryptor.
+				validAlgorithm.GenerateIV();
+			}
+			else
+			{
+				// If decrypting, validate the given initialization vector.
 				ValidateBlockSize(validAlgorithm, this.initializationVector);
 
+				// Use the given initialization vector for the decryptor.
 				validAlgorithm.IV = this.initializationVector;
 			}
 
@@ -149,15 +185,13 @@
 		private static void ValidateKeySize(
 			SymmetricAlgorithm algorithm, byte[] encryptionKey)
 		{
-			// TODO: Implement key and block size validation
-			////	throw new CryptographicException();
+			Contract.Requires(algorithm.ValidKeySize(encryptionKey.Length));
 		}
 
 		private static void ValidateBlockSize(
 			SymmetricAlgorithm algorithm, byte[] initializationVector)
 		{
-			// TODO: Implement key and block size validation
-			////	throw new CryptographicException();
+			Contract.Requires(algorithm.ValidKeySize(initializationVector.Length));
 		}
 	}
 }

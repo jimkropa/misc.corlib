@@ -10,26 +10,6 @@
 		// use RNGCryptoServiceProvider.
 		public static readonly Random RandomInstance = new Random();
 
-		public static SymmetricAlgorithm CreateAlgorithm()
-		{
-			// Use AesManaged by default because it's easier on memory.
-			// In production code use more compliant "crypto" flavor of AES.
-			return new AesManaged();
-		}
-
-		public static Encryptor CreateEncryptor()
-		{
-			return CreateEncryptor(CreateEncryptionKey());
-		}
-
-		public static Encryptor CreateEncryptor(byte[] encryptionKey)
-		{
-			using (SymmetricAlgorithm algorithm = CreateAlgorithm())
-			{
-				return new Encryptor(algorithm, encryptionKey);
-			}
-		}
-
 		public static byte[] CreateEncryptionKey(int size = 32)
 		{
 			byte[] byteArray = new byte[size];
@@ -37,6 +17,26 @@
 			RandomInstance.NextBytes(byteArray);
 
 			return byteArray;
+		}
+
+		public static SymmetricAlgorithm CreateAlgorithm()
+		{
+			// Use AesManaged by default because it's easier on memory.
+			// In production code use more compliant "crypto" flavor of AES.
+			return new AesManaged();
+		}
+
+		public static Encryptor CreateEncryptor(out byte[] initializationVector)
+		{
+			return CreateEncryptor(CreateEncryptionKey(), out initializationVector);
+		}
+
+		public static Encryptor CreateEncryptor(byte[] encryptionKey, out byte[] initializationVector)
+		{
+			using (SymmetricAlgorithm algorithm = CreateAlgorithm())
+			{
+				return new Encryptor(algorithm, encryptionKey, out initializationVector);
+			}
 		}
 	}
 }

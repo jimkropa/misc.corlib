@@ -17,7 +17,7 @@
 		where T : SymmetricAlgorithm
 	{
 		public Decryptor([NotNull] T algorithm, byte[] encryptionKey, byte[] initializationVector)
-			: base(algorithm, encryptionKey, initializationVector)
+			: base(algorithm, true, encryptionKey, initializationVector)
 		{
 			Contract.Requires(algorithm != null);
 			Contract.Requires(encryptionKey != null);
@@ -25,7 +25,7 @@
 		}
 
 		public Decryptor(byte[] encryptionKey, byte[] initializationVector)
-			: base(encryptionKey, initializationVector)
+			: base(true, encryptionKey, initializationVector)
 		{
 			Contract.Requires(encryptionKey != null);
 			Contract.Requires(initializationVector != null);

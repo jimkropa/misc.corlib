@@ -26,7 +26,8 @@
 					Console.WriteLine(algorithm.IV.Length);
 
 					byte[] encryptionKey = TestObjectFactory.CreateEncryptionKey();
-					using (Encryptor encryptor = new Encryptor(algorithm, encryptionKey))
+					byte[] initializationVector;
+					using (Encryptor encryptor = new Encryptor(algorithm, encryptionKey, out initializationVector))
 					{
 						Console.WriteLine();
 						Console.Write("encryptionKey: ");
@@ -42,7 +43,7 @@
 						Console.Write("algorithm.IV: ");
 						Console.WriteLine(algorithm.IV.ToBase64String(true));
 						Console.Write("encryptor.InitializationVector: ");
-						Console.WriteLine(encryptor.InitializationVector.ToBase64String(true));
+						Console.WriteLine(initializationVector.ToBase64String(true));
 					}
 				}
 

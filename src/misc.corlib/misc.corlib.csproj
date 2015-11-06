@@ -104,7 +104,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Cryptography\ByteArrayEncryption.cs" />
     <Compile Include="Security\Cryptography\ByteArrayHashing.cs" />
+    <Compile Include="Security\Cryptography\CipherEncoding.cs" />
     <Compile Include="Security\Cryptography\Decryptor.cs" />
+    <Compile Include="Security\Cryptography\Encryption-CreateDecryptor.cs" />
+    <Compile Include="Security\Cryptography\Encryption-CreateEncryptor.cs" />
+    <Compile Include="Security\Cryptography\Encryption-CreateEncryptorWithRelatedIV.cs" />
+    <Compile Include="Security\Cryptography\Encryption.cs" />
     <Compile Include="Security\Cryptography\Encryptor.cs" />
     <Compile Include="Security\Cryptography\Hasher.cs" />
     <Compile Include="Security\Cryptography\StringEncryption.cs" />
