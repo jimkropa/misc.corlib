@@ -3,6 +3,7 @@
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 	using System.Text;
+
 	using JetBrains.Annotations;
 
 	/// <summary>
