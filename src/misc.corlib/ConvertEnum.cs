@@ -2,7 +2,7 @@ namespace MiscCorLib
 {
 	using System;
 	using System.Collections.Generic;
-	using Collections;
+
 	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
@@ -90,7 +90,7 @@ namespace MiscCorLib
 		/// <typeparam name="T">
 		/// An <see cref="Enum"/> type.
 		/// </typeparam>
-		/// <typeparam name="U">
+		/// <typeparam name="TU">
 		/// The underlying type of the <see cref="Enum"/>
 		/// value of <typeparamref name="T"/>, from the
 		/// <see cref="Enum.GetUnderlyingType"/> method.
@@ -99,9 +99,9 @@ namespace MiscCorLib
 		/// The generic type parameter <typeparamref name="T"/>
 		/// does not derive from <see cref="Enum"/>.
 		/// </returns>
-		public static IDictionary<U, string> ToDictionary<T, U>()
+		public static IDictionary<TU, string> ToDictionary<T, TU>()
 			where T : struct, IComparable, IFormattable
-			where U : struct
+			where TU : struct
 		{
 			Type enumType = typeof(T);
 
@@ -112,21 +112,21 @@ namespace MiscCorLib
 
 			Type underlyingType = Enum.GetUnderlyingType(enumType);
 
-			if (!underlyingType.Equals(typeof(U)))
+			if (underlyingType != typeof(TU))
 			{
 				throw new InvalidCastException(
 					"Cannot convert the System.Enum type to the specified type becaues the underlying type does not match.");
 			}
 
 			Array values = Enum.GetValues(enumType);
-			IDictionary<U, string> dict = new Dictionary<U, string>();
+			IDictionary<TU, string> dict = new Dictionary<TU, string>();
 
 			foreach (object value in values)
 			{
 				string name;
 				if (TryParseName<T>(enumType, value, out name))
 				{
-					dict.Add((U)value, name);
+					dict.Add((TU)value, name);
 				}
 			}
 
@@ -484,162 +484,163 @@ namespace MiscCorLib
 		#endregion
 
 		#region [ TryParse Methods For Enums with the Flags Attribute ]
-
-		/// <summary>
-		/// Returns the values of a flags
-		/// enumeration from a given byte value.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// A byte representing a set of bits of
-		/// the <typeparamref name="TEnum"/>.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// an array with the bits of a flags
-		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
-		/// Otherwise, returns an empty array.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="enumValue"/>
-		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
-		/// </returns>
-		public static bool TryParse<TEnum>(this byte enumValue, out TEnum[] enumOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			return TryParseInternal(enumValue, out enumOut);
-		}
-
-		/// <summary>
-		/// This method takes a short and returns the Prime Parts that Compose the Flags Enumeration.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// A short integer representing a set of bits
-		/// of the <typeparamref name="TEnum"/>.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// an array with the bits of a flags
-		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
-		/// Otherwise, returns an empty array.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="enumValue"/>
-		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
-		/// </returns>
-		public static bool TryParse<TEnum>(this short enumValue, out TEnum[] enumOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			return TryParseInternal(enumValue, out enumOut);
-		}
-
-		/// <summary>
-		/// This method takes an int and returns the Prime Parts that Compose the Flags Enumeration.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// An integer representing a set of bits
-		/// of the <typeparamref name="TEnum"/>.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// an array with the bits of a flags
-		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
-		/// Otherwise, returns an empty array.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="enumValue"/>
-		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
-		/// </returns>
-		public static bool TryParse<TEnum>(this int enumValue, out TEnum[] enumOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			return TryParseInternal(enumValue, out enumOut);
-		}
-
-		/// <summary>
-		/// This method takes a long and returns the Prime Parts that Compose the Flags Enumeration.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// A long integer representing a set of bits
-		/// of the <typeparamref name="TEnum"/>.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// an array with the bits of a flags
-		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
-		/// Otherwise, returns an empty array.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="enumValue"/>
-		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
-		/// </returns>
-		public static bool TryParse<TEnum>(this long enumValue, out TEnum[] enumOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			return TryParseInternal(enumValue, out enumOut);
-		}
-
-		/// <summary>
-		/// This method is used to split an enumeration that is flags
-		/// into its defined values, which are typically powers of two.
-		/// This implementation always returns true.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// A <typeparamref name="TEnum"/> value to
-		/// be parsed into its individually defined values.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// an array with the bits of a flags
-		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
-		/// Otherwise, returns an empty array.
-		/// </param>
-		/// <returns>
-		/// Always returns true.
-		/// </returns>
-		public static bool TryParse<TEnum>(this TEnum enumValue, out TEnum[] enumOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			VerifyIsEnumType<TEnum>();
-
-			ICollection<TEnum> enumsOut = new List<TEnum>();
-			foreach (TEnum actualEnumValue in Enum.GetValues(typeof(TEnum)))
+		/*
+			/// <summary>
+			/// Returns the values of a flags
+			/// enumeration from a given byte value.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <param name="enumValue">
+			/// A byte representing a set of bits of
+			/// the <typeparamref name="TEnum"/>.
+			/// </param>
+			/// <param name="enumOut">
+			/// If this method returns true, returns
+			/// an array with the bits of a flags
+			/// enumeration contained in the given
+			/// <paramref name="enumValue"/>.
+			/// Otherwise, returns an empty array.
+			/// </param>
+			/// <returns>
+			/// True if the <paramref name="enumValue"/>
+			/// was parsed into at least one value of the
+			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// </returns>
+			public static bool TryParse<TEnum>(this byte enumValue, out TEnum[] enumOut)
+				where TEnum : struct, IComparable, IFormattable
 			{
-				if ((enumValue & actualEnumValue) == actualEnumValue))
-				{
-					enumsOut.Add(actualEnumValue);
-				}
+				return TryParseInternal(enumValue, out enumOut);
 			}
 
-			RemoveNoneIfFlagsAndHasOtherValues(enumsOut);
+			/// <summary>
+			/// This method takes a short and returns the Prime Parts that Compose the Flags Enumeration.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <param name="enumValue">
+			/// A short integer representing a set of bits
+			/// of the <typeparamref name="TEnum"/>.
+			/// </param>
+			/// <param name="enumOut">
+			/// If this method returns true, returns
+			/// an array with the bits of a flags
+			/// enumeration contained in the given
+			/// <paramref name="enumValue"/>.
+			/// Otherwise, returns an empty array.
+			/// </param>
+			/// <returns>
+			/// True if the <paramref name="enumValue"/>
+			/// was parsed into at least one value of the
+			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// </returns>
+			public static bool TryParse<TEnum>(this short enumValue, out TEnum[] enumOut)
+				where TEnum : struct, IComparable, IFormattable
+			{
+				return TryParseInternal(enumValue, out enumOut);
+			}
 
-			enumOut = enumsOut.ToArray<TEnum>();
+			/// <summary>
+			/// This method takes an int and returns the Prime Parts that Compose the Flags Enumeration.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <param name="enumValue">
+			/// An integer representing a set of bits
+			/// of the <typeparamref name="TEnum"/>.
+			/// </param>
+			/// <param name="enumOut">
+			/// If this method returns true, returns
+			/// an array with the bits of a flags
+			/// enumeration contained in the given
+			/// <paramref name="enumValue"/>.
+			/// Otherwise, returns an empty array.
+			/// </param>
+			/// <returns>
+			/// True if the <paramref name="enumValue"/>
+			/// was parsed into at least one value of the
+			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// </returns>
+			public static bool TryParse<TEnum>(this int enumValue, out TEnum[] enumOut)
+				where TEnum : struct, IComparable, IFormattable
+			{
+				return TryParseInternal(enumValue, out enumOut);
+			}
 
-			return true;
-		}
+			/// <summary>
+			/// This method takes a long and returns the Prime Parts that Compose the Flags Enumeration.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <param name="enumValue">
+			/// A long integer representing a set of bits
+			/// of the <typeparamref name="TEnum"/>.
+			/// </param>
+			/// <param name="enumOut">
+			/// If this method returns true, returns
+			/// an array with the bits of a flags
+			/// enumeration contained in the given
+			/// <paramref name="enumValue"/>.
+			/// Otherwise, returns an empty array.
+			/// </param>
+			/// <returns>
+			/// True if the <paramref name="enumValue"/>
+			/// was parsed into at least one value of the
+			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// </returns>
+			public static bool TryParse<TEnum>(this long enumValue, out TEnum[] enumOut)
+				where TEnum : struct, IComparable, IFormattable
+			{
+				return TryParseInternal(enumValue, out enumOut);
+			}
+
+			/// <summary>
+			/// This method is used to split an enumeration that is flags
+			/// into its defined values, which are typically powers of two.
+			/// This implementation always returns true.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <param name="enumValue">
+			/// A <typeparamref name="TEnum"/> value to
+			/// be parsed into its individually defined values.
+			/// </param>
+			/// <param name="enumOut">
+			/// If this method returns true, returns
+			/// an array with the bits of a flags
+			/// enumeration contained in the given
+			/// <paramref name="enumValue"/>.
+			/// Otherwise, returns an empty array.
+			/// </param>
+			/// <returns>
+			/// Always returns true.
+			/// </returns>
+			public static bool TryParse<TEnum>(this TEnum enumValue, out TEnum[] enumOut)
+				where TEnum : struct, IComparable, IFormattable
+			{
+				VerifyIsEnumType<TEnum>();
+
+				ICollection<TEnum> enumsOut = new List<TEnum>();
+				foreach (TEnum actualEnumValue in Enum.GetValues(typeof(TEnum)))
+				{
+					if ((enumValue & actualEnumValue) == actualEnumValue))
+					{
+						enumsOut.Add(actualEnumValue);
+					}
+				}
+
+				RemoveNoneIfFlagsAndHasOtherValues(enumsOut);
+
+				enumOut = enumsOut.ToArray<TEnum>();
+
+				return true;
+			}
+		*/
 
 		/// <summary>
 		/// This method is used to determine if a string value is the text of an enumeration.
@@ -817,85 +818,87 @@ namespace MiscCorLib
 			return false;
 		}
 
-		/// <summary>
-		/// Returns the values of a flags
-		/// enumeration from a given byte value.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <typeparam name="TValue">
-		/// The underlying type of <typeparamref name="TEnum"/>,
-		/// or an integer type which may be converted to that type.
-		/// </typeparam>
-		/// <param name="enumValue">
-		/// A byte representing a set of bits of
-		/// the <typeparamref name="TEnum"/>.
-		/// </param>
-		/// <param name="enumOut">
-		/// If this method returns true, returns
-		/// an array with the bits of a flags
-		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
-		/// Otherwise, returns an empty array.
-		/// </param>
-		/// <returns>
-		/// True if the <paramref name="enumValue"/>
-		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
-		/// </returns>
-		private static bool TryParseInternal<TEnum, TValue>(TValue enumValue, out TEnum[] enumOut)
-			where TEnum : struct, IComparable, IFormattable
-			where TValue : struct, IComparable, IFormattable
-		{
-			VerifyIsEnumType<TEnum>();
-
-			TEnum convertedEnumValue = GetUnderlyingValueOfEnum<TEnum, TValue>(enumValue);
-
-			ICollection<TEnum> enumsOut = new List<TEnum>();
-
-			foreach (TEnum actualEnumValue in Enum.GetValues(typeof(TEnum)))
+		/*
+			/// <summary>
+			/// Returns the values of a flags
+			/// enumeration from a given byte value.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <typeparam name="TValue">
+			/// The underlying type of <typeparamref name="TEnum"/>,
+			/// or an integer type which may be converted to that type.
+			/// </typeparam>
+			/// <param name="enumValue">
+			/// A byte representing a set of bits of
+			/// the <typeparamref name="TEnum"/>.
+			/// </param>
+			/// <param name="enumOut">
+			/// If this method returns true, returns
+			/// an array with the bits of a flags
+			/// enumeration contained in the given
+			/// <paramref name="enumValue"/>.
+			/// Otherwise, returns an empty array.
+			/// </param>
+			/// <returns>
+			/// True if the <paramref name="enumValue"/>
+			/// was parsed into at least one value of the
+			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// </returns>
+			private static bool TryParseInternal<TEnum, TValue>(TValue enumValue, out TEnum[] enumOut)
+				where TEnum : struct, IComparable, IFormattable
+				where TValue : struct, IComparable, IFormattable
 			{
-				if (IsSet(convertedEnumValue, actualEnumValue))
+				VerifyIsEnumType<TEnum>();
+
+				TEnum convertedEnumValue = GetUnderlyingValueOfEnum<TEnum, TValue>(enumValue);
+
+				ICollection<TEnum> enumsOut = new List<TEnum>();
+
+				foreach (TEnum actualEnumValue in Enum.GetValues(typeof(TEnum)))
 				{
-					enumsOut.Add(actualEnumValue);
+					if ((convertedEnumValue & actualEnumValue) == actualEnumValue))
+					{
+						enumsOut.Add(actualEnumValue);
+					}
+				}
+
+				RemoveNoneIfFlagsAndHasOtherValues(enumsOut);
+
+				enumOut = enumsOut.ToArray<TEnum>();
+
+				if (enumsOut.Count > 0)
+				{
+					return true;
+				}
+
+				return false;
+			}
+
+			/// <summary>
+			/// Removes the "zero" value from the given
+			/// collection if it contains other values.
+			/// </summary>
+			/// <typeparam name="TEnum">
+			/// The type of enumeration to parse.
+			/// </typeparam>
+			/// <param name="enumsOut">
+			/// A reference to an <see cref="ICollection{TEnum}"/>
+			/// which may contain the "zero" value and others.
+			/// </param>
+			private static void RemoveNoneIfFlagsAndHasOtherValues<TEnum>(ICollection<TEnum> enumsOut)
+				where TEnum : struct, IComparable, IFormattable
+			{
+				Type enumType = typeof(TEnum);
+				if ((enumsOut.Count > 1)
+					&& Enum.IsDefined(enumType, GetUnderlyingValueOfEnum<TEnum, int>(0))
+					&& enumsOut.Contains(default(TEnum)))
+				{
+					enumsOut.Remove(default(TEnum));
 				}
 			}
-
-			RemoveNoneIfFlagsAndHasOtherValues(enumsOut);
-
-			enumOut = enumsOut.ToArray<TEnum>();
-
-			if (enumsOut.Count > 0)
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Removes the "zero" value from the given
-		/// collection if it contains other values.
-		/// </summary>
-		/// <typeparam name="TEnum">
-		/// The type of enumeration to parse.
-		/// </typeparam>
-		/// <param name="enumsOut">
-		/// A reference to an <see cref="ICollection{TEnum}"/>
-		/// which may contain the "zero" value and others.
-		/// </param>
-		private static void RemoveNoneIfFlagsAndHasOtherValues<TEnum>(ICollection<TEnum> enumsOut)
-			where TEnum : struct, IComparable, IFormattable
-		{
-			Type enumType = typeof(TEnum);
-			if ((enumsOut.Count > 1)
-				&& Enum.IsDefined(enumType, GetUnderlyingValueOfEnum<TEnum, int>(0))
-				&& enumsOut.Contains(default(TEnum)))
-			{
-				enumsOut.Remove(default(TEnum));
-			}
-		}
+		*/
 
 		/// <summary>
 		/// Private method used by the ToDictionary overloads.
@@ -925,7 +928,7 @@ namespace MiscCorLib
 				throw new ArgumentException("The generic type parameter must be a System.Enum type.", "enumType");
 			}
 
-			if (!enumType.Equals(typeof(T)))
+			if (enumType != typeof(T))
 			{
 				throw new ArgumentException("The generic type parameter must be the same as the enumType parameter.", "enumType");
 			}
@@ -937,9 +940,14 @@ namespace MiscCorLib
 				return false;
 			}
 
-			T enumValue = (T)value;
+			name = Enum.GetName(enumType, value);
+			if (string.IsNullOrEmpty(name))
+			{
+				return false;
+			}
 
-			name = Enum.GetName(enumType, value).Replace("_", " ");
+			// Remove underscores, replace with spaces.
+			name = name.Replace("_", " ");
 
 			return true;
 		}
