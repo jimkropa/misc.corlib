@@ -58,7 +58,7 @@
 		/// </para>
 		/// </remarks>
 		protected SymmetricTransformer(
-			[NotNull] T algorithm, bool isEncryptor, byte[] encryptionKey, byte[] initializationVector)
+			[NotNull] T algorithm, bool isEncryptor, [NotNull] byte[] encryptionKey, byte[] initializationVector)
 			: this(isEncryptor, encryptionKey, initializationVector)
 		{
 			Contract.Requires(algorithm != null);
@@ -86,8 +86,15 @@
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance using an abstract factory
+		/// to resolve an algorithm based on the generic type.
+		/// </summary>
+		/// <param name="isEncryptor"></param>
+		/// <param name="encryptionKey"></param>
+		/// <param name="initializationVector"></param>
 		protected SymmetricTransformer(
-			bool isEncryptor, byte[] encryptionKey, byte[] initializationVector)
+			bool isEncryptor, [NotNull] byte[] encryptionKey, byte[] initializationVector)
 		{
 			Contract.Requires(encryptionKey != null);
 

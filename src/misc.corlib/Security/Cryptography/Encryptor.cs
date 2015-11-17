@@ -17,19 +17,36 @@
 	/// </remarks>
 	public sealed class Encryptor : Encryptor<SymmetricAlgorithm>
 	{
-		internal Encryptor(SymmetricAlgorithm algorithm, byte[] encryptionKey, out byte[] initializationVector)
+		internal Encryptor(
+			[NotNull] SymmetricAlgorithm algorithm,
+			[NotNull] byte[] encryptionKey,
+			out byte[] initializationVector)
 			: base(algorithm, encryptionKey, out initializationVector)
 		{
 			Contract.Requires(algorithm != null);
 			Contract.Requires(encryptionKey != null);
 			Contract.Ensures(initializationVector != null);
 		}
+
+		internal Encryptor(
+		[NotNull] SymmetricAlgorithm algorithm,
+		[NotNull] byte[] encryptionKey,
+		[NotNull] byte[] initializationVector)
+			: base(algorithm, encryptionKey, initializationVector)
+		{
+			Contract.Requires(algorithm != null);
+			Contract.Requires(encryptionKey != null);
+			Contract.Requires(initializationVector != null);
+		}
 	}
 
 	public class Encryptor<T> : SymmetricTransformer<T>
 		where T : SymmetricAlgorithm
 	{
-		internal Encryptor([NotNull] T algorithm, byte[] encryptionKey, out byte[] initializationVector)
+		internal Encryptor(
+			[NotNull] T algorithm,
+			[NotNull] byte[] encryptionKey,
+			out byte[] initializationVector)
 			: base(algorithm, true, encryptionKey, null)
 		{
 			Contract.Requires(algorithm != null);
@@ -41,7 +58,20 @@
 			////	Contract.Ensures(initializationVector != null);
 		}
 
-		internal Encryptor(byte[] encryptionKey, out byte[] initializationVector)
+		internal Encryptor(
+			[NotNull] T algorithm,
+			[NotNull] byte[] encryptionKey,
+			[NotNull] byte[] initializationVector)
+			: base(algorithm, true, encryptionKey, initializationVector)
+		{
+			Contract.Requires(algorithm != null);
+			Contract.Requires(encryptionKey != null);
+			Contract.Requires(initializationVector != null);
+		}
+
+		internal Encryptor(
+			[NotNull] byte[] encryptionKey,
+			out byte[] initializationVector)
 			: base(true, encryptionKey, null)
 		{
 			Contract.Requires(encryptionKey != null);
@@ -52,7 +82,16 @@
 			////	Contract.Ensures(initializationVector != null);
 		}
 
-		public byte[] Encrypt(byte[] plaintextBytes)
+		internal Encryptor(
+			[NotNull] byte[] encryptionKey,
+			[NotNull] byte[] initializationVector)
+			: base(true, encryptionKey, initializationVector)
+		{
+			Contract.Requires(encryptionKey != null);
+			Contract.Requires(initializationVector != null);
+		}
+
+		public byte[] Encrypt([NotNull] byte[] plaintextBytes)
 		{
 			return this.Transform(plaintextBytes);
 		}
@@ -69,27 +108,27 @@
 				plaintext, Encryption.DefaultTextEncoding, encoding);
 		}
 
-		public string EncryptToString(string plaintext, Encoding encoding)
+		public string EncryptToString(string plaintext, [NotNull] Encoding encoding)
 		{
 			return this.EncryptToString(
 				plaintext, encoding, Encryption.DefaultCipherEncoding);
 		}
 		
 		public string EncryptToString(
-			string plaintext, Encoding textEncoding, CipherEncoding cipherEncoding)
+			string plaintext, [NotNull] Encoding textEncoding, CipherEncoding cipherEncoding)
 		{
 			return this.EncryptToString(
 				textEncoding.GetBytes(plaintext), cipherEncoding);
 		}
 
-		public string EncryptToString(byte[] plaintextBytes)
+		public string EncryptToString([NotNull] byte[] plaintextBytes)
 		{
 			return this.EncryptToString(
 				plaintextBytes, Encryption.DefaultCipherEncoding);
 		}
 
 		public string EncryptToString(
-			byte[] plaintextBytes, CipherEncoding encoding)
+			[NotNull] byte[] plaintextBytes, CipherEncoding encoding)
 		{
 			return encoding == CipherEncoding.Hexadecimal
 				? this.Transform(plaintextBytes).ToHexadecimalString()

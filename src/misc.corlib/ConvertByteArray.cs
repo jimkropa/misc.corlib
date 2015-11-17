@@ -5,6 +5,7 @@
 	using System.Text;
 
 	using JetBrains.Annotations;
+	using MiscCorLib.Security.Cryptography;
 
 	public static class ConvertByteArray
 	{
@@ -13,13 +14,6 @@
 		public static string ToBase64String([NotNull] this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
-
-			// This is not needed because the method
-			// of Convert already throws the same.
-			////	if (inArray == null)
-			////	{
-			////		throw new ArgumentNullException("inArray");
-			////	}
 
 			return Convert.ToBase64String(inArray);
 		}
@@ -37,12 +31,6 @@
 		public static string ToHexadecimalString([NotNull] this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
-
-			// With code contracts in place, this code is generated:
-			////	if (inArray == null)
-			////	{
-			////		throw new ArgumentNullException("inArray");
-			////	}
 
 			// For performance analysis, try here:
 			// https://github.com/patridge/PerformanceStubs
@@ -65,6 +53,22 @@
 			return hashedStringBuilder.ToString().ToLowerInvariant();
 		}
 
+		public static string ToEncodedString([NotNull] this byte[] inArray, CipherEncoding encoding)
+		{
+			// ReSharper disable once ConvertIfStatementToSwitchStatement
+			if (encoding == CipherEncoding.Base64)
+			{
+				return inArray.ToBase64String();
+			}
+
+			if (encoding == CipherEncoding.Hexadecimal)
+			{
+				return inArray.ToHexadecimalString();
+			}
+
+			throw new ArgumentOutOfRangeException("encoding", encoding, "Invalid value for CipherEncoding enumeration.");
+		}
+
 		public static string ToText([NotNull] this byte[] inArray, Encoding encoding)
 		{
 			// Simple double-dispatch.
@@ -72,9 +76,9 @@
 			return encoding.GetString(inArray);
 		}
 
-		// Below works for syntactic sugar, but abstract factory
-		// is not efficient for looking up singleton Encoding types.
-		// Better to send parameter, as above.
+		// Below works for syntactic sugar, but an abstract factory like
+		// this is not efficient for looking up singleton Encoding types.
+		// Better to send Encoding as a parameter, as above.
 		/*
 			public static string ToText<T>([NotNull] this byte[] inArray)
 				where T : Encoding

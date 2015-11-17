@@ -10,7 +10,7 @@
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public static Encryptor CreateEncryptorWithRelatedIV()
+		public static Encryptor CreateEncryptorWithGivenIV()
 		{
 			throw new NotImplementedException();
 		}

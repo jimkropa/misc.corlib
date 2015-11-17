@@ -109,7 +109,7 @@
     <Compile Include="Security\Cryptography\Decryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateDecryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateEncryptor.cs" />
-    <Compile Include="Security\Cryptography\Encryption-CreateEncryptorWithRelatedIV.cs" />
+    <Compile Include="Security\Cryptography\Encryption-CreateEncryptorWithGivenIV.cs" />
     <Compile Include="Security\Cryptography\Encryption.cs" />
     <Compile Include="Security\Cryptography\Encryptor.cs" />
     <Compile Include="Security\Cryptography\Hasher.cs" />
