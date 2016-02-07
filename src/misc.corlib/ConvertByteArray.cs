@@ -5,6 +5,7 @@
 	using System.Text;
 
 	using JetBrains.Annotations;
+
 	using MiscCorLib.Security.Cryptography;
 
 	public static class ConvertByteArray
@@ -55,6 +56,8 @@
 
 		public static string ToEncodedString([NotNull] this byte[] inArray, CipherEncoding encoding)
 		{
+			Contract.Requires<ArgumentNullException>(inArray != null);
+
 			// ReSharper disable once ConvertIfStatementToSwitchStatement
 			if (encoding == CipherEncoding.Base64)
 			{
@@ -71,6 +74,9 @@
 
 		public static string ToText([NotNull] this byte[] inArray, Encoding encoding)
 		{
+			Contract.Requires<ArgumentNullException>(inArray != null);
+			Contract.Requires<ArgumentNullException>(encoding != null);
+
 			// Simple double-dispatch.
 			// TODO: Loop over buffer if array is large.
 			return encoding.GetString(inArray);

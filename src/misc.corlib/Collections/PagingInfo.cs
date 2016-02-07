@@ -2,20 +2,25 @@
 {
 	using System;
 	using System.Diagnostics.Contracts;
+	using System.Runtime.Serialization;
 
 	// TODO: Test JSON Serializability, test ToString();
 	// TODO: Override equality operators and GetHashCode.
-	[Serializable]
+	[Serializable, DataContract]
 	public struct PagingInfo
 	{
 		#region [ Immutable Public Fields ]
 
+		[DataMember]
 		public readonly PageNumberAndSize CurrentPage;
 
+		[DataMember]
 		public readonly int FirstItemNumber;
 
+		[DataMember]
 		public readonly PageNumberAndSize FirstPage;
 
+		[DataMember]
 		public readonly bool IsFirstPage;
 
 		public readonly bool IsLastPage;
@@ -46,22 +51,22 @@
 			: this(PageNumberAndSize.Unbounded, totalItems)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(totalItems >= 0), "The number of items in the list must not be negative!");
+				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
 		public PagingInfo(int pageNumber, byte pageSize, int totalItems)
 			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(pageNumber >= PageNumberAndSize.FirstPageNumber),
+				pageNumber >= PageNumberAndSize.FirstPageNumber,
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 
 			// Beware of possible division by zero.
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(pageSize >= PageNumberAndSize.MinimumPageSize),
+				pageSize >= PageNumberAndSize.MinimumPageSize,
 				"There must be at least one item per page or there could be division by zero!");
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(totalItems >= 0), "The number of items in the list must not be negative!");
+				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
 		/// <summary>
@@ -84,7 +89,7 @@
 			Contract.Requires<ArgumentException>(
 				requestedPage.IsValid, "The current page must have a value. \"Unbounded\" is an acceptable value.");
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(totalItems >= 0), "The number of items in the list must not be negative!");
+				totalItems >= 0, "The number of items in the list must not be negative!");
 
 			// With code contracts in place, the following generates compiler warnings:
 			////	if (totalItems < 0)
@@ -105,7 +110,7 @@
 				// There are no calculations here based on the page size!
 				this.CurrentPage = PageNumberAndSize.Unbounded;
 				this.TotalPages = 1;
-				this.FirstItemNumber = ((this.TotalItems > 0) ? 1 : 0);
+				this.FirstItemNumber = this.TotalItems > 0 ? 1 : 0;
 				this.LastItemNumber = this.TotalItems;
 				this.IsFirstPage = true;
 				this.IsLastPage = true;
@@ -123,10 +128,11 @@
 					// This calculation is part of the calculation of total pages,
 					// which will produce an invalid value if the number of total items
 					// plus the page size exceeds the capacity of a 32-bit integer.
-					int extendedTotalItems = (this.TotalItems + this.CurrentPage.Size - 1);
+					int extendedTotalItems = this.TotalItems + this.CurrentPage.Size - 1;
 					if (extendedTotalItems <= 0)
 					{
-						throw new OverflowException("There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
+						throw new OverflowException(
+							"There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
 					}
 
 					// There is no division by zero here, due to validation and logic
@@ -142,10 +148,10 @@
 						this.CurrentPage = new PageNumberAndSize(this.TotalPages, this.CurrentPage.Size);
 					}
 
-					this.LastItemNumber = (this.CurrentPage.Number * this.CurrentPage.Size);
-					this.FirstItemNumber = (this.LastItemNumber - this.CurrentPage.Size + 1);
-					this.IsFirstPage = (this.CurrentPage.Number == PageNumberAndSize.FirstPageNumber);
-					this.IsLastPage = (this.CurrentPage.Number == this.TotalPages);
+					this.LastItemNumber = this.CurrentPage.Number * this.CurrentPage.Size;
+					this.FirstItemNumber = this.LastItemNumber - this.CurrentPage.Size + 1;
+					this.IsFirstPage = this.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
+					this.IsLastPage = this.CurrentPage.Number == this.TotalPages;
 
 					if (this.IsFirstPage)
 					{
@@ -158,7 +164,7 @@
 							PageNumberAndSize.FirstPageNumber, this.CurrentPage.Size);
 
 						this.PreviousPage = new PageNumberAndSize(
-							(this.CurrentPage.Number - 1), this.CurrentPage.Size);
+							this.CurrentPage.Number - 1, this.CurrentPage.Size);
 					}
 
 					if (this.IsLastPage)
@@ -176,7 +182,7 @@
 							this.TotalPages, this.CurrentPage.Size);
 
 						this.NextPage = new PageNumberAndSize(
-							(this.CurrentPage.Number + 1), this.CurrentPage.Size);
+							this.CurrentPage.Number + 1, this.CurrentPage.Size);
 					}
 				}
 				else
@@ -208,18 +214,20 @@
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
 		/// </summary>
+		[DataMember(IsRequired = false)]
 		public int FirstItemIndex
 		{
-			get { return (this.FirstItemNumber - 1); }
+			get { return this.FirstItemNumber - 1; }
 		}
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="LastItemNumber"/> minus one.
 		/// </summary>
+		[DataMember(IsRequired = false)]
 		public int LastItemIndex
 		{
-			get { return (this.LastItemNumber - 1); }
+			get { return this.LastItemNumber - 1; }
 		}
 
 		#endregion
@@ -269,7 +277,7 @@
 		public PageNumberAndSize TurnToPage(int pageNumber)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(pageNumber >= PageNumberAndSize.FirstPageNumber),
+				pageNumber >= PageNumberAndSize.FirstPageNumber,
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 
 			// Always return the unbounded page if the current page is unbounded.

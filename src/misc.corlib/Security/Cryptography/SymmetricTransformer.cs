@@ -1,6 +1,7 @@
 ﻿namespace MiscCorLib.Security.Cryptography
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 	using System.Text;
@@ -11,7 +12,7 @@
 	/// <summary>
 	/// Common base class for generic <see cref="Encryptor{T}"/>
 	/// and <see cref="Decryptor{T}"/> types, with an internal
-	/// abstract factory which can automatically create an instance
+	/// abstract factory which automatically creates an instance
 	/// of a specific <see cref="SymmetricAlgorithm"/> based on
 	/// the generic type parameter <typeparamref name="T"/>.
 	/// </summary>
@@ -50,7 +51,7 @@
 		/// <remarks>
 		/// <para>
 		/// Beware of side effects. If a <see cref="SymmetricAlgorithm"/>
-		/// instanceis passed to this constructor, the values of
+		/// instance is passed to this constructor, the values of
 		/// its <see cref="SymmetricAlgorithm.Key"/>
 		/// and <see cref="SymmetricAlgorithm.IV"/>
 		/// properties will be changed by code inside
@@ -61,22 +62,22 @@
 			[NotNull] T algorithm, bool isEncryptor, [NotNull] byte[] encryptionKey, byte[] initializationVector)
 			: this(isEncryptor, encryptionKey, initializationVector)
 		{
-			Contract.Requires(algorithm != null);
-			Contract.Requires(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+
+			ValidateKeySize(algorithm, encryptionKey);
 
 			this.algorithm = algorithm;
+			this.algorithm.Key = this.encryptionKey;
 			this.preserveAlgorithm = true;
 
-			ValidateKeySize(this.algorithm, this.encryptionKey);
-
-			this.algorithm.Key = this.encryptionKey;
-
-			if (initializationVector == null)
+			if (this.initializationVector == null)
 			{
 				// Always generate a new vector
 				// to use for the data to be
 				// encrypted by this instance.
 				this.algorithm.GenerateIV();
+				this.initializationVector = this.algorithm.IV;
 			}
 			else
 			{
@@ -96,7 +97,7 @@
 		protected SymmetricTransformer(
 			bool isEncryptor, [NotNull] byte[] encryptionKey, byte[] initializationVector)
 		{
-			Contract.Requires(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
@@ -134,21 +135,79 @@
 				this.transform.Dispose();
 			}
 
-			if ((this.algorithm != null) && (!this.preserveAlgorithm))
+			if ((this.algorithm != null) && !this.preserveAlgorithm)
 			{
 				this.algorithm.Dispose();
 			}
 		}
 
-		protected byte[] Transform(byte[] plaintextBytes)
+		protected byte[] Transform([NotNull] byte[] plaintextBytes)
 		{
+			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+
 			// TODO: Here is where to implement looping over a buffer.
 			return this.Transformer.TransformFinalBlock(plaintextBytes, 0, 0);
 		}
 
-		protected byte[] Transform(string plaintext, Encoding encoding)
+		protected byte[] Transform([NotNull] string plaintext, [NotNull] Encoding encoding)
 		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(encoding != null);
+
 			return Transform(encoding.GetBytes(plaintext));
+		}
+
+		#region [ Private Methods to Create a SymmetricAlgorithm Instance based on its Generic Type Name ]
+
+		private static T CreateAlgorithm()
+		{
+			T algorithm = SymmetricAlgorithm.Create(typeof(T).ToString()) as T;
+			if (algorithm == null)
+			{
+				throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a symmetric encryption algorithm!"));
+			}
+
+			return algorithm;
+		}
+
+		private static void ValidateKeySize(
+			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> encryptionKey)
+		{
+			////	Contract.Requires<ArgumentOutOfRangeException>(
+			////		algorithm.ValidKeySize(encryptionKey.Count),
+			////		"The size of the given encryption key does not match the valid key size for the algorithm.");
+
+			if (!algorithm.ValidKeySize(encryptionKey.Count))
+			{
+				throw new TypeInitializationException(
+					"MiscCorLib.Security.Cryptography.SymmetricTransformer",
+					new ArgumentOutOfRangeException(
+						"encryptionKey",
+						string.Format(
+							"The size of the given encryption key ({0}) does not match a valid key size for the \"{1}\" algorithm.",
+							encryptionKey.Count,
+							algorithm.GetType().Name)));
+			}
+		}
+
+		private static void ValidateBlockSize(
+			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> initializationVector)
+		{
+			////	Contract.Requires<ArgumentOutOfRangeException>(
+			////		algorithm.ValidKeySize(initializationVector.Count),
+			////		"The size of the given initialization vector does not match the valid block size for the algorithm.");
+
+			if (!algorithm.ValidKeySize(initializationVector.Count))
+			{
+				throw new TypeInitializationException(
+					"MiscCorLib.Security.Cryptography.SymmetricTransformer",
+					new ArgumentOutOfRangeException(
+						"initializationVector",
+						string.Format(
+							"The size of the given initialization vector ({0}) does not match a valid block size for the \"{1}\" algorithm.",
+							initializationVector.Count,
+							algorithm.GetType().Name)));
+			}
 		}
 
 		// Method for lazy initialization of algorithm field.
@@ -178,27 +237,6 @@
 			return validAlgorithm;
 		}
 
-		private static T CreateAlgorithm()
-		{
-			T algorithm = SymmetricAlgorithm.Create((typeof(T)).ToString()) as T;
-			if (algorithm == null)
-			{
-				throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a symmetric encryption algorithm!"));
-			}
-
-			return algorithm;
-		}
-
-		private static void ValidateKeySize(
-			SymmetricAlgorithm algorithm, byte[] encryptionKey)
-		{
-			Contract.Requires(algorithm.ValidKeySize(encryptionKey.Length));
-		}
-
-		private static void ValidateBlockSize(
-			SymmetricAlgorithm algorithm, byte[] initializationVector)
-		{
-			Contract.Requires(algorithm.ValidKeySize(initializationVector.Length));
-		}
+		#endregion
 	}
 }

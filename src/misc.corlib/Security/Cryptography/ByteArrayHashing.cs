@@ -94,7 +94,10 @@
 			return ComputeHash<T>(bytes, key, DefaultHashKeyEncoding);
 		}
 
-		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes, [NotNull] string key, [NotNull] Encoding keyEncoding)
+		public static byte[] ComputeHash<T>(
+			[NotNull] this byte[] bytes,
+			[NotNull] string key,
+			[NotNull] Encoding keyEncoding)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);

@@ -15,12 +15,10 @@
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector)
 		{
-			Contract.Requires(algorithm != null);
-			Contract.Requires(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			return new Encryptor(algorithm, encryptionKey, out initializationVector);
-
-			////	Contract.Ensures(initializationVector != null);
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
@@ -28,7 +26,7 @@
 			out byte[] initializationVector)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			// Set output parameter.
 			return new Encryptor<T>(encryptionKey, out initializationVector);
@@ -39,6 +37,8 @@
 			out string initializationVector)
 			where T : SymmetricAlgorithm
 		{
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+
 			return CreateEncryptor<T>(
 				DefaultKeyEncoding,
 				encryptionKey,
@@ -53,6 +53,9 @@
 			out string initializationVector)
 			where T : SymmetricAlgorithm
 		{
+			Contract.Requires<ArgumentNullException>(keyEncoding != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+
 			byte[] ivbytes;
 			Encryptor<T> encryptor = CreateEncryptor<T>(
 				keyEncoding.GetBytes(encryptionKey), out ivbytes);
@@ -68,7 +71,7 @@
 			out byte[] salt,
 			out byte[] initializationVector)
 		{
-			Contract.Requires(algorithm != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
 
 			return CreateEncryptorFromPassword(algorithm, password, DefaultSaltSize, out salt, out initializationVector);
 		}
@@ -80,7 +83,7 @@
 			out byte[] salt,
 			out byte[] initializationVector)
 		{
-			Contract.Requires(algorithm != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
 
 			return new Encryptor(
 				algorithm,
@@ -94,7 +97,8 @@
 			[NotNull] string password,
 			out byte[] salt)
 		{
-			Contract.Requires(algorithm != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(initializationVector != null);
 
 			return CreateEncryptorFromPassword(algorithm, initializationVector, password, DefaultSaltSize, out salt);
 		}
@@ -106,7 +110,8 @@
 			int saltSize,
 			out byte[] salt)
 		{
-			Contract.Requires(algorithm != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(initializationVector != null);
 
 			return new Encryptor(
 				algorithm,

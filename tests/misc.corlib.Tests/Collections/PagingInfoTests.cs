@@ -68,10 +68,11 @@
 		}
 
 		[TestFixture]
-		public sealed class UnboundedValue
+		public sealed class UnboundedValueWithManyItems
 		{
 			private const int TestTotalItems = int.MaxValue;
-			private readonly PagingInfo pagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, TestTotalItems);
+			private readonly PagingInfo pagingInfo = new PagingInfo(
+				PageNumberAndSize.Unbounded, TestTotalItems);
 
 			[Test]
 			public void HasValidFirstAndLastPages()
@@ -95,7 +96,42 @@
 			public void HasAllItems()
 			{
 				Assert.AreEqual(0, this.pagingInfo.FirstItemIndex);
-				Assert.AreEqual((TestTotalItems - 1), this.pagingInfo.LastItemIndex);
+				Assert.AreEqual(TestTotalItems - 1, this.pagingInfo.LastItemIndex);
+				Assert.AreEqual(TestTotalItems, this.pagingInfo.TotalItems);
+				Assert.AreEqual(1, this.pagingInfo.TotalPages);
+			}
+		}
+
+		[TestFixture]
+		public sealed class UnboundedValueWithNoItems
+		{
+			private const int TestTotalItems = 0;
+			private readonly PagingInfo pagingInfo = new PagingInfo(
+				PageNumberAndSize.Unbounded, TestTotalItems);
+
+			[Test]
+			public void HasValidFirstAndLastPages()
+			{
+				PageNumberAndSizeTests.AssertIsUnbounded(this.pagingInfo.CurrentPage);
+				PageNumberAndSizeTests.AssertIsUnbounded(this.pagingInfo.FirstPage);
+				PageNumberAndSizeTests.AssertIsUnbounded(this.pagingInfo.LastPage);
+
+				Assert.IsTrue(this.pagingInfo.IsFirstPage);
+				Assert.IsTrue(this.pagingInfo.IsLastPage);
+			}
+
+			[Test]
+			public void HasEmptyNextAndPreviousPages()
+			{
+				PageNumberAndSizeTests.AssertIsEmpty(this.pagingInfo.NextPage);
+				PageNumberAndSizeTests.AssertIsEmpty(this.pagingInfo.PreviousPage);
+			}
+
+			[Test]
+			public void HasAllItems()
+			{
+				Assert.AreEqual(0, this.pagingInfo.FirstItemIndex);
+				Assert.AreEqual(0, this.pagingInfo.LastItemIndex);
 				Assert.AreEqual(TestTotalItems, this.pagingInfo.TotalItems);
 				Assert.AreEqual(1, this.pagingInfo.TotalPages);
 			}

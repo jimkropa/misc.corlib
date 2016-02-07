@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics.Contracts;
+	using System.Runtime.Serialization;
 
 	/// <summary>
 	/// A simple struct representing the one-based ordinal
@@ -12,8 +13,8 @@
 	/// A zero-based index value is accessible
 	/// via the <see cref="Index"/> proiperty.
 	/// </remarks>
-	[Serializable]
-	public struct PageNumberAndSize : IEquatable<PageNumberAndSize>
+	[Serializable, DataContract]
+	public struct PageNumberAndSize : IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
 	{
 		#region [ Constants and Static ReadOnly Fields ]
 
@@ -22,8 +23,16 @@
 		/// </summary>
 		public const int FirstPageNumber = 1;
 
+		/// <summary>
+		/// The default value for the <see cref="Size"/>
+		/// of a page within a "paged" collection of items.
+		/// </summary>
 		internal const byte DefaultPageSize = 10;
-		internal const int MinimumPageSize = 1;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal const byte MinimumPageSize = 1;
 
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize"/>
@@ -71,6 +80,7 @@
 		/// <see cref="Index"/> property
 		/// or subtract one from this value.
 		/// </remarks>
+		[DataMember(IsRequired = true)]
 		public readonly int Number;
 
 		/// <summary>
@@ -80,29 +90,36 @@
 		/// <remarks>
 		/// If <see cref="IsUnbounded"/> is <c>true</c>, this value will be zero.
 		/// </remarks>
+		[DataMember(IsRequired = true)]
 		public readonly byte Size;
 
 		#endregion
 
 		#region [ Constructor Overloads ]
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="number">
+		/// 
+		/// </param>
 		public PageNumberAndSize(int number)
 			: this(number, DefaultPageSize)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(number >= FirstPageNumber),
+				number >= FirstPageNumber,
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 		}
 
 		public PageNumberAndSize(int number, byte size)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(number >= FirstPageNumber),
+				number >= FirstPageNumber,
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 
 			// Beware of possible division by zero.
 			Contract.Requires<ArgumentOutOfRangeException>(
-				(size >= MinimumPageSize),
+				size >= MinimumPageSize,
 				"There must be at least one item per page or there could be division by zero!");
 
 			// With code contracts in place, the following generates compiler warnings:
@@ -127,12 +144,12 @@
 		{
 			// This private constructor exists only for the
 			// initialization of the static Unbounded value.
-			this.Size = byte.MinValue;
+			this.Size = default(byte);
 
 			// If the "unbounded" parameter is false,
 			// then this constructor creates the same
 			// as the default constructor.
-			this.Number = unbounded ? FirstPageNumber : 0;
+			this.Number = unbounded ? FirstPageNumber : default(int);
 		}
 
 		#endregion
@@ -140,16 +157,21 @@
 		#region [ Public ReadOnly HasValue and Index Properties ]
 
 		/// <summary>
-		/// Gets the zero-based index of a page within a "paged" collection of items,
-		/// equal to the value of <see cref="Number"/> minus one.
+		/// Gets the zero-based index of a page within
+		/// a "paged" collection of items, equal to the
+		/// value of <see cref="Number"/> minus one.
 		/// </summary>
 		/// <remarks>
 		/// If <see cref="IsUnbounded"/> is <c>true</c>,
 		/// then this property returns a value of zero.
+		/// The "default" (and invalid) value of this property,
+		/// matching that of the <see cref="Empty"/> value,
+		/// is one less than zero.
 		/// </remarks>
+		[DataMember(IsRequired = false)]
 		public int Index
 		{
-			get { return (this.Number - 1); }
+			get { return this.Number - 1; }
 		}
 
 		/// <summary>
@@ -160,13 +182,14 @@
 		/// unbounded size.
 		/// </summary>
 		/// <remarks>
-		/// When this value is <c>true</c>, there is a risk
-		/// of division by zero because the <see cref="Size"/>
-		/// value is zero.
+		/// When this value is <c>true</c>, there
+		/// is a risk of division by zero because the
+		/// <see cref="Size"/> value is zero.
 		/// </remarks>
+		[DataMember(IsRequired = false)]
 		public bool IsUnbounded
 		{
-			get { return ((this.Size == byte.MinValue) && (this.Number == FirstPageNumber)); }
+			get { return (this.Size == byte.MinValue) && (this.Number == FirstPageNumber); }
 		}
 
 		/// <summary>
@@ -174,11 +197,17 @@
 		/// <see cref="Number"/> and <see cref="Size"/>
 		/// values are valid.
 		/// </summary>
+		[DataMember(IsRequired = false)]
 		public bool IsValid
 		{
-			// There is no need to check this.Size >= byte.MinValue
-			// unless the type of this.Size changes to a signed type.
-			get { return (this.Number >= FirstPageNumber); }
+			get
+			{
+				return this.Number >= FirstPageNumber;
+				
+				// This is redundant, unless the Size
+				// field changes to a signed integer:
+				////	&& this.Size >= byte.MinValue;
+			}
 		}
 
 		#endregion
@@ -202,6 +231,18 @@
 			}
 		*/
 
+		#region [ Public Implementation of IComparable<PageNumberAndSize> ]
+
+		public int CompareTo(PageNumberAndSize other)
+		{
+			int thisComposite = this.Size * this.Number;
+			int otherComposite = other.Size * other.Number;
+
+			return thisComposite.CompareTo(otherComposite);
+		}
+
+		#endregion
+
 		#region [ Public Equality Overrides for Memory Optimization ]
 
 		/// <summary>
@@ -211,7 +252,7 @@
 		/// <returns></returns>
 		public bool Equals(PageNumberAndSize other)
 		{
-			return ((this.Number == other.Number) && (this.Size == other.Size));
+			return (this.Number == other.Number) && (this.Size == other.Size);
 		}
 
 		/// <summary>
@@ -230,6 +271,8 @@
 		public override bool Equals(object obj)
 		{
 			if (obj == null) { return false; }
+
+			// ReSharper disable once ConvertIfStatementToReturnStatement
 			if (obj.GetType() != this.GetType()) { return false; }
 
 			return this.Equals((PageNumberAndSize)obj);
@@ -265,7 +308,7 @@
 		/// <returns></returns>
 		public static bool operator !=(PageNumberAndSize x, PageNumberAndSize y)
 		{
-			return (!x.Equals(y));
+			return !x.Equals(y);
 		}
 
 		#endregion

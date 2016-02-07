@@ -199,11 +199,11 @@ namespace MiscCorLib.Collections.Generic
 			Type t = typeof(T);
 			TypeConverter converter = TypeDescriptor.GetConverter(t);
 
-			if (converter == null)
-			{
-				throw new NullReferenceException(string.Format(
-					"No TypeConverter could be resolved for the \"{0}\" type.", t.Name));
-			}
+			////	if (converter == null)
+			////	{
+			////		throw new NullReferenceException(string.Format(
+			////			"No TypeConverter could be resolved for the \"{0}\" type.", t.Name));
+			////	}
 
 			foreach (string value in values)
 			{

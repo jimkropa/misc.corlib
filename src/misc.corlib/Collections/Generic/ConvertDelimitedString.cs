@@ -2,7 +2,6 @@ namespace MiscCorLib.Collections.Generic
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Text;
 
 	/// <summary>
 	/// A set of static methods for converting delimited strings
@@ -10,7 +9,7 @@ namespace MiscCorLib.Collections.Generic
 	/// with options for sorting and removing duplicate entries.
 	/// </summary>
 	[CLSCompliant(true)]
-	public static class ConvertString
+	public static class ConvertDelimitedString
 	{
 		/// <summary>
 		/// A constant value to use when converting to

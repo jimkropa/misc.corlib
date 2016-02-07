@@ -32,7 +32,10 @@
 		/// </summary>
 		public static readonly Encoding DefaultIVEncoding = Encoding.ASCII;
 
-		public static byte[] Encrypt<T>([NotNull] this byte[] plaintextBytes, [NotNull] byte[] encryptionKey, [NotNull] byte[] salt)
+		public static byte[] Encrypt<T>(
+			[NotNull] this byte[] plaintextBytes,
+			[NotNull] byte[] encryptionKey,
+			[NotNull] byte[] salt)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
@@ -49,7 +52,10 @@
 			return encryptedBytes;
 		}
 
-		public static byte[] Encrypt<T>([NotNull] this byte[] plaintextBytes, [NotNull] string encryptionKey, [NotNull] string iv)
+		public static byte[] Encrypt<T>(
+			[NotNull] this byte[] plaintextBytes,
+			[NotNull] string encryptionKey,
+			[NotNull] string iv)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);

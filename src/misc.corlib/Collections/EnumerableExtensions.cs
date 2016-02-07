@@ -3,6 +3,7 @@ namespace MiscCorLib.Collections
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.Diagnostics.Contracts;
 
 	using MiscCorLib.Collections.Generic;
 
@@ -197,6 +198,8 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public static T[] ToArray<T>(this IEnumerable values) where T : IComparable
 		{
+			Contract.Requires<ArgumentNullException>(values != null);
+
 			return ToArray<T>(values, ConvertStrings.DefaultPreserveDuplicates, ConvertStrings.DefaultSort);
 		}
 
@@ -225,6 +228,8 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public static T[] ToArray<T>(this IEnumerable values, bool preserveDuplicates, bool sort) where T : IComparable
 		{
+			Contract.Requires<ArgumentNullException>(values != null);
+
 			IList<T> list = ToList<T>(values, preserveDuplicates, sort);
 			T[] ret = new T[list.Count];
 
@@ -316,6 +321,8 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public static IList<T> ToList<T>(this IEnumerable values) where T : IComparable
 		{
+			Contract.Requires<ArgumentNullException>(values != null);
+
 			return ToList<T>(values, ConvertStrings.DefaultPreserveDuplicates, ConvertStrings.DefaultSort);
 		}
 
@@ -344,6 +351,8 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public static IList<T> ToList<T>(this IEnumerable values, bool preserveDuplicates, bool sort) where T : IComparable
 		{
+			Contract.Requires<ArgumentNullException>(values != null);
+
 			ICollection<string> collection = new List<string>();
 			foreach (object value in values)
 			{

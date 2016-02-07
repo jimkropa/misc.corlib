@@ -4,6 +4,9 @@ namespace MiscCorLib.Collections.Specialized
 	using System.Collections.Generic;
 	using System.Collections.Specialized;
 	using System.ComponentModel;
+	using System.Diagnostics.Contracts;
+
+	using JetBrains.Annotations;
 
 	using MiscCorLib.Collections.Generic;
 
@@ -17,7 +20,7 @@ namespace MiscCorLib.Collections.Specialized
 		/// <summary>
 		/// A value to use when converting from a delimited string.
 		/// </summary>
-		private const string DefaultSeparator = ConvertString.DefaultSeparator;
+		private const string DefaultSeparator = ConvertDelimitedString.DefaultSeparator;
 
 		/// <summary>
 		/// Checks the existence of a named item in
@@ -206,6 +209,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool TryGetString(this NameValueCollection collection, string name, out string result)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			if (ValueExists(collection, name))
 			{
 				result = collection[name];
@@ -234,6 +239,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static string GetString(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetString(collection, name, string.Empty);
 		}
 
@@ -259,6 +266,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static string GetString(this NameValueCollection collection, string name, string defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			string result;
 			if (!TryGetString(collection, name, out result))
 			{
@@ -311,8 +320,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// corresponding to the <paramref name="name"/> parameter,
 		/// or false if none could be found.
 		/// </returns>
-		public static bool GetBoolean(this NameValueCollection collection, string name)
+		public static bool GetBoolean([NotNull] this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetBoolean(collection, name, false);
 		}
 
@@ -339,6 +350,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool GetBoolean(this NameValueCollection collection, string name, bool defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			bool result;
 			if (!TryParseBoolean(collection, name, out result))
 			{
@@ -392,6 +405,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static byte GetByte(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetByte(collection, name, 0);
 		}
 
@@ -417,6 +432,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static byte GetByte(this NameValueCollection collection, string name, byte defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			byte result;
 			if (!TryParseByte(collection, name, out result))
 			{
@@ -448,7 +465,7 @@ namespace MiscCorLib.Collections.Specialized
 				return new byte[0];
 			}
 
-			return ConvertString.ToEnumerable<byte>(collection[name], DefaultSeparator);
+			return ConvertDelimitedString.ToEnumerable<byte>(collection[name], DefaultSeparator);
 		}
 
 		#endregion
@@ -495,6 +512,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static short GetInt16(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetInt16(collection, name, 0);
 		}
 
@@ -520,6 +539,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static short GetInt16(this NameValueCollection collection, string name, short defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			short result;
 			if (!TryParseInt16(collection, name, out result))
 			{
@@ -551,7 +572,7 @@ namespace MiscCorLib.Collections.Specialized
 				return new short[0];
 			}
 
-			return ConvertString.ToEnumerable<short>(collection[name], DefaultSeparator);
+			return ConvertDelimitedString.ToEnumerable<short>(collection[name], DefaultSeparator);
 		}
 
 		#endregion
@@ -598,6 +619,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static int GetInt32(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetInt32(collection, name, 0);
 		}
 
@@ -623,6 +646,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static int GetInt32(this NameValueCollection collection, string name, int defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			int result;
 			if (!TryParseInt32(collection, name, out result))
 			{
@@ -654,7 +679,7 @@ namespace MiscCorLib.Collections.Specialized
 				return new int[0];
 			}
 
-			return ConvertString.ToEnumerable<int>(collection[name], DefaultSeparator);
+			return ConvertDelimitedString.ToEnumerable<int>(collection[name], DefaultSeparator);
 		}
 
 		#endregion
@@ -701,6 +726,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static long GetInt64(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetInt64(collection, name, 0L);
 		}
 
@@ -726,6 +753,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static long GetInt64(this NameValueCollection collection, string name, long defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			long result;
 			if (!TryParseInt64(collection, name, out result))
 			{
@@ -757,7 +786,7 @@ namespace MiscCorLib.Collections.Specialized
 				return new long[0];
 			}
 
-			return ConvertString.ToEnumerable<long>(collection[name], DefaultSeparator);
+			return ConvertDelimitedString.ToEnumerable<long>(collection[name], DefaultSeparator);
 		}
 
 		#endregion
@@ -806,6 +835,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static Guid GetGuid(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetGuid(collection, name, Guid.Empty);
 		}
 
@@ -831,6 +862,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static Guid GetGuid(this NameValueCollection collection, string name, Guid defaultReturn)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			Guid result;
 			if (!TryParseGuid(collection, name, out result))
 			{
@@ -862,7 +895,7 @@ namespace MiscCorLib.Collections.Specialized
 				return new Guid[0];
 			}
 
-			return ConvertString.ToEnumerable<Guid>(collection[name], DefaultSeparator);
+			return ConvertDelimitedString.ToEnumerable<Guid>(collection[name], DefaultSeparator);
 		}
 
 		#endregion
@@ -911,6 +944,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static DateTime GetDate(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetDate(collection, name, DateTime.MinValue);
 		}
 
@@ -936,13 +971,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static DateTime GetDate(this NameValueCollection collection, string name, DateTime defaultReturn)
 		{
-			DateTime result;
-			if (!TryParseDate(collection, name, out result))
-			{
-				return defaultReturn;
-			}
+			Contract.Requires<ArgumentNullException>(collection != null);
 
-			return result;
+			DateTime result;
+			return TryParseDate(collection, name, out result) ? result : defaultReturn;
 		}
 
 		#endregion
@@ -975,6 +1007,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool TryParseEnum<T>(this NameValueCollection collection, string name, out T result)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return TryParseEnum(collection, name, false, out result);
 		}
 
@@ -1097,6 +1131,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static T GetEnum<T>(this NameValueCollection collection, string name) where T : struct
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return GetEnum<T>(collection, name, false);
 		}
 
@@ -1130,6 +1166,8 @@ namespace MiscCorLib.Collections.Specialized
 		public static T GetEnum<T>(this NameValueCollection collection, string name, bool allowMultipleFlagsBits)
 			where T : struct
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			T result;
 			TryParseEnum(collection, name, allowMultipleFlagsBits, out result);
 			return result;
@@ -1171,6 +1209,8 @@ namespace MiscCorLib.Collections.Specialized
 			bool allowMultipleFlagsBits,
 			T defaultReturn) where T : struct
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			T result;
 			if (!TryParseEnum(collection, name, allowMultipleFlagsBits, out result))
 			{

@@ -1,5 +1,6 @@
 ﻿namespace MiscCorLib.Security.Cryptography
 {
+	using System;
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 	using System.Text;
@@ -7,39 +8,78 @@
 	using JetBrains.Annotations;
 
 	/// <summary>
-	/// 
+	/// Encapsulation of an encryption operation
+	/// with a simple contract: An encryptor encrypts
+	/// plaintext bytes using any implementation of
+	/// <see cref="SymmetricAlgorithm"/>.
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// This one is slightly more memory efficient.
-	/// Allows recycling of a single algorithm instance.
+	/// This type is derived from the generic
+	/// <see cref="Encryptor{T}"/>. Refer to
+	/// remarks there for more details.
 	/// </para>
 	/// </remarks>
 	public sealed class Encryptor : Encryptor<SymmetricAlgorithm>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Encryptor"/> class
+		/// which generates a random initialization vector using the
+		/// <see cref="SymmetricAlgorithm.GenerateIV"/> method
+		/// of its embedded <see cref="SymmetricAlgorithm"/>.
+		/// The new <paramref name="initializationVector"/> must be
+		/// preserved, in addition to the <paramref name="encryptionKey"/>,
+		/// to decrypt ciphertext created by this encryptor.
+		/// </summary>
+		/// <param name="algorithm">
+		/// An instance of <see cref="SymmetricAlgorithm"/>
+		/// to use for an encryption operation.
+		/// </param>
+		/// <param name="encryptionKey">
+		/// A value for the <see cref="SymmetricAlgorithm.Key"/>
+		/// of the embedded <see cref="SymmetricAlgorithm"/>.
+		/// </param>
+		/// <param name="initializationVector">
+		/// Returns a new pseudo-random value which has been
+		/// generated for the <see cref="SymmetricAlgorithm.IV"/>
+		/// of the embedded <see cref="SymmetricAlgorithm"/>.
+		/// This value must be preserved, in addition to the
+		/// <paramref name="encryptionKey"/>, to decrypt
+		/// ciphertext created by this <see cref="Encryptor"/>.
+		/// </param>
 		internal Encryptor(
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector)
 			: base(algorithm, encryptionKey, out initializationVector)
 		{
-			Contract.Requires(algorithm != null);
-			Contract.Requires(encryptionKey != null);
-			Contract.Ensures(initializationVector != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 		}
 
+		// TODO: Enable IOC of injection of SymmetricAlgorithm by non-static Encryptor Factory and Decryptor Factory
 		internal Encryptor(
-		[NotNull] SymmetricAlgorithm algorithm,
-		[NotNull] byte[] encryptionKey,
-		[NotNull] byte[] initializationVector)
+			[NotNull] SymmetricAlgorithm algorithm,
+			[NotNull] byte[] encryptionKey,
+			[NotNull] byte[] initializationVector)
 			: base(algorithm, encryptionKey, initializationVector)
 		{
-			Contract.Requires(algorithm != null);
-			Contract.Requires(encryptionKey != null);
-			Contract.Requires(initializationVector != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <remarks>
+	/// <para>
+	/// , adding a layer of security by preventing
+	/// cryptographic dictionary attacks.
+	/// </para>
+	/// </remarks>
 	public class Encryptor<T> : SymmetricTransformer<T>
 		where T : SymmetricAlgorithm
 	{
@@ -49,13 +89,11 @@
 			out byte[] initializationVector)
 			: base(algorithm, true, encryptionKey, null)
 		{
-			Contract.Requires(algorithm != null);
-			Contract.Requires(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			// Set output parameter.
 			initializationVector = this.Algorithm.IV;
-
-			////	Contract.Ensures(initializationVector != null);
 		}
 
 		internal Encryptor(
@@ -64,9 +102,9 @@
 			[NotNull] byte[] initializationVector)
 			: base(algorithm, true, encryptionKey, initializationVector)
 		{
-			Contract.Requires(algorithm != null);
-			Contract.Requires(encryptionKey != null);
-			Contract.Requires(initializationVector != null);
+			Contract.Requires<ArgumentNullException>(algorithm != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
 
 		internal Encryptor(
@@ -74,12 +112,10 @@
 			out byte[] initializationVector)
 			: base(true, encryptionKey, null)
 		{
-			Contract.Requires(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			// Set output parameter.
 			initializationVector = this.Algorithm.IV;
-
-			////	Contract.Ensures(initializationVector != null);
 		}
 
 		internal Encryptor(
@@ -87,42 +123,56 @@
 			[NotNull] byte[] initializationVector)
 			: base(true, encryptionKey, initializationVector)
 		{
-			Contract.Requires(encryptionKey != null);
-			Contract.Requires(initializationVector != null);
+			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
 
 		public byte[] Encrypt([NotNull] byte[] plaintextBytes)
 		{
+			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+
 			return this.Transform(plaintextBytes);
 		}
 
-		public string EncryptToString(string plaintext)
+		public string EncryptToString([NotNull] string plaintext)
 		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, Encryption.DefaultCipherEncoding);
 		}
 
 		public string EncryptToString(string plaintext, CipherEncoding encoding)
 		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, encoding);
 		}
 
 		public string EncryptToString(string plaintext, [NotNull] Encoding encoding)
 		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(encoding != null);
+
 			return this.EncryptToString(
 				plaintext, encoding, Encryption.DefaultCipherEncoding);
 		}
 		
 		public string EncryptToString(
-			string plaintext, [NotNull] Encoding textEncoding, CipherEncoding cipherEncoding)
+			[NotNull] string plaintext, [NotNull] Encoding textEncoding, CipherEncoding cipherEncoding)
 		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(textEncoding != null);
+
 			return this.EncryptToString(
 				textEncoding.GetBytes(plaintext), cipherEncoding);
 		}
 
 		public string EncryptToString([NotNull] byte[] plaintextBytes)
 		{
+			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+
 			return this.EncryptToString(
 				plaintextBytes, Encryption.DefaultCipherEncoding);
 		}
@@ -130,6 +180,8 @@
 		public string EncryptToString(
 			[NotNull] byte[] plaintextBytes, CipherEncoding encoding)
 		{
+			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+
 			return encoding == CipherEncoding.Hexadecimal
 				? this.Transform(plaintextBytes).ToHexadecimalString()
 				: this.Transform(plaintextBytes).ToBase64String();

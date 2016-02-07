@@ -47,13 +47,11 @@
 					}
 				}
 
-				using (Encryptor<SymmetricAlgorithm> encryptor = TestObjectFactory.CreateEncryptor())
-				{
-					
-				}
+				////	using (Encryptor<SymmetricAlgorithm> encryptor = TestObjectFactory.CreateEncryptor())
+				////	{
+				////		
+				////	}
 			}
 		}
-
-
 	}
 }

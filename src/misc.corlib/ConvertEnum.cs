@@ -676,7 +676,7 @@ namespace MiscCorLib
 				return false;
 			}
 
-			string[] enumValues = ConvertString.ToArray<string>(enumValue, ",");
+			string[] enumValues = ConvertDelimitedString.ToArray<string>(enumValue, ",");
 			for (int i = 0; i < enumValues.Length; i++)
 			{
 				enumValues[i] = enumValues[i].Trim();
