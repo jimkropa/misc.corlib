@@ -13,13 +13,33 @@
 		public sealed class JsonNetSerialization
 		{
 			[Test]
-			public void Serializes()
+			public void Serializes_All_Properties()
 			{
 				PageNumberAndSize page = new PageNumberAndSize(7, 20);
 				string serializedPage = JsonConvert.SerializeObject(page);
 
 				Assert.AreEqual(
 					"{\"Number\":7,\"Size\":20,\"Index\":6,\"IsUnbounded\":false,\"IsValid\":true}",
+					serializedPage);
+			}
+
+			[Test]
+			public void Serializes_Unbounded_Value()
+			{
+				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Unbounded);
+
+				Assert.AreEqual(
+					"{\"Number\":1,\"Size\":0,\"Index\":0,\"IsUnbounded\":true,\"IsValid\":true}",
+					serializedPage);
+			}
+
+			[Test]
+			public void Serializes_Empty_Value()
+			{
+				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Empty);
+
+				Assert.AreEqual(
+					"{\"Number\":0,\"Size\":0,\"Index\":-1,\"IsUnbounded\":false,\"IsValid\":false}",
 					serializedPage);
 			}
 
