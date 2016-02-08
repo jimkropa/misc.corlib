@@ -6,7 +6,7 @@
 
 	// TODO: Test JSON Serializability, test ToString();
 	// TODO: Override equality operators and GetHashCode.
-	[Serializable, DataContract]
+	[CLSCompliant(true), Serializable, DataContract]
 	public struct PagingInfo
 	{
 		#region [ Immutable Public Fields ]
@@ -139,7 +139,7 @@
 					// above and within the PageNumberAndSize struct itself.
 					// The method of calculating total pages is shown here:
 					// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
-					this.TotalPages = (extendedTotalItems / this.CurrentPage.Size);
+					this.TotalPages = extendedTotalItems / this.CurrentPage.Size;
 
 					// Handle the situation if someone turns past the last page.
 					if (this.CurrentPage.Number > this.TotalPages)

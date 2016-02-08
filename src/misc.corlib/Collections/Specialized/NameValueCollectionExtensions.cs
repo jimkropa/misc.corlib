@@ -38,6 +38,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool ValueExists(this NameValueCollection collection, string name)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			return collection[name] != null;
 		}
 

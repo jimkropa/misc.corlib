@@ -72,5 +72,59 @@
 		}
 
 
+		[TestFixture]
+		public sealed class ToDelimitedString
+		{
+			[Test]
+			public void Removes_Duplicates_By_Default()
+			{
+				string result = SampleIntegerCollection.ToDelimitedString();
+
+				Assert.AreEqual("7,3,9,5", result);
+			}
+
+			[Test]
+			public void Preserves_Duplicates_When_Specified()
+			{
+				string result = SampleIntegerCollection.ToDelimitedString(true);
+
+				Assert.AreEqual("7,3,9,3,5", result);
+			}
+
+			/*
+			[Test]
+			public void Allows_Custom_Formatter()
+			{
+				string result = SampleIntegerCollection.ToDelimitedString(item => item.ToString("00"));
+
+				Assert.AreEqual("07,03,09,05", result);
+			}
+			*/
+
+			[Test]
+			public void Allows_Custom_Separator()
+			{
+				string result = SampleIntegerCollection.ToDelimitedString(":");
+
+				Assert.AreEqual("7:3:9:5", result);
+			}
+
+			[Test]
+			public void Uses_Ordinal_String_Comparison()
+			{
+				string result = SampleCharCollection.ToDelimitedString();
+
+				Assert.AreEqual("A,a", result);
+			}
+
+			[Test]
+			public void Omits_Empty_Strings()
+			{
+				string[] result = SampleCharCollection.ToStringArray();
+
+				Assert.AreEqual("A,a", result);
+			}
+		}
+
 	}
 }

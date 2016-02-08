@@ -1,5 +1,6 @@
 ﻿namespace MiscCorLib.Collections
 {
+	using System;
 	using System.Collections;
 
 	/// <summary>
@@ -8,6 +9,7 @@
 	/// contains metadata about the position of the
 	/// page within the longer list.
 	/// </summary>
+	[CLSCompliant(true)]
 	public interface IPagedCollection : IEnumerable
 	{
 		/// <summary>

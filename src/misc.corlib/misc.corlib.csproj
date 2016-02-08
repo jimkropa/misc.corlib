@@ -90,10 +90,14 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Collections\Generic\ConvertDelimitedString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\Generic\ConvertStrings.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ConvertByteArray.cs" />
     <Compile Include="Collections\Generic\ConvertValueTypeCollection.cs" />
-    <Compile Include="Collections\Generic\ConvertDelimitedString.cs" />
-    <Compile Include="Collections\Generic\ConvertStrings.cs" />
     <Compile Include="Collections\Generic\IPagedList.cs" />
     <Compile Include="Collections\Generic\PagedList.cs" />
     <Compile Include="Collections\IPagedCollection.cs" />

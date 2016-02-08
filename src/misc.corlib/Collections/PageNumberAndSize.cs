@@ -13,7 +13,7 @@
 	/// A zero-based index value is accessible
 	/// via the <see cref="Index"/> proiperty.
 	/// </remarks>
-	[Serializable, DataContract]
+	[CLSCompliant(true), Serializable, DataContract]
 	public struct PageNumberAndSize : IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
 	{
 		#region [ Constants and Static ReadOnly Fields ]
@@ -30,7 +30,8 @@
 		internal const byte DefaultPageSize = 10;
 
 		/// <summary>
-		/// 
+		/// The lowest allowed value for the <see cref="Size"/>
+		/// of a page within a "paged" collection of items.
 		/// </summary>
 		internal const byte MinimumPageSize = 1;
 
@@ -80,7 +81,7 @@
 		/// <see cref="Index"/> property
 		/// or subtract one from this value.
 		/// </remarks>
-		[DataMember(IsRequired = true)]
+		[DataMember(IsRequired = true, Order = 0)]
 		public readonly int Number;
 
 		/// <summary>
@@ -88,9 +89,10 @@
 		/// within a "paged" collection of items.
 		/// </summary>
 		/// <remarks>
-		/// If <see cref="IsUnbounded"/> is <c>true</c>, this value will be zero.
+		/// If <see cref="IsUnbounded"/> is
+		/// <c>true</c>, this value will be zero.
 		/// </remarks>
-		[DataMember(IsRequired = true)]
+		[DataMember(IsRequired = true, Order = 1)]
 		public readonly byte Size;
 
 		#endregion
@@ -168,7 +170,7 @@
 		/// matching that of the <see cref="Empty"/> value,
 		/// is one less than zero.
 		/// </remarks>
-		[DataMember(IsRequired = false)]
+		[DataMember(IsRequired = false, Order = 3)]
 		public int Index
 		{
 			get { return this.Number - 1; }
@@ -186,7 +188,7 @@
 		/// is a risk of division by zero because the
 		/// <see cref="Size"/> value is zero.
 		/// </remarks>
-		[DataMember(IsRequired = false)]
+		[DataMember(IsRequired = false, Order = 4)]
 		public bool IsUnbounded
 		{
 			get { return (this.Size == byte.MinValue) && (this.Number == FirstPageNumber); }
@@ -197,7 +199,7 @@
 		/// <see cref="Number"/> and <see cref="Size"/>
 		/// values are valid.
 		/// </summary>
-		[DataMember(IsRequired = false)]
+		[DataMember(IsRequired = false, Order = 5)]
 		public bool IsValid
 		{
 			get
@@ -244,6 +246,11 @@
 		#endregion
 
 		#region [ Public Equality Overrides for Memory Optimization ]
+
+		public override string ToString()
+		{
+			return string.Format("[Page[Number[{0}],Size[{1}]]", this.Number, this.Size);
+		}
 
 		/// <summary>
 		/// 

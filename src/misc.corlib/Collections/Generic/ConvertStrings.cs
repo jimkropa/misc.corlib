@@ -12,20 +12,6 @@ namespace MiscCorLib.Collections.Generic
 	[CLSCompliant(true)]
 	public static class ConvertStrings
 	{
-		/// <summary>
-		/// A value to use when sorting a set of strings
-		/// to a generic typed collection, indicating to remove
-		/// duplicate values from the resulting collection by default.
-		/// </summary>
-		internal const bool DefaultPreserveDuplicates = false;
-
-		/// <summary>
-		/// A value to use when sorting a set of strings
-		/// to a generic typed collection, indicating
-		/// to sort the resulting collection by default.
-		/// </summary>
-		internal const bool DefaultSort = true;
-
 		#region [ Overloads of Public Static ToArray<T> Method ]
 
 		/// <summary>
@@ -44,9 +30,11 @@ namespace MiscCorLib.Collections.Generic
 		/// An array of type <typeparamref name="T"/>,
 		/// sorted and with duplicates removed.
 		/// </returns>
-		public static T[] ToArray<T>(this IEnumerable<string> values) where T : IComparable
+		public static T[] ToArray<T>(
+			this IEnumerable<string> values)
+			where T : struct
 		{
-			return ToArray<T>(values, DefaultPreserveDuplicates, DefaultSort);
+			return ToArray<T>(values, ConvertValueTypeCollection.DefaultPreserveDuplicates);
 		}
 
 		/// <summary>
@@ -65,21 +53,14 @@ namespace MiscCorLib.Collections.Generic
 		/// Whether to keep duplicate entries, or to
 		/// remove duplicates from the array returned.
 		/// </param>
-		/// <param name="sort">
-		/// Whether to sort the entries in the array returned.
-		/// </param>
 		/// <returns>
 		/// An array of type <typeparamref name="T"/>.
 		/// </returns>
-		public static T[] ToArray<T>(this IEnumerable<string> values, bool preserveDuplicates, bool sort)
-			where T : IComparable
+		public static T[] ToArray<T>(
+			this IEnumerable<string> values, bool preserveDuplicates)
+			where T : struct
 		{
-			IList<T> list = ToList<T>(values, preserveDuplicates, sort);
-			T[] ret = new T[list.Count];
-
-			list.CopyTo(ret, 0);
-
-			return ret;
+			return ToList<T>(values, preserveDuplicates).ToArray();
 		}
 
 		#endregion
@@ -102,9 +83,11 @@ namespace MiscCorLib.Collections.Generic
 		/// A collection of type <typeparamref name="T"/>,
 		/// sorted and with duplicates removed.
 		/// </returns>
-		public static IEnumerable<T> ToEnumerable<T>(this IEnumerable<string> values) where T : IComparable
+		public static IReadOnlyList<T> ToEnumerable<T>(
+			this IEnumerable<string> values)
+			where T : struct
 		{
-			return ToEnumerable<T>(values, DefaultPreserveDuplicates, DefaultSort);
+			return ToEnumerable<T>(values, ConvertValueTypeCollection.DefaultPreserveDuplicates);
 		}
 
 		/// <summary>
@@ -123,21 +106,17 @@ namespace MiscCorLib.Collections.Generic
 		/// Whether to keep duplicate entries, or to
 		/// remove duplicates from the collection returned.
 		/// </param>
-		/// <param name="sort">
-		/// Whether to sort the entries in the collection returned.
-		/// </param>
 		/// <returns>
 		/// An collection of type <typeparamref name="T"/>.
 		/// </returns>
-		public static IEnumerable<T> ToEnumerable<T>(this IEnumerable<string> values, bool preserveDuplicates, bool sort)
-			where T : IComparable
+		public static IReadOnlyList<T> ToEnumerable<T>(
+			this IEnumerable<string> values,
+			bool preserveDuplicates)
+			where T : struct
 		{
-			IList<T> list = ToList<T>(values, preserveDuplicates, sort);
+			List<T> list = ToList<T>(values, preserveDuplicates);
 
-			foreach (T t in list)
-			{
-				yield return t;
-			}
+			return list;
 		}
 
 		#endregion
@@ -160,9 +139,11 @@ namespace MiscCorLib.Collections.Generic
 		/// A list of type <typeparamref name="T"/>,
 		/// sorted and with duplicates removed.
 		/// </returns>
-		public static IList<T> ToList<T>(this IEnumerable<string> values) where T : IComparable
+		public static IList<T> ToList<T>(
+			this IEnumerable<string> values)
+			where T : struct
 		{
-			return ToList<T>(values, DefaultPreserveDuplicates, DefaultSort);
+			return ToList<T>(values, ConvertValueTypeCollection.DefaultPreserveDuplicates);
 		}
 
 		/// <summary>
@@ -181,14 +162,11 @@ namespace MiscCorLib.Collections.Generic
 		/// Whether to keep duplicate entries, or to
 		/// remove duplicates from the list returned.
 		/// </param>
-		/// <param name="sort">
-		/// Whether to sort the entries in the list returned.
-		/// </param>
 		/// <returns>
 		/// A list of type <typeparamref name="T"/>.
 		/// </returns>
-		public static IList<T> ToList<T>(this IEnumerable<string> values, bool preserveDuplicates, bool sort)
-			where T : IComparable
+		public static List<T> ToList<T>(this IEnumerable<string> values, bool preserveDuplicates)
+			where T : struct
 		{
 			if (values == null)
 			{
@@ -213,23 +191,8 @@ namespace MiscCorLib.Collections.Generic
 				}
 
 				T instance;
-
-				try
-				{
-					object converted = converter.ConvertFrom(value);
-
-					instance = (T)converted;
-				}
-				catch (FormatException)
-				{
-					continue;
-				}
-				catch (NotSupportedException)
-				{
-					continue;
-				}
-
-				if ((!preserveDuplicates) && list.Contains(instance))
+				if (!TryParseFromString(converter, value, out instance))
+				if (!preserveDuplicates && list.Contains(instance))
 				{
 					continue;
 				}
@@ -237,14 +200,37 @@ namespace MiscCorLib.Collections.Generic
 				list.Add(instance);
 			}
 
-			if (sort)
-			{
-				list.Sort();
-			}
-
 			return list;
 		}
 
 		#endregion
+
+		private static bool TryParseFromString<T>(
+			TypeConverter converter, string value, out T result)
+			where T : struct
+		{
+			result = default(T);
+
+			try
+			{
+				object converted = converter.ConvertFrom(value);
+				if (converted == null)
+				{
+					return false;
+				}
+
+				result = (T)converted;
+
+				return true;
+			}
+			catch (FormatException)
+			{
+				return false;
+			}
+			catch (NotSupportedException)
+			{
+				return false;
+			}
+		}
 	}
 }
