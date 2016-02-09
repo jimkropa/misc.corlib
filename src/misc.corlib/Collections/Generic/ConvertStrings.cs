@@ -34,7 +34,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> values)
 			where T : struct
 		{
-			return ToArray<T>(values, ConvertValueTypeCollection.DefaultPreserveDuplicates);
+			return ToArray<T>(values, ConvertValueTypeCollection.DefaultRemoveDuplicates);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> values)
 			where T : struct
 		{
-			return ToEnumerable<T>(values, ConvertValueTypeCollection.DefaultPreserveDuplicates);
+			return ToEnumerable<T>(values, ConvertValueTypeCollection.DefaultRemoveDuplicates);
 		}
 
 		/// <summary>
@@ -143,7 +143,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> values)
 			where T : struct
 		{
-			return ToList<T>(values, ConvertValueTypeCollection.DefaultPreserveDuplicates);
+			return ToList<T>(values, ConvertValueTypeCollection.DefaultRemoveDuplicates);
 		}
 
 		/// <summary>

@@ -17,21 +17,9 @@
 		public sealed class ToStringArray
 		{
 			[Test]
-			public void Removes_Duplicates_By_Default()
+			public void Preserves_Duplicates_By_Default()
 			{
 				string[] result = SampleIntegerCollection.ToStringArray();
-
-				Assert.AreEqual(4, result.Length);
-				Assert.AreEqual("7", result[0]);
-				Assert.AreEqual("3", result[1]);
-				Assert.AreEqual("9", result[2]);
-				Assert.AreEqual("5", result[3]);
-			}
-
-			[Test]
-			public void Preserves_Duplicates_When_Specified()
-			{
-				string[] result = SampleIntegerCollection.ToStringArray(true);
 
 				Assert.AreEqual(5, result.Length);
 				Assert.AreEqual("7", result[0]);
@@ -42,9 +30,21 @@
 			}
 
 			[Test]
+			public void Removes_Duplicates_When_Specified()
+			{
+				string[] result = SampleIntegerCollection.ToStringArray(true);
+
+				Assert.AreEqual(4, result.Length);
+				Assert.AreEqual("7", result[0]);
+				Assert.AreEqual("3", result[1]);
+				Assert.AreEqual("9", result[2]);
+				Assert.AreEqual("5", result[3]);
+			}
+
+			[Test]
 			public void Allows_Custom_Formatter()
 			{
-				string[] result = SampleIntegerCollection.ToStringArray(item => item.ToString("00"));
+				string[] result = SampleIntegerCollection.ToStringArray(item => item.ToString("00"), true);
 
 				Assert.AreEqual(4, result.Length);
 				Assert.AreEqual("07", result[0]);
@@ -71,40 +71,37 @@
 			}
 		}
 
-
 		[TestFixture]
 		public sealed class ToDelimitedString
 		{
 			[Test]
-			public void Removes_Duplicates_By_Default()
+			public void Preserves_Duplicates_By_Default()
 			{
 				string result = SampleIntegerCollection.ToDelimitedString();
+
+				Assert.AreEqual("7,3,9,3,5", result);
+			}
+
+			[Test]
+			public void Removes_Duplicates_When_Specified()
+			{
+				string result = SampleIntegerCollection.ToDelimitedString(true);
 
 				Assert.AreEqual("7,3,9,5", result);
 			}
 
 			[Test]
-			public void Preserves_Duplicates_When_Specified()
-			{
-				string result = SampleIntegerCollection.ToDelimitedString(true);
-
-				Assert.AreEqual("7,3,9,3,5", result);
-			}
-
-			/*
-			[Test]
 			public void Allows_Custom_Formatter()
 			{
 				string result = SampleIntegerCollection.ToDelimitedString(item => item.ToString("00"));
 
-				Assert.AreEqual("07,03,09,05", result);
+				Assert.AreEqual("07,03,09,03,05", result);
 			}
-			*/
 
 			[Test]
 			public void Allows_Custom_Separator()
 			{
-				string result = SampleIntegerCollection.ToDelimitedString(":");
+				string result = SampleIntegerCollection.ToDelimitedString(":", true);
 
 				Assert.AreEqual("7:3:9:5", result);
 			}
@@ -120,7 +117,7 @@
 			[Test]
 			public void Omits_Empty_Strings()
 			{
-				string[] result = SampleCharCollection.ToStringArray();
+				string result = SampleCharCollection.ToDelimitedString();
 
 				Assert.AreEqual("A,a", result);
 			}

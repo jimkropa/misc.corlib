@@ -11,11 +11,21 @@ namespace MiscCorLib.Collections.Generic
 	[CLSCompliant(true)]
 	public static class ConvertDelimitedString
 	{
+		#region [ Constants Default String Delimiter (a comma) ]
+
 		/// <summary>
 		/// A constant value to use when converting to
 		/// and from a delimited string, always a comma.
 		/// </summary>
-		internal const string DefaultSeparator = ",";
+		public const string DefaultSeparator = ",";
+
+		/// <summary>
+		/// A constant value to use when converting to
+		/// and from a delimited string, always a comma.
+		/// </summary>
+		public static readonly char[] DefaultStringSplitter = {','};
+
+		#endregion
 
 		#region [ Overloads of Public Static ToArray<T> Method ]
 
@@ -66,7 +76,7 @@ namespace MiscCorLib.Collections.Generic
 			) where T : struct
 		{
 			return ToArray<T>(
-				value, separator, ConvertValueTypeCollection.DefaultPreserveDuplicates);
+				value, separator, ConvertValueTypeCollection.DefaultRemoveDuplicates);
 		}
 
 		/// <summary>
@@ -179,7 +189,7 @@ namespace MiscCorLib.Collections.Generic
 			where T : struct
 		{
 			return ToEnumerable<T>(
-				value, separator, ConvertValueTypeCollection.DefaultPreserveDuplicates);
+				value, separator, ConvertValueTypeCollection.DefaultRemoveDuplicates);
 		}
 
 		/// <summary>
