@@ -18,7 +18,7 @@
 	[CLSCompliant(true), Serializable]
 	public class PagedList<T> : List<T>, IPagedList<T>
 	{
-		#region [ Private ReadOnly Field and 
+		#region [ Private ReadOnly Field and Constructor Overloads ]
 
 		/// <summary>
 		/// Private backing field for the public
@@ -97,6 +97,15 @@
 			Contract.Requires<ArgumentException>(
 				pagingInfo.CurrentPage.IsValid,
 				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
+
+			int expectedCapacity = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;
+			if (capacity != expectedCapacity)
+			{
+				throw new ArgumentException(string.Format(
+					"The given capacity ({0}) does not match the expected number of items for the current page ({1}) based on the PagingInfo value.",
+					capacity,
+					expectedCapacity));
+			}
 
 			this.pagingInfo = pagingInfo;
 		}

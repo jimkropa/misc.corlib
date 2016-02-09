@@ -5,7 +5,9 @@
 	using NUnit.Framework;
 
 	/// <summary>
-	/// Automated NUnit tests of the <see cref="ConvertValueTypeCollection"/> 
+	/// Automated NUnit tests of the
+	/// <see cref="ConvertValueTypeCollection"/>
+	/// static extension methods.
 	/// </summary>
 	[TestFixture]
 	public sealed class ConvertValueTypeCollectionTests
@@ -69,6 +71,17 @@
 
 				Assert.AreEqual(2, result.Length);
 			}
+
+			[Test]
+			public void Returns_Empty_From_Null_Input()
+			{
+				IEnumerable<char> nullArray = null;
+
+				// ReSharper disable once ExpressionIsAlwaysNull
+				string[] result = nullArray.ToStringArray();
+
+				Assert.AreEqual(0, result.Length);
+			}
 		}
 
 		[TestFixture]
@@ -120,6 +133,17 @@
 				string result = SampleCharCollection.ToDelimitedString();
 
 				Assert.AreEqual("A,a", result);
+			}
+
+			[Test]
+			public void Returns_Empty_From_Null_Input()
+			{
+				IEnumerable<char> nullArray = null;
+
+				// ReSharper disable once ExpressionIsAlwaysNull
+				string result = nullArray.ToDelimitedString();
+
+				Assert.AreEqual(string.Empty, result);
 			}
 		}
 

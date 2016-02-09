@@ -192,7 +192,8 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return ToDelimitedString(collection, toStringMethod, ConvertDelimitedString.DefaultSeparator, removeDuplicates);
+			return ToDelimitedString(
+				collection, toStringMethod, ConvertDelimitedString.DefaultSeparator, removeDuplicates);
 		}
 
 		/// <summary>
@@ -225,7 +226,8 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return ToDelimitedString(collection, null, separator, removeDuplicates);
+			return ToDelimitedString(
+				collection, null, separator, removeDuplicates);
 		}
 
 		/// <summary>
@@ -265,7 +267,8 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return string.Join(separator, ToStringArray(collection, toStringMethod, removeDuplicates));
+			return string.Join(
+				separator, ToStringArray(collection, toStringMethod, removeDuplicates));
 		}
 
 		#endregion
