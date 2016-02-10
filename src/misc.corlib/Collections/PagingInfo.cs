@@ -25,6 +25,8 @@
 
 		public readonly bool IsLastPage;
 
+		//public readonly int ItemCount;
+
 		public readonly int LastItemNumber;
 
 		public readonly PageNumberAndSize LastPage;

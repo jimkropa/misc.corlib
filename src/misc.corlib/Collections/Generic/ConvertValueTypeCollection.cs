@@ -20,31 +20,32 @@ namespace MiscCorLib.Collections.Generic
 	public static class ConvertValueTypeCollection
 	{
 		/// <summary>
-		/// A value to use when translating between lists
-		/// of strings and lists of generic <see cref="ValueType"/>
-		/// values, indicating to preserve duplicate values
+		/// A value to use when translating between collections of strings
+		/// and generic collections of <see cref="ValueType"/>,
+		/// indicating to preserve duplicate values
 		/// in the resulting collection by default.
 		/// </summary>
-		internal const bool DefaultRemoveDuplicates = false;
+		public const bool DefaultRemoveDuplicates = false;
 
 		#region [ Overloads of ToStringArray Extension Method ]
 
 		/// <summary>
-		/// Converts a generic collection to a
-		/// one-dimensional array of <see cref="string"/>,
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a one-dimensional array of <see cref="string"/>,
 		/// by calling the <see cref="ValueType.ToString"/>
 		/// method on each item in the source collection,
 		/// and optionally removing any duplicates.
 		/// </summary>
 		/// <param name="collection">
-		/// A generic collection of items.
+		/// A generic collection of <see cref="ValueType"/> items.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <typeparam name="T">
-		/// The generic type of item, derived from <see cref="ValueType"/>.
+		/// The generic type of <paramref name="collection"/>,
+		/// derived from <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <returns>
 		/// An array of strings with null or empty values omitted,
@@ -57,18 +58,18 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return ToStringArray(collection, null, removeDuplicates);
+			return collection.ToStringArray(null, removeDuplicates);
 		}
 
 		/// <summary>
-		/// Converts a generic collection to a
-		/// one-dimensional array of <see cref="string"/>,
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a one-dimensional array of <see cref="string"/>,
 		/// by calling the <paramref name="toStringMethod"/>
 		/// delegate on each item in the source collection,
 		/// and optionally removing any duplicates.
 		/// </summary>
 		/// <param name="collection">
-		/// A generic collection of items.
+		/// A generic collection of <see cref="ValueType"/> items.
 		/// </param>
 		/// <param name="toStringMethod">
 		/// A delegate function which accepts a <typeparamref name="T"/>
@@ -81,7 +82,8 @@ namespace MiscCorLib.Collections.Generic
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <typeparam name="T">
-		/// The generic type of item, derived from <see cref="ValueType"/>.
+		/// The generic type of <paramref name="collection"/>,
+		/// derived from <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <returns>
 		/// An array of strings created by the <paramref name="toStringMethod"/>,
@@ -120,8 +122,15 @@ namespace MiscCorLib.Collections.Generic
 				list.Add(str);
 			}
 
+			// T must be a non-nullable type
+			// for List.ToArray() to work.
+			////	return list.ToArray<string>();
+			
+			// So convert the old-fashioned way instead:
+			// Create an array the right size...
 			string[] ary = new string[list.Count];
 
+			// ...and copy all of the values into it.
 			list.CopyTo(ary, 0);
 
 			return ary;
@@ -132,21 +141,22 @@ namespace MiscCorLib.Collections.Generic
 		#region [ Overloads of ToDelimitedString Extension Method ]
 
 		/// <summary>
-		/// Converts a generic collection to a
-		/// comma-delimited <see cref="string"/>,
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a comma-delimited <see cref="string"/>,
 		/// by calling the <see cref="ValueType.ToString()"/>
 		/// method on each item in the source collection,
 		/// and optionally removing any duplicates.
 		/// </summary>
 		/// <param name="collection">
-		/// A generic collection of items.
+		/// A generic collection of <see cref="ValueType"/> items.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <typeparam name="T">
-		/// The generic type of item, derived from <see cref="ValueType"/>.
+		/// The generic type of <paramref name="collection"/>,
+		/// derived from <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <returns>
 		/// A comma-delimited string.
@@ -156,19 +166,19 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return ToDelimitedString(
-				collection, ConvertDelimitedString.DefaultSeparator, removeDuplicates);
+			return collection.ToDelimitedString(
+				ConvertDelimitedString.DefaultSeparator, removeDuplicates);
 		}
 
 		/// <summary>
-		/// Converts a generic collection to a
-		/// comma-delimited <see cref="string"/>,
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a comma-delimited <see cref="string"/>,
 		/// by calling the <paramref name="toStringMethod"/>
 		/// delegate on each item in the source collection,
 		/// and optionally removing any duplicates.
 		/// </summary>
 		/// <param name="collection">
-		/// A generic collection of items.
+		/// A generic collection of <see cref="ValueType"/> items.
 		/// </param>
 		/// <param name="toStringMethod">
 		/// A delegate function which accepts a <typeparamref name="T"/>
@@ -181,7 +191,8 @@ namespace MiscCorLib.Collections.Generic
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <typeparam name="T">
-		/// The generic type of item, derived from <see cref="ValueType"/>.
+		/// The generic type of <paramref name="collection"/>,
+		/// derived from <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <returns>
 		/// A comma-delimited string.
@@ -192,30 +203,31 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return ToDelimitedString(
-				collection, toStringMethod, ConvertDelimitedString.DefaultSeparator, removeDuplicates);
+			return collection.ToDelimitedString(
+				toStringMethod, ConvertDelimitedString.DefaultSeparator, removeDuplicates);
 		}
 
 		/// <summary>
-		/// Converts a generic collection to a
-		/// <see cref="string"/> delimited by the value
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a <see cref="string"/> delimited by the value
 		/// of the <paramref name="separator"/> parameter,
 		/// by calling the <see cref="ValueType.ToString()"/>
 		/// method on each item in the source collection,
 		/// and removing any duplicates.
 		/// </summary>
 		/// <param name="collection">
-		/// A generic collection of items.
+		/// A generic collection of <see cref="ValueType"/> items.
 		/// </param>
 		/// <param name="separator">
-		/// The delimiter to use.
+		/// A string delimiter to use instead of a comma.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <typeparam name="T">
-		/// The generic type of item, derived from <see cref="ValueType"/>.
+		/// The generic type of <paramref name="collection"/>,
+		/// derived from <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <returns>
 		/// A <paramref name="separator"/>-delimited string.
@@ -226,20 +238,20 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			return ToDelimitedString(
-				collection, null, separator, removeDuplicates);
+			return collection.ToDelimitedString(
+				null, separator, removeDuplicates);
 		}
 
 		/// <summary>
-		/// Converts a generic collection to a
-		/// <see cref="string"/> delimited by the value
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a <see cref="string"/> delimited by the value
 		/// of the <paramref name="separator"/> parameter,
 		/// by calling the <paramref name="toStringMethod"/>
 		/// delegate on each item in the source collection,
 		/// and optionally removing any duplicates.
 		/// </summary>
 		/// <param name="collection">
-		/// A generic collection of items.
+		/// A generic collection of <see cref="ValueType"/> items.
 		/// </param>
 		/// <param name="toStringMethod">
 		/// A delegate function which accepts a <typeparamref name="T"/>
@@ -248,14 +260,15 @@ namespace MiscCorLib.Collections.Generic
 		/// <see cref="ValueType.ToString"/> method.
 		/// </param>
 		/// <param name="separator">
-		/// The delimiter to use.
+		/// A string delimiter to use instead of a comma.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <typeparam name="T">
-		/// The generic type of item, derived from <see cref="ValueType"/>.
+		/// The generic type of <paramref name="collection"/>,
+		/// derived from <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <returns>
 		/// A <paramref name="separator"/>-delimited string.
@@ -268,7 +281,7 @@ namespace MiscCorLib.Collections.Generic
 			where T : struct
 		{
 			return string.Join(
-				separator, ToStringArray(collection, toStringMethod, removeDuplicates));
+				separator, collection.ToStringArray(toStringMethod, removeDuplicates));
 		}
 
 		#endregion
