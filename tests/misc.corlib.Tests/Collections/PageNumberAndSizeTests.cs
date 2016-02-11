@@ -1,7 +1,5 @@
 ﻿namespace MiscCorLib.Collections
 {
-	using System;
-
 	using Newtonsoft.Json;
 
 	using NUnit.Framework;
@@ -19,7 +17,7 @@
 				string serializedPage = JsonConvert.SerializeObject(page);
 
 				Assert.AreEqual(
-					"{\"Number\":7,\"Size\":20,\"Index\":6,\"IsUnbounded\":false,\"IsValid\":true}",
+					"{\"Number\":7,\"Size\":20,\"Index\":6,\"IsUnbounded\":false}", // ,\"IsValid\":true
 					serializedPage);
 			}
 
@@ -29,7 +27,7 @@
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Unbounded);
 
 				Assert.AreEqual(
-					"{\"Number\":1,\"Size\":0,\"Index\":0,\"IsUnbounded\":true,\"IsValid\":true}",
+					"{\"Number\":1,\"Size\":0,\"Index\":0,\"IsUnbounded\":true}", // ,\"IsValid\":true
 					serializedPage);
 			}
 
@@ -39,7 +37,7 @@
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Empty);
 
 				Assert.AreEqual(
-					"{\"Number\":0,\"Size\":0,\"Index\":-1,\"IsUnbounded\":false,\"IsValid\":false}",
+					"{\"Number\":0,\"Size\":0,\"Index\":-1,\"IsUnbounded\":false}", // ,\"IsValid\":false
 					serializedPage);
 			}
 
@@ -60,7 +58,7 @@
 				PageNumberAndSize page = new PageNumberAndSize(7, 20);
 				PageNumberAndSize deserializedPage
 					= JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":7,\"Size\":20,\"Index\":1111111,\"IsUnbounded\":true,\"IsValid\":false}");
+						"{\"Number\":7,\"Size\":20,\"Index\":1111111,\"IsUnbounded\":true}"); // ,\"IsValid\":false
 
 				AssertEquality(page, deserializedPage);
 			}
