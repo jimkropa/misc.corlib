@@ -15,7 +15,7 @@ namespace MiscCorLib.Collections.Generic
 	/// <remarks>
 	/// <para>
 	/// These methods operate midway between delimited strings
-	/// created by <see cref="ConvertValueTypeCollection"/> methods
+	/// created by <see cref="ConvertStructCollection"/> methods
 	/// and the <see cref="ConvertDelimitedString"/> methods for
 	/// reversing the process.
 	/// </para>
@@ -200,7 +200,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		public static T[] ToArray<T>(
 			this IEnumerable<string> strings,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates,
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates,
 			bool throwTypeConversionExceptions = DefaultThrowTypeConversionExceptions)
 			where T : struct
 		{
@@ -244,7 +244,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> strings,
 			TypeConverter converter,
 			bool throwTypeConversionExceptions,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates)
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates)
 			where T : struct
 		{
 			return strings.ToList<T>(
@@ -283,7 +283,7 @@ namespace MiscCorLib.Collections.Generic
 		public static T[] ToArray<T>(
 			this IEnumerable<string> strings,
 			TryParseFromString<T> tryParseDelegate,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates)
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates)
 			where T : struct
 		{
 			return strings.ToList(
@@ -324,7 +324,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		public static IReadOnlyList<T> ToEnumerable<T>(
 			this IEnumerable<string> strings,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates,
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates,
 			bool throwTypeConversionExceptions = DefaultThrowTypeConversionExceptions)
 			where T : struct
 		{
@@ -369,7 +369,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> strings,
 			TypeConverter converter,
 			bool throwTypeConversionExceptions,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates)
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates)
 			where T : struct
 		{
 			return strings.ToList<T>(
@@ -409,7 +409,7 @@ namespace MiscCorLib.Collections.Generic
 		public static IReadOnlyList<T> ToEnumerable<T>(
 			this IEnumerable<string> strings,
 			TryParseFromString<T> tryParseDelegate,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates)
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates)
 			where T : struct
 		{
 			return strings.ToList(
@@ -450,7 +450,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		public static List<T> ToList<T>(
 			this IEnumerable<string> strings,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates,
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates,
 			bool throwTypeConversionExceptions = DefaultThrowTypeConversionExceptions)
 			where T : struct
 		{
@@ -494,7 +494,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> strings,
 			TypeConverter converter,
 			bool throwTypeConversionExceptions,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates)
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates)
 			where T : struct
 		{
 			List<T> list = new List<T>();
@@ -570,7 +570,7 @@ namespace MiscCorLib.Collections.Generic
 		public static List<T> ToList<T>(
 			this IEnumerable<string> strings,
 			TryParseFromString<T> tryParseDelegate,
-			bool removeDuplicates = ConvertValueTypeCollection.DefaultRemoveDuplicates)
+			bool removeDuplicates = ConvertStructCollection.DefaultRemoveDuplicates)
 			where T : struct
 		{
 			if (tryParseDelegate == null)

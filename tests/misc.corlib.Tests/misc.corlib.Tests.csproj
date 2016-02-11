@@ -65,7 +65,7 @@
     <Compile Include="ByteArrayExtensionsTests.cs" />
     <Compile Include="Collections\Generic\ConvertDelimitedStringTests.cs" />
     <Compile Include="Collections\Generic\ConvertStringsTests.cs" />
-    <Compile Include="Collections\Generic\ConvertValueTypeCollectionTests.cs" />
+    <Compile Include="Collections\Generic\ConvertStructCollectionTests.cs" />
     <Compile Include="Collections\PageNumberAndSizeTests.cs" />
     <Compile Include="Collections\PagingInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

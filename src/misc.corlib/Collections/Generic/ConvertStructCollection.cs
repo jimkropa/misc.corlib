@@ -17,7 +17,7 @@ namespace MiscCorLib.Collections.Generic
 	/// </para>
 	/// </remarks>
 	[CLSCompliant(true)]
-	public static class ConvertValueTypeCollection
+	public static class ConvertStructCollection
 	{
 		/// <summary>
 		/// A value to use when translating between collections of strings
@@ -280,6 +280,11 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
+			if (string.IsNullOrWhiteSpace(separator))
+			{
+				
+			}
+
 			return string.Join(
 				separator, collection.ToStringArray(toStringMethod, removeDuplicates));
 		}

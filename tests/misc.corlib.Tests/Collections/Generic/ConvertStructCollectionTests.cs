@@ -6,11 +6,11 @@
 
 	/// <summary>
 	/// Automated NUnit tests of the
-	/// <see cref="ConvertValueTypeCollection"/>
+	/// <see cref="ConvertStructCollection"/>
 	/// static extension methods.
 	/// </summary>
 	[TestFixture]
-	public sealed class ConvertValueTypeCollectionTests
+	public sealed class ConvertStructCollectionTests
 	{
 		private static readonly IEnumerable<int> SampleIntegerCollection = new[] { 7, 3, 9, 3, 5 };
 		private static readonly IEnumerable<char> SampleCharCollection = new[] { 'A', 'a', ' ' };

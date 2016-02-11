@@ -22,7 +22,7 @@
 			[Test]
 			public void Preserves_Duplicates_By_Default()
 			{
-				int[] result = SampleIntegerStringCollection.ToArray<int>();
+				int[] result = SampleIntegersString.ToArray<int>();
 
 				Assert.AreEqual(5, result.Length);
 				Assert.AreEqual(7, result[0]);
@@ -35,7 +35,7 @@
 			[Test]
 			public void Removes_Duplicates_When_Specified()
 			{
-				int[] result = SampleIntegerStringCollection.ToArray<int>(true);
+				int[] result = SampleIntegersString.ToArray<int>(true);
 
 				Assert.AreEqual(4, result.Length);
 				Assert.AreEqual(7, result[0]);
@@ -47,7 +47,7 @@
 			[Test]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
-				int[] result = PartlyInvalidIntStringCollection.ToArray<int>(true);
+				int[] result = PartlyInvalidIntsString.ToArray<int>(true);
 
 				Assert.AreEqual(4, result.Length);
 				Assert.AreEqual(8, result[0]);
@@ -59,13 +59,13 @@
 			[Test]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
-				Assert.Throws<FormatException>(() => PartlyInvalidIntStringCollection.ToArray<int>(false, true));
+				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToArray<int>(false, true));
 			}
 
 			[Test]
 			public void Allows_Custom_Parser()
 			{
-				int[] result = SampleIntegerStringCollection.ToArray<int>(int.TryParse, true);
+				int[] result = SampleIntegersString.ToArray<int>(int.TryParse, true);
 
 				Assert.AreEqual(4, result.Length);
 				Assert.AreEqual(7, result[0]);
@@ -77,7 +77,7 @@
 			[Test]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
-				int[] result = PartlyInvalidIntStringCollection.ToArray<int>(int.TryParse);
+				int[] result = PartlyInvalidIntsString.ToArray<int>(int.TryParse);
 
 				Assert.AreEqual(5, result.Length);
 				Assert.AreEqual(8, result[0]);
@@ -105,7 +105,7 @@
 			[Test]
 			public void Preserves_Duplicates_By_Default()
 			{
-				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>();
+				IReadOnlyList<int> result = SampleIntegersString.ToEnumerable<int>();
 
 				Assert.AreEqual(5, result.Count);
 				Assert.AreEqual(7, result[0]);
@@ -118,7 +118,7 @@
 			[Test]
 			public void Removes_Duplicates_When_Specified()
 			{
-				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>(true);
+				IReadOnlyList<int> result = SampleIntegersString.ToEnumerable<int>(true);
 
 				Assert.AreEqual(4, result.Count);
 				Assert.AreEqual(7, result[0]);
@@ -130,7 +130,7 @@
 			[Test]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
-				IReadOnlyList<int> result = PartlyInvalidIntStringCollection.ToEnumerable<int>(true);
+				IReadOnlyList<int> result = PartlyInvalidIntsString.ToEnumerable<int>(true);
 
 				Assert.AreEqual(4, result.Count);
 				Assert.AreEqual(8, result[0]);
@@ -142,13 +142,13 @@
 			[Test]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
-				Assert.Throws<FormatException>(() => PartlyInvalidIntStringCollection.ToEnumerable<int>(false, true));
+				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToEnumerable<int>(false, true));
 			}
 
 			[Test]
 			public void Allows_Custom_Parser()
 			{
-				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>(int.TryParse, true);
+				IReadOnlyList<int> result = SampleIntegersString.ToEnumerable<int>(int.TryParse, true);
 
 				Assert.AreEqual(4, result.Count);
 				Assert.AreEqual(7, result[0]);
@@ -160,7 +160,7 @@
 			[Test]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
-				IReadOnlyList<int> result = PartlyInvalidIntStringCollection.ToEnumerable<int>(int.TryParse);
+				IReadOnlyList<int> result = PartlyInvalidIntsString.ToEnumerable<int>(int.TryParse);
 
 				Assert.AreEqual(5, result.Count);
 				Assert.AreEqual(8, result[0]);
@@ -188,7 +188,7 @@
 			[Test]
 			public void Preserves_Duplicates_By_Default()
 			{
-				IList<int> result = SampleIntegerStringCollection.ToList<int>();
+				IList<int> result = SampleIntegersString.ToList<int>();
 
 				Assert.AreEqual(5, result.Count);
 				Assert.AreEqual(7, result[0]);
@@ -201,7 +201,7 @@
 			[Test]
 			public void Removes_Duplicates_When_Specified()
 			{
-				IList<int> result = SampleIntegerStringCollection.ToList<int>(true);
+				IList<int> result = SampleIntegersString.ToList<int>(true);
 
 				Assert.AreEqual(4, result.Count);
 				Assert.AreEqual(7, result[0]);
@@ -213,7 +213,7 @@
 			[Test]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
-				IList<int> result = PartlyInvalidIntStringCollection.ToList<int>(true);
+				IList<int> result = PartlyInvalidIntsString.ToList<int>(true);
 
 				Assert.AreEqual(4, result.Count);
 				Assert.AreEqual(8, result[0]);
@@ -225,13 +225,13 @@
 			[Test]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
-				Assert.Throws<FormatException>(() => PartlyInvalidIntStringCollection.ToList<int>(false, true));
+				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToList<int>(false, true));
 			}
 
 			[Test]
 			public void Allows_Custom_Parser()
 			{
-				IList<int> result = SampleIntegerStringCollection.ToList<int>(int.TryParse, true);
+				IList<int> result = SampleIntegersString.ToList<int>(int.TryParse, true);
 
 				Assert.AreEqual(4, result.Count);
 				Assert.AreEqual(7, result[0]);
@@ -243,7 +243,7 @@
 			[Test]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
-				IList<int> result = PartlyInvalidIntStringCollection.ToList<int>(int.TryParse);
+				IList<int> result = PartlyInvalidIntsString.ToList<int>(int.TryParse);
 
 				Assert.AreEqual(5, result.Count);
 				Assert.AreEqual(8, result[0]);

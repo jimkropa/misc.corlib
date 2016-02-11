@@ -97,7 +97,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConvertByteArray.cs" />
-    <Compile Include="Collections\Generic\ConvertValueTypeCollection.cs" />
+    <Compile Include="Collections\Generic\ConvertStructCollection.cs" />
     <Compile Include="Collections\Generic\IPagedList.cs" />
     <Compile Include="Collections\Generic\PagedList.cs" />
     <Compile Include="Collections\IPagedCollection.cs" />
