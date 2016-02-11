@@ -96,6 +96,7 @@
     <Compile Include="Collections\Generic\ConvertStrings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Collections\PagingInfoCalculator.cs" />
     <Compile Include="ConvertByteArray.cs" />
     <Compile Include="Collections\Generic\ConvertStructCollection.cs" />
     <Compile Include="Collections\Generic\IPagedList.cs" />

@@ -37,6 +37,15 @@ namespace MiscCorLib.Collections.Generic
 		public const bool DefaultThrowTypeConversionExceptions = false;
 
 		/// <summary>
+		/// This is a workaround for a problem in CodeContracts.
+		/// </summary>
+		/// <remarks>
+		/// Refer to <a href="https://github.com/Microsoft/CodeContracts/issues/339">the issue report</a>
+		/// and <a href="http://stackoverflow.com/questions/34612382/">the source of this workaround</a>.
+		/// </remarks>
+		public static readonly Predicate<string> IsNullOrWhiteSpace = string.IsNullOrWhiteSpace;
+
+		/// <summary>
 		/// Converts a string to a <see cref="ValueType"/>
 		/// of <typeparamref name="T"/>, optionally
 		/// suppressing exceptions in the conversion.
@@ -70,15 +79,20 @@ namespace MiscCorLib.Collections.Generic
 		/// <c>true</c> if <paramref name="s"/> was
 		/// converted successfully; otherwise, <c>false</c>.
 		/// </returns>
+		[System.Diagnostics.Contracts.Pure, JetBrains.Annotations.Pure]
 		public static bool TryConvertFromString<T>(
 			[NotNull] TypeConverter converter,
 			bool throwTypeConversionExceptions,
-			string s,
+			[NotNull] string s,
 			out T result)
 			where T : struct
 		{
 			Contract.Requires<ArgumentNullException>(converter != null);
-			Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(s));
+			Contract.Requires<ArgumentException>(!IsNullOrWhiteSpace(s));
+
+			// This produces a compiler warning due to CodeContracts issue.
+			// See workaround above for https://github.com/Microsoft/CodeContracts/issues/339
+			////	Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(s));
 
 			result = default(T);
 

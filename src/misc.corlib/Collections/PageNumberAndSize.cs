@@ -199,7 +199,7 @@
 		/// <see cref="Number"/> and <see cref="Size"/>
 		/// values are valid.
 		/// </summary>
-		[DataMember(IsRequired = false, Order = 5)]
+		////	[DataMember(IsRequired = false, Order = 5)]
 		public bool IsValid
 		{
 			get
@@ -249,7 +249,7 @@
 
 		public override string ToString()
 		{
-			return string.Format("[Page[Number[{0}],Size[{1}]]", this.Number, this.Size);
+			return string.Format("Page[Number={0},Size={1}]", this.Number, this.Size);
 		}
 
 		/// <summary>

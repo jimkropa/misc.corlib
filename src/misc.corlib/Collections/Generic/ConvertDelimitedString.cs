@@ -789,9 +789,9 @@ namespace MiscCorLib.Collections.Generic
 					StringSplitOptions.RemoveEmptyEntries);
 			}
 
-			return separator.Length > 1
-				? delimitedString.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
-				: delimitedString.Split(new[] { separator[0] }, StringSplitOptions.RemoveEmptyEntries);
+			return separator.Length == 1
+				? delimitedString.Split(new[] {separator[0]}, StringSplitOptions.RemoveEmptyEntries)
+				: delimitedString.Split(new[] {separator}, StringSplitOptions.RemoveEmptyEntries);
 		}
 	}
 }

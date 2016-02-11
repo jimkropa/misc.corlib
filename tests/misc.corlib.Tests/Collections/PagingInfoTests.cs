@@ -130,8 +130,8 @@
 			[Test]
 			public void HasAllItems()
 			{
-				Assert.AreEqual(0, this.pagingInfo.FirstItemIndex, "FirstItemIndex");
-				Assert.AreEqual(0, this.pagingInfo.LastItemIndex, "LastItemIndex");
+				Assert.AreEqual(-1, this.pagingInfo.FirstItemIndex, "FirstItemIndex");
+				Assert.AreEqual(-1, this.pagingInfo.LastItemIndex, "LastItemIndex");
 				Assert.AreEqual(TestTotalItems, this.pagingInfo.TotalItems, "TotalItems");
 				Assert.AreEqual(1, this.pagingInfo.TotalPages);
 			}

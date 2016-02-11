@@ -11,33 +11,39 @@
 	{
 		#region [ Immutable Public Fields ]
 
-		[DataMember]
+		[NonSerialized]
+		private readonly PagingInfoCalculator calculator;
+
+		private PagingInfoCalculator Calculator
+		{
+			get
+			{
+				if (this.calculator.CurrentPage.IsValid)
+				{
+					return this.calculator;
+				}
+
+				if (!this.CurrentPage.IsValid)
+				{
+					return PagingInfoCalculator.Empty;
+				}
+
+				// Some ridiculous sleight-of-hand for the sake
+				// of optimizing serialization and deserialization.
+				// When deserialized, only the CurrentPage and
+				// TotalItems are required, then other values
+				// are calculated once into a "state" object.
+				PagingInfoCalculator newCalculator = new PagingInfoCalculator(this.CurrentPage, this.TotalItems);
+				this = new PagingInfo(newCalculator);
+				return newCalculator;
+			}
+		}
+
+		[DataMember(IsRequired = true, Order = 0)]
 		public readonly PageNumberAndSize CurrentPage;
 
-		[DataMember]
-		public readonly int FirstItemNumber;
-
-		[DataMember]
-		public readonly PageNumberAndSize FirstPage;
-
-		[DataMember]
-		public readonly bool IsFirstPage;
-
-		public readonly bool IsLastPage;
-
-		//public readonly int ItemCount;
-
-		public readonly int LastItemNumber;
-
-		public readonly PageNumberAndSize LastPage;
-
-		public readonly PageNumberAndSize NextPage;
-
-		public readonly PageNumberAndSize PreviousPage;
-
+		[DataMember(IsRequired = true, Order = 1)]
 		public readonly int TotalItems;
-
-		public readonly int TotalPages;
 
 		#endregion
 
@@ -87,136 +93,39 @@
 		/// the initial value of <see cref="TotalItems"/>.
 		/// </param>
 		public PagingInfo(PageNumberAndSize requestedPage, int totalItems)
+			: this(new PagingInfoCalculator(requestedPage, totalItems))
 		{
 			Contract.Requires<ArgumentException>(
 				requestedPage.IsValid, "The current page must have a value. \"Unbounded\" is an acceptable value.");
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
+		}
 
-			// With code contracts in place, the following generates compiler warnings:
-			////	if (totalItems < 0)
-			////	{
-			////		throw new ArgumentOutOfRangeException(
-			////			"totalItems", totalItems, "The number of items in the list must not be negative!");
-			////	}
-
-			this.TotalItems = totalItems;
-
-			if (requestedPage.IsUnbounded)
-			{
-				// This is the case where all of the items are returned on
-				// the list, and there is just one unbounded page of items.
-				// The total number of items may exceed the maximum allowed
-				// value of a byte, so the "page size" value remains as zero.
-				// Beware of division by zero!
-				// There are no calculations here based on the page size!
-				this.CurrentPage = PageNumberAndSize.Unbounded;
-				this.TotalPages = 1;
-				this.FirstItemNumber = this.TotalItems > 0 ? 1 : 0;
-				this.LastItemNumber = this.TotalItems;
-				this.IsFirstPage = true;
-				this.IsLastPage = true;
-				this.PreviousPage = PageNumberAndSize.Empty;
-				this.NextPage = PageNumberAndSize.Empty;
-				this.FirstPage = this.CurrentPage;
-				this.LastPage = this.CurrentPage;
-			}
-			else
-			{
-				this.CurrentPage = requestedPage;
-
-				if ((this.TotalItems > 0) && (this.CurrentPage.Size > 0))
-				{
-					// This calculation is part of the calculation of total pages,
-					// which will produce an invalid value if the number of total items
-					// plus the page size exceeds the capacity of a 32-bit integer.
-					int extendedTotalItems = this.TotalItems + this.CurrentPage.Size - 1;
-					if (extendedTotalItems <= 0)
-					{
-						throw new OverflowException(
-							"There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
-					}
-
-					// There is no division by zero here, due to validation and logic
-					// above and within the PageNumberAndSize struct itself.
-					// The method of calculating total pages is shown here:
-					// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
-					this.TotalPages = extendedTotalItems / this.CurrentPage.Size;
-
-					// Handle the situation if someone turns past the last page.
-					if (this.CurrentPage.Number > this.TotalPages)
-					{
-						// Reset the current page to be the number of the last possible page.
-						this.CurrentPage = new PageNumberAndSize(this.TotalPages, this.CurrentPage.Size);
-					}
-
-					this.LastItemNumber = this.CurrentPage.Number * this.CurrentPage.Size;
-					this.FirstItemNumber = this.LastItemNumber - this.CurrentPage.Size + 1;
-					this.IsFirstPage = this.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
-					this.IsLastPage = this.CurrentPage.Number == this.TotalPages;
-
-					if (this.IsFirstPage)
-					{
-						this.FirstPage = this.CurrentPage;
-						this.PreviousPage = PageNumberAndSize.Empty;
-					}
-					else
-					{
-						this.FirstPage = new PageNumberAndSize(
-							PageNumberAndSize.FirstPageNumber, this.CurrentPage.Size);
-
-						this.PreviousPage = new PageNumberAndSize(
-							this.CurrentPage.Number - 1, this.CurrentPage.Size);
-					}
-
-					if (this.IsLastPage)
-					{
-						this.LastPage = this.CurrentPage;
-						this.NextPage = PageNumberAndSize.Empty;
-
-						// The number of items shown on the last page
-						// may be smaller than the number of items per page.
-						this.LastItemNumber = this.TotalItems;
-					}
-					else
-					{
-						this.LastPage = new PageNumberAndSize(
-							this.TotalPages, this.CurrentPage.Size);
-
-						this.NextPage = new PageNumberAndSize(
-							this.CurrentPage.Number + 1, this.CurrentPage.Size);
-					}
-				}
-				else
-				{
-					// This is the case where the count of TotalItems is zero,
-					// so reset the page number back to the first page.
-					this.CurrentPage = new PageNumberAndSize(
-						PageNumberAndSize.FirstPageNumber, this.CurrentPage.Size);
-
-					// There is just one page of results, with no items.
-					this.TotalPages = 1;
-					this.FirstItemNumber = 0;
-					this.LastItemNumber = 0;
-					this.IsFirstPage = true;
-					this.IsLastPage = true;
-					this.PreviousPage = PageNumberAndSize.Empty;
-					this.NextPage = PageNumberAndSize.Empty;
-					this.FirstPage = this.CurrentPage;
-					this.LastPage = this.CurrentPage;
-				}
-			}
+		private PagingInfo(PagingInfoCalculator calculator)
+		{
+			this.CurrentPage = calculator.CurrentPage;
+			this.TotalItems = calculator.TotalItems;
+			this.calculator = calculator;
 		}
 
 		#endregion
 
 		#region [ Public Read-Only Properties ]
 
+		[DataMember(IsRequired = false, Order = 2)]
+		public int TotalPages { get { return this.Calculator.TotalPages; } }
+
+		[DataMember(IsRequired = false, Order = 3)]
+		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
+
+		[DataMember(IsRequired = false, Order = 4)]
+		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
+
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
 		/// </summary>
-		[DataMember(IsRequired = false)]
+		[DataMember(IsRequired = false, Order = 5)]
 		public int FirstItemIndex
 		{
 			get { return this.FirstItemNumber - 1; }
@@ -226,11 +135,32 @@
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="LastItemNumber"/> minus one.
 		/// </summary>
-		[DataMember(IsRequired = false)]
+		[DataMember(IsRequired = false, Order = 6)]
 		public int LastItemIndex
 		{
 			get { return this.LastItemNumber - 1; }
 		}
+
+		[DataMember(IsRequired = false, Order = 7)]
+		public int ItemCount { get { return this.Calculator.ItemCount; } }
+
+		[DataMember(IsRequired = false, Order = 8)]
+		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
+
+		[DataMember(IsRequired = false, Order = 9)]
+		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
+
+		[DataMember(IsRequired = false, Order = 10)]
+		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
+
+		[DataMember(IsRequired = false, Order = 11)]
+		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
+
+		[DataMember(IsRequired = false, Order = 12)]
+		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
+
+		[DataMember(IsRequired = false, Order = 13)]
+		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
 
 		#endregion
 
@@ -288,5 +218,12 @@
 		}
 
 		#endregion
+
+
+		public override string ToString()
+		{
+			return string.Format("PagingInfo[{0},TotalItems={1}]", this.CurrentPage, this.TotalItems);
+		}
+
 	}
 }

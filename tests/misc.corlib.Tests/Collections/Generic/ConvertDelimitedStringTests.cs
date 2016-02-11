@@ -60,6 +60,7 @@
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToArray<int>(false, true));
+				Assert.Throws<FormatException>(() => "1:7:0:1:A".ToArray<int>(":", false, true));
 			}
 
 			[Test]
@@ -96,6 +97,28 @@
 				int[] result = nullArray.ToArray<int>();
 
 				Assert.AreEqual(0, result.Length);
+			}
+
+			[Test]
+			public void TryParse_Allows_Custom_Separator()
+			{
+				int[] result = "1:7:0:1:A".ToArray<int>(":", int.TryParse, true);
+
+				Assert.AreEqual(3, result.Length);
+				Assert.AreEqual(1, result[0]);
+				Assert.AreEqual(7, result[1]);
+				Assert.AreEqual(0, result[2]);
+			}
+
+			[Test]
+			public void Convert_Allows_Custom_Separator()
+			{
+				int[] result = "1:7:0:1:A".ToArray<int>(":", true);
+
+				Assert.AreEqual(3, result.Length);
+				Assert.AreEqual(1, result[0]);
+				Assert.AreEqual(7, result[1]);
+				Assert.AreEqual(0, result[2]);
 			}
 		}
 
@@ -143,6 +166,7 @@
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToEnumerable<int>(false, true));
+				Assert.Throws<FormatException>(() => "1:7:0:1:A".ToEnumerable<int>(":", false, true));
 			}
 
 			[Test]
@@ -179,6 +203,28 @@
 				IReadOnlyList<int> result = nullArray.ToEnumerable<int>();
 
 				Assert.AreEqual(0, result.Count);
+			}
+
+			[Test]
+			public void TryParse_Allows_Custom_Separator()
+			{
+				IReadOnlyList<int> result = "1:7:0:1:A".ToEnumerable<int>(":", int.TryParse, true);
+
+				Assert.AreEqual(3, result.Count);
+				Assert.AreEqual(1, result[0]);
+				Assert.AreEqual(7, result[1]);
+				Assert.AreEqual(0, result[2]);
+			}
+
+			[Test]
+			public void Convert_Allows_Custom_Separator()
+			{
+				IReadOnlyList<int> result = "1:7:0:1:A".ToEnumerable<int>(":", true);
+
+				Assert.AreEqual(3, result.Count);
+				Assert.AreEqual(1, result[0]);
+				Assert.AreEqual(7, result[1]);
+				Assert.AreEqual(0, result[2]);
 			}
 		}
 
@@ -226,6 +272,7 @@
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToList<int>(false, true));
+				Assert.Throws<FormatException>(() => "1:7:0:1:A".ToList<int>(":", false, true));
 			}
 
 			[Test]
@@ -262,6 +309,28 @@
 				IList<int> result = nullArray.ToList<int>();
 
 				Assert.AreEqual(0, result.Count);
+			}
+
+			[Test]
+			public void TryParse_Allows_Custom_Separator()
+			{
+				IList<int> result = "1:7:0:1:A".ToList<int>(":", int.TryParse, true);
+
+				Assert.AreEqual(3, result.Count);
+				Assert.AreEqual(1, result[0]);
+				Assert.AreEqual(7, result[1]);
+				Assert.AreEqual(0, result[2]);
+			}
+
+			[Test]
+			public void Convert_Allows_Custom_Separator()
+			{
+				IList<int> result = "1:7:0:1:A".ToList<int>(":", true);
+
+				Assert.AreEqual(3, result.Count);
+				Assert.AreEqual(1, result[0]);
+				Assert.AreEqual(7, result[1]);
+				Assert.AreEqual(0, result[2]);
 			}
 		}
 	}
