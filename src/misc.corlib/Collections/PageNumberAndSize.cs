@@ -14,7 +14,8 @@
 	/// via the <see cref="Index"/> property.
 	/// </remarks>
 	[CLSCompliant(true), Serializable, DataContract]
-	public struct PageNumberAndSize : IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
+	public struct PageNumberAndSize
+		: IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
 	{
 		#region [ Constants and Static ReadOnly Fields ]
 
@@ -205,11 +206,19 @@
 		/// value of <see cref="Number"/> minus one.
 		/// </summary>
 		/// <remarks>
+		/// <para>
+		/// This is also the index of a
+		/// <see cref="PageNumberAndItemNumbers"/>
+		/// value within a list such as the one returned by
+		/// <see cref="PagingInfo.CalculateAllPagesAndItemNumbers"/>.
+		/// </para>
+		/// <para>
 		/// If <see cref="IsUnbounded"/> is <c>true</c>,
 		/// then this property returns a value of zero.
 		/// The "default" (and invalid) value of this property,
 		/// matching that of the <see cref="Empty"/> value,
 		/// is one less than zero.
+		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 2)]
 		public int Index
@@ -367,29 +376,16 @@
 
 		#endregion
 
-		// TODO: Test ToString
+		/// <summary>
+		/// Converts this value to its equivalent string representation.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this value.
+		/// </returns>
 		public override string ToString()
 		{
 			return string.Format("Page[Number={0},Size={1}]", this.Number, this.Size);
 		}
-
-		// TODO: Override implicit operators for comparing PageNumber to Int32.
-		/*
-			public static implicit operator PageNumber(int value)
-			{
-				return new PageNumber(value);
-			}
-
-			public static implicit operator int(PageNumber value)
-			{
-				return value.Number;
-			}
-
-			bool IEquatable<int>.Equals(int other)
-			{
-				return this.Number.Equals(other);
-			}
-		*/
 
 		#region [ Public Equality Overrides for Memory Optimization ]
 
@@ -435,7 +431,7 @@
 
 		#endregion
 
-		#region [ Implementation of IComparable<PageNumberAndSize> and IEquatable<ITenantIdentifier> ]
+		#region [ Implementation of IComparable<PageNumberAndSize> and IEquatable<PageNumberAndSize> ]
 
 		/// <summary>
 		/// Compares the current value with another
@@ -457,6 +453,7 @@
 		/// <see cref="Size"/> value multiplied by the
 		/// <see cref="Number"/> value.
 		/// </remarks>
+		[Pure]
 		public int CompareTo(PageNumberAndSize other)
 		{
 			int thisComposite = this.CreateComposite();
@@ -479,22 +476,10 @@
 		/// value have the same <see cref="Number"/> and
 		/// <see cref="Size"/> values; otherwise, <c>false</c>.
 		/// </returns>
+		[Pure]
 		public bool Equals(PageNumberAndSize other)
 		{
 			return (this.Number == other.Number) && (this.Size == other.Size);
-		}
-
-		/// <summary>
-		/// Returns a value to use for comparing
-		/// <see cref="PageNumberAndSize"/> values.
-		/// </summary>
-		/// <returns>
-		/// The value of <see cref="Size"/> multiplied
-		/// by the value of <see cref="Number"/>.
-		/// </returns>
-		private int CreateComposite()
-		{
-			return this.Size*this.Number;
 		}
 
 		int IComparable<PageNumberAndSize>.CompareTo(PageNumberAndSize other)
@@ -511,6 +496,19 @@
 			// Using an explicit implementation is a way
 			// to avoid accidental boxing or unboxing.
 			return this.Equals(other);
+		}
+
+		/// <summary>
+		/// Returns a value to use for comparing
+		/// <see cref="PageNumberAndSize"/> values.
+		/// </summary>
+		/// <returns>
+		/// The value of <see cref="Size"/> multiplied
+		/// by the value of <see cref="Number"/>.
+		/// </returns>
+		private int CreateComposite()
+		{
+			return this.Size * this.Number;
 		}
 
 		#endregion

@@ -6,16 +6,12 @@
 	using System.Runtime.Serialization;
 
 	// TODO: Test JSON Serializability, test ToString();
-	// TODO: Override equality operators and GetHashCode.
-
-
 
 	/// <summary>
 	/// A simple struct with a robust set of metadata
 	/// about a page within a "paged" collection of items,
-	/// essential for rendering user interface widgets
-	/// for moving through pages, and optimized for
-	/// simple serialization.
+	/// for rendering user interface widgets for moving
+	/// through pages, and optimized for simple serialization.
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -32,13 +28,13 @@
 	/// </para>
 	/// </remarks>
 	[CLSCompliant(true), Serializable, DataContract]
-	public struct PagingInfo
+	public struct PagingInfo : IEquatable<PagingInfo>
 	{
 		#region [ Private Field and Property backing the Public Read-Only Properties ]
 
-		private const bool DefaultCalculateAllPagesAndItemNumbers = false;
+		public const bool DefaultCalculateAllPagesAndItemNumbers = false;
 
-		//private static readonly PagingInfo Empty = new PagingInfo();
+		public static readonly PagingInfo Empty = new PagingInfo();
 
 		[NonSerialized]
 		private readonly bool calculateAllPagesAndItemNumbers;
@@ -262,61 +258,64 @@
 		[DataMember(IsRequired = false, Order = 2)]
 		public int TotalPages { get { return this.Calculator.TotalPages; } }
 
-		[DataMember(IsRequired = false, Order = 12)]
+		[DataMember(IsRequired = false, Order = 3)]
 		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
 
-		[DataMember(IsRequired = false, Order = 13)]
+		[DataMember(IsRequired = false, Order = 4)]
 		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
 
-		[DataMember(IsRequired = false, Order = 3)]
+		[DataMember(IsRequired = false, Order = 5)]
 		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
 
-		[DataMember(IsRequired = false, Order = 4)]
+		[DataMember(IsRequired = false, Order = 6)]
 		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
 		/// </summary>
-		[DataMember(IsRequired = false, Order = 5)]
-		public int FirstItemIndex
-		{
-			get { return this.FirstItemNumber - 1; }
-		}
+		[DataMember(IsRequired = false, Order = 7)]
+		public int FirstItemIndex { get { return this.FirstItemNumber - 1; } }
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="LastItemNumber"/> minus one.
 		/// </summary>
-		[DataMember(IsRequired = false, Order = 6)]
-		public int LastItemIndex
-		{
-			get { return this.LastItemNumber - 1; }
-		}
-
-		[DataMember(IsRequired = false, Order = 7)]
-		public int ItemCount { get { return this.Calculator.ItemCount; } }
-
 		[DataMember(IsRequired = false, Order = 8)]
-		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
+		public int LastItemIndex { get { return this.LastItemNumber - 1; } }
 
 		[DataMember(IsRequired = false, Order = 9)]
-		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
+		public int ItemCount { get { return this.Calculator.ItemCount; } }
 
 		[DataMember(IsRequired = false, Order = 10)]
-		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
+		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
 
 		[DataMember(IsRequired = false, Order = 11)]
+		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
+
+		[DataMember(IsRequired = false, Order = 12)]
+		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
+
+		[DataMember(IsRequired = false, Order = 13)]
 		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Name="AllPages", EmitDefaultValue = false, Order = 14)]
 		private IReadOnlyList<PageNumberAndItemNumbers> AllPages { get { return this.Calculator.AllPages; } }
 
 		#endregion
 
-		#region [ Public TurnToPage Method ]
+		#region [ Public TurnToPage and CalculateAllPagesAndItemNumbers Methods ]
 
-		public IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers()
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>
+		/// 
+		/// </returns>
+		public IReadOnlyList<PageNumberAndItemNumbers> CalculateAllPagesAndItemNumbers()
 		{
 			return this.AllPages ?? PagingInfoCalculator.AllPagesAndItemNumbers(this);
 		}
@@ -374,11 +373,92 @@
 
 		#endregion
 
-
+		/// <summary>
+		/// Converts this value to its equivalent string representation.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this value.
+		/// </returns>
 		public override string ToString()
 		{
 			return string.Format("PagingInfo[{0},TotalItems={1}]", this.CurrentPage, this.TotalItems);
 		}
 
+		#region [ Public Equality Overrides for Memory Optimization ]
+
+		/// <summary>
+		/// Indicates whether this instance
+		/// and a specified object are equal.
+		/// </summary>
+		/// <returns>
+		/// <c>true</c> if <paramref name="obj"/>
+		/// and this instance are the same type
+		/// and represent the same value;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		/// <param name="obj">
+		/// The object to compare with the current instance.
+		/// </param>
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+
+			// ReSharper disable once ConvertIfStatementToReturnStatement
+			if (obj.GetType() != this.GetType())
+			{
+				return false;
+			}
+
+			return this.Equals((PagingInfo)obj);
+		}
+
+		/// <summary>
+		/// Returns the hash code for this instance.
+		/// </summary>
+		/// <returns>
+		/// A 32-bit signed integer that is the hash code for this instance.
+		/// </returns>
+		public override int GetHashCode()
+		{
+			return this.CurrentPage.GetHashCode() + this.TotalItems.GetHashCode();
+		}
+
+		#endregion
+
+		#region [ Implementation of IEquatable<PageNumberAndSize> ]
+
+		/// <summary>
+		/// Indicates whether this value and another
+		/// specified <see cref="PagingInfo"/>
+		/// value are equal.
+		/// </summary>
+		/// <param name="other">
+		/// The <see cref="PagingInfo"/> value
+		/// to compare with the current value.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="other"/> and this
+		/// value have the same <see cref="CurrentPage"/> and
+		/// <see cref="TotalItems"/> values; otherwise, <c>false</c>.
+		/// </returns>
+		[Pure]
+		public bool Equals(PagingInfo other)
+		{
+			return this.CurrentPage.Equals(other.CurrentPage)
+				&& this.TotalItems == other.TotalItems;
+		}
+
+		bool IEquatable<PagingInfo>.Equals(PagingInfo other)
+		{
+			// Return the public method.
+			// Using an explicit implementation is a way
+			// to avoid accidental boxing or unboxing.
+			return this.Equals(other);
+		}
+
+		#endregion
 	}
 }

@@ -19,6 +19,8 @@
 	/// </remarks>
 	internal struct PagingInfoCalculator
 	{
+		#region [ Fields and Constructor ]
+
 		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
 
 		internal readonly bool IncludeAllPagesAndItemNumbers;
@@ -151,6 +153,10 @@
 				: null;
 		}
 
+		#endregion
+
+		#region [ Static Methods ]
+
 		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems, int totalPages)
 		{
@@ -187,7 +193,8 @@
 
 			if ((pageSize >= PageNumberAndSize.MinimumPageSize) && (totalItems > 0))
 			{
-				return AllPagesAndItemNumbers(pageSize, totalItems, CalculateTotalPages(pageSize, totalItems));
+				return AllPagesAndItemNumbers(
+					pageSize, totalItems, CalculateTotalPages(pageSize, totalItems));
 			}
 
 			return new List<PageNumberAndItemNumbers>
@@ -200,7 +207,8 @@
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			PagingInfo pagingInfo)
 		{
-			return AllPagesAndItemNumbers(pagingInfo.CurrentPage.Size, pagingInfo.TotalItems);
+			return AllPagesAndItemNumbers(
+				pagingInfo.CurrentPage.Size, pagingInfo.TotalItems, pagingInfo.TotalPages);
 		}
 
 		internal static int CalculateTotalPages(byte pageSize, int totalItems)
@@ -227,5 +235,7 @@
 			// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
 			return extendedTotalItems / pageSize;
 		}
+
+		#endregion
 	}
 }
