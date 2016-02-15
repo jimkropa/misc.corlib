@@ -4,15 +4,25 @@
 	using System.Diagnostics.Contracts;
 
 	/// <summary>
-	/// A "state" object backing the <see cref="PagingInfo"/>
-	/// class, for optimizing deserialization.
+	/// An internal value backing the public properties
+	/// of the <see cref="PagingInfo"/> class,
+	/// for optimizing deserialization.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// To understand how this works, refer to the
+	/// <see cref="PagingInfo.Calculator"/> property
+	/// and the <see cref="PagingInfo(PagingInfoCalculator)"/>
+	/// constructor.
+	/// </para>
+	/// </remarks>
 	internal struct PagingInfoCalculator
 	{
 		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
 
 		public readonly PageNumberAndSize CurrentPage;
 		public readonly int TotalItems;
+
 		public readonly int TotalPages;
 		public readonly int FirstItemNumber;
 		public readonly int LastItemNumber;

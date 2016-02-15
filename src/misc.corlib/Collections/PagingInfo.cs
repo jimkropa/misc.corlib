@@ -6,14 +6,70 @@
 
 	// TODO: Test JSON Serializability, test ToString();
 	// TODO: Override equality operators and GetHashCode.
+
+
+
+	/// <summary>
+	/// A simple struct with a robust set of metadata
+	/// about a page within a "paged" collection of items,
+	/// essential for rendering user interface widgets
+	/// for moving through pages, and optimized for
+	/// simple serialization.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Initialize using values of the <see cref="CurrentPage"/>
+	/// number and size, and the number of <see cref="TotalItems"/>
+	/// in the collection. All other values, accessible as the
+	/// public read-only properties of this struct, are calculated
+	/// and held by an internal lazy-initialized value.
+	/// </para>
+	/// <para>
+	/// When serialized this value contains a wealth of information.
+	/// When sent for deserialization, this value needs only the
+	/// page number, page size, and total number of items.
+	/// </para>
+	/// </remarks>
 	[CLSCompliant(true), Serializable, DataContract]
 	public struct PagingInfo
 	{
-		#region [ Immutable Public Fields ]
+		#region [ Private Field and Property backing the Public Read-Only Properties ]
 
+		/// <summary>
+		/// Backing field of the internal
+		/// <see cref="Calculator"/>,
+		/// also used as a semaphore
+		/// indicating whether calculated
+		/// values have been initialized.
+		/// </summary>
 		[NonSerialized]
 		private readonly PagingInfoCalculator calculator;
 
+		/// <summary>
+		/// Gets an internal reference to all of the values
+		/// calculated based on initial <see cref="CurrentPage"/>
+		/// and <see cref="TotalItems"/> values.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property does some clever sleight-of-hand
+		/// for the sake of optimizing serialization and deserialization.
+		/// When deserialized, only the <see cref="CurrentPage"/>
+		/// and <see cref="TotalItems"/> are required, then other
+		/// values are calculated once into a "state" object.
+		/// </para>
+		/// <para>
+		/// Internally, the first access of this property
+		/// also has the effect of replacing the parent
+		/// <see cref="PagingInfo"/> value.  It's a "lazy"
+		/// initialization optimized for <see cref="ValueType"/>
+		/// requiring this serialization feature.
+		/// </para>
+		/// <para>
+		/// This property backs all of the serialized public
+		/// read-only properties of <see cref="PagingInfo"/>.
+		/// </para>
+		/// </remarks>
 		private PagingInfoCalculator Calculator
 		{
 			get
@@ -34,14 +90,29 @@
 				// TotalItems are required, then other values
 				// are calculated once into a "state" object.
 				PagingInfoCalculator newCalculator = new PagingInfoCalculator(this.CurrentPage, this.TotalItems);
+
+				// Having initialized the values,
+				// replace the original PagingInfo
+				// with a fully-initialized value.
 				this = new PagingInfo(newCalculator);
+
 				return newCalculator;
 			}
 		}
 
+		#endregion
+
+		#region [ Immutable Public Fields CurrentPage and TotalItems ]
+
+		/// <summary>
+		/// The current page number and size.
+		/// </summary>
 		[DataMember(IsRequired = true, Order = 0)]
 		public readonly PageNumberAndSize CurrentPage;
 
+		/// <summary>
+		/// The total number of items paged.
+		/// </summary>
 		[DataMember(IsRequired = true, Order = 1)]
 		public readonly int TotalItems;
 
@@ -50,10 +121,13 @@
 		#region [ Constructor Overloads ]
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// for having all of the items in a collection on a single page
+		/// as large as the number of <paramref name="totalItems"/>.
 		/// </summary>
 		/// <param name="totalItems">
-		/// 
+		/// The total number of items in the collection to be paged,
+		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
 		public PagingInfo(int totalItems)
 			: this(PageNumberAndSize.Unbounded, totalItems)
@@ -62,6 +136,20 @@
 				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// for pages of a fixed size between 1 and 255.
+		/// </summary>
+		/// <param name="pageNumber">
+		/// The requested page <see cref="PageNumberAndSize.Number"/>.
+		/// </param>
+		/// <param name="pageSize">
+		/// The requested page <see cref="PageNumberAndSize.Size"/>.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in the collection to be paged,
+		/// initial value for the immutable <see cref="TotalItems"/> field.
+		/// </param>
 		public PagingInfo(int pageNumber, byte pageSize, int totalItems)
 			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems)
 		{
@@ -79,7 +167,7 @@
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagingInfo"/> class
-		/// starting from a <see cref="PageNumberAndSize"/> value.
+		/// based on a given <see cref="PageNumberAndSize"/> value.
 		/// </summary>
 		/// <param name="requestedPage">
 		/// The requested page <see cref="PageNumberAndSize.Number"/>
@@ -89,8 +177,8 @@
 		/// as the number of <paramref name="totalItems"/>.
 		/// </param>
 		/// <param name="totalItems">
-		/// The total number of items on a paged list,
-		/// the initial value of <see cref="TotalItems"/>.
+		/// The total number of items in the collection to be paged,
+		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
 		public PagingInfo(PageNumberAndSize requestedPage, int totalItems)
 			: this(new PagingInfoCalculator(requestedPage, totalItems))
@@ -101,6 +189,19 @@
 				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// upon deserialization of another <see cref="PagingInfo"/> which
+		/// this one replaces, used for lazy initializtion by the internal
+		/// <see cref="Calculator"/> property.
+		/// </summary>
+		/// <param name="calculator">
+		/// A <see cref="PagingInfoCalculator"/> value initialized from
+		/// the <see cref="CurrentPage"/> and <see cref="TotalItems"/>
+		/// values of a <see cref="PagingInfo"/> value to be replaced
+		/// by this new instance. To understand how this works,
+		/// refer to the <see cref="Calculator"/> property.
+		/// </param>
 		private PagingInfo(PagingInfoCalculator calculator)
 		{
 			this.CurrentPage = calculator.CurrentPage;

@@ -11,7 +11,7 @@
 	/// </summary>
 	/// <remarks>
 	/// A zero-based index value is accessible
-	/// via the <see cref="Index"/> proiperty.
+	/// via the <see cref="Index"/> property.
 	/// </remarks>
 	[CLSCompliant(true), Serializable, DataContract]
 	public struct PageNumberAndSize : IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
@@ -19,26 +19,28 @@
 		#region [ Constants and Static ReadOnly Fields ]
 
 		/// <summary>
-		/// The lowest allowed value of a one-based ordinal number.
+		/// The lowest allowed value of a one-based ordinal number: one.
 		/// </summary>
 		public const int FirstPageNumber = 1;
 
 		/// <summary>
 		/// The default value for the <see cref="Size"/>
-		/// of a page within a "paged" collection of items.
+		/// of a page within a "paged" collection of items: ten.
 		/// </summary>
-		internal const byte DefaultPageSize = 10;
+		public const byte DefaultPageSize = 10;
 
 		/// <summary>
 		/// The lowest allowed value for the <see cref="Size"/>
-		/// of a page within a "paged" collection of items.
+		/// of a page within a "paged" collection of items: one.
+		/// Zero may be used to indicate an <see cref="Unbounded"/>
+		/// value, with all items in the collection on a single page.
 		/// </summary>
-		internal const byte MinimumPageSize = 1;
+		public const byte MinimumPageSize = 1;
 
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize"/>
 		/// with its <see cref="Number"/> set to the value
-		/// of <see cref="FirstPageNumber"/> and its
+		/// of <see cref="FirstPageNumber"/> (one) and its
 		/// <see cref="Size"/> set to a default value of ten.
 		/// </summary>
 		public static readonly PageNumberAndSize Default
@@ -46,8 +48,13 @@
 
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize"/>
-		/// with its <see cref="Number"/> and <see cref="Size"/>
-		/// values set to indicate no paging.
+		/// with its <see cref="Number"/> equal to
+		/// <see cref="FirstPageNumber"/>
+		/// and <see cref="Size"/> of zero,
+		/// to indicate no paging. This value
+		/// represents listing all items on a single
+		/// page whose size is the total number
+		/// of items in the collection.
 		/// </summary>
 		/// <remarks>
 		/// There is a risk of division by zero when using this value,
@@ -58,7 +65,7 @@
 
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize"/>
-		/// which is not valid, indicating an unspecifed value.
+		/// which is not valid, indicating an unspecified value.
 		/// </summary>
 		public static readonly PageNumberAndSize Empty
 			= new PageNumberAndSize();
@@ -72,25 +79,42 @@
 		/// within a "paged" collection of items.
 		/// </summary>
 		/// <remarks>
-		/// This is not a zero-based index,
-		/// this is a one-based ordinal like
+		/// <para>
+		/// This is not a zero-based index!
+		/// This is a one-based ordinal like
 		/// usage of natural numbers in
 		/// human speech, so the first page
 		/// is "page one."  If the zero-based
 		/// index is needed, use the
 		/// <see cref="Index"/> property
 		/// or subtract one from this value.
+		/// </para>
+		/// <para>
+		/// If <see cref="IsUnbounded"/> is
+		/// <c>true</c>, this value will be
+		/// <see cref="FirstPageNumber"/>.
+		/// </para>
+		/// <para>
+		/// If <see cref="IsValid"/> is
+		/// <c>false</c>, this value will be
+		/// zero and <see cref="Index"/>
+		/// will equal negative one.
+		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = true, Order = 0)]
 		public readonly int Number;
 
 		/// <summary>
 		/// The number of items on each page
-		/// within a "paged" collection of items.
+		/// within a "paged" collection of items,
+		/// or zero to indicate an <see cref="Unbounded"/>
+		/// single page with all items.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// If <see cref="IsUnbounded"/> is
 		/// <c>true</c>, this value will be zero.
+		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = true, Order = 1)]
 		public readonly byte Size;
@@ -100,10 +124,14 @@
 		#region [ Constructor Overloads ]
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
+		/// using the <see cref="DefaultPageSize"/>.
 		/// </summary>
 		/// <param name="number">
-		/// 
+		/// A one-based ordinal position of a page
+		/// within a "paged" collection of items,
+		/// initial value of the immutable
+		/// <see cref="Number"/> field.
 		/// </param>
 		public PageNumberAndSize(int number)
 			: this(number, DefaultPageSize)
@@ -113,6 +141,22 @@
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
+		/// for a page size between 1 and 255.
+		/// </summary>
+		/// <param name="number">
+		/// A one-based ordinal position of a page
+		/// within a "paged" collection of items,
+		/// initial value of the immutable
+		/// <see cref="Number"/> field.
+		/// </param>
+		/// <param name="size">
+		/// The number of items on each page
+		/// within a "paged" collection of items,
+		/// initial value of the immutable
+		/// <see cref="Size"/> field.
+		/// </param>
 		public PageNumberAndSize(int number, byte size)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
@@ -142,6 +186,17 @@
 			this.Size = size;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
+		/// for the static using the <see cref="Unbounded"/> value, having a
+		/// <see cref="Number"/> equal to <see cref="FirstPageNumber"/>
+		/// and <see cref="Size"/> of zero.
+		/// </summary>
+		/// <param name="unbounded">
+		/// Always sent as <c>true</c> by the static
+		/// <see cref="Unbounded"/> initializer. Would
+		/// other wise create a value equal to <see cref="Empty"/>.
+		/// </param>
 		private PageNumberAndSize(bool unbounded)
 		{
 			// This private constructor exists only for the
@@ -200,6 +255,7 @@
 		/// values are valid.
 		/// </summary>
 		////	[DataMember(IsRequired = false, Order = 5)]
+		////	[NonSerialized] // (this is applicable only to fields, not properties)
 		public bool IsValid
 		{
 			get
@@ -214,87 +270,7 @@
 
 		#endregion
 
-		// TODO: Override implicit operators for comparing PageNumber to Int32.
-		// TODO: Test JSON Serializability, test ToString();
-		/*
-			public static implicit operator PageNumber(int value)
-			{
-				return new PageNumber(value);
-			}
-
-			public static implicit operator int(PageNumber value)
-			{
-				return value.Number;
-			}
-
-			bool IEquatable<int>.Equals(int other)
-			{
-				return this.Number.Equals(other);
-			}
-		*/
-
-		#region [ Public Implementation of IComparable<PageNumberAndSize> ]
-
-		public int CompareTo(PageNumberAndSize other)
-		{
-			int thisComposite = this.Size * this.Number;
-			int otherComposite = other.Size * other.Number;
-
-			return thisComposite.CompareTo(otherComposite);
-		}
-
-		#endregion
-
-		#region [ Public Equality Overrides for Memory Optimization ]
-
-		public override string ToString()
-		{
-			return string.Format("Page[Number={0},Size={1}]", this.Number, this.Size);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		public bool Equals(PageNumberAndSize other)
-		{
-			return (this.Number == other.Number) && (this.Size == other.Size);
-		}
-
-		/// <summary>
-		/// Indicates whether this instance
-		/// and a specified object are equal.
-		/// </summary>
-		/// <returns>
-		/// <c>true</c> if <paramref name="obj"/>
-		/// and this instance are the same type
-		/// and represent the same value;
-		/// otherwise, <c>false</c>.
-		/// </returns>
-		/// <param name="obj">
-		/// The object to compare with the current instance.
-		/// </param>
-		public override bool Equals(object obj)
-		{
-			if (obj == null) { return false; }
-
-			// ReSharper disable once ConvertIfStatementToReturnStatement
-			if (obj.GetType() != this.GetType()) { return false; }
-
-			return this.Equals((PageNumberAndSize)obj);
-		}
-
-		/// <summary>
-		/// Returns the hash code for this instance.
-		/// </summary>
-		/// <returns>
-		/// A 32-bit signed integer that is the hash code for this instance.
-		/// </returns>
-		public override int GetHashCode()
-		{
-			return this.Number.GetHashCode() + this.Size.GetHashCode();
-		}
+		#region [ Public Static Overrides of Equality Operators ]
 
 		/// <summary>
 		/// 
@@ -320,7 +296,115 @@
 
 		#endregion
 
-		#region [ Explicit Implementation of IEquatable<ITenantIdentifier> ]
+		// TODO: Test ToString
+		public override string ToString()
+		{
+			return string.Format("Page[Number={0},Size={1}]", this.Number, this.Size);
+		}
+
+		// TODO: Override implicit operators for comparing PageNumber to Int32.
+		/*
+			public static implicit operator PageNumber(int value)
+			{
+				return new PageNumber(value);
+			}
+
+			public static implicit operator int(PageNumber value)
+			{
+				return value.Number;
+			}
+
+			bool IEquatable<int>.Equals(int other)
+			{
+				return this.Number.Equals(other);
+			}
+		*/
+
+		#region [ Public Equality Overrides for Memory Optimization ]
+
+		/// <summary>
+		/// Indicates whether this instance
+		/// and a specified object are equal.
+		/// </summary>
+		/// <returns>
+		/// <c>true</c> if <paramref name="obj"/>
+		/// and this instance are the same type
+		/// and represent the same value;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		/// <param name="obj">
+		/// The object to compare with the current instance.
+		/// </param>
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+
+			// ReSharper disable once ConvertIfStatementToReturnStatement
+			if (obj.GetType() != this.GetType())
+			{
+				return false;
+			}
+
+			return this.Equals((PageNumberAndSize)obj);
+		}
+
+		/// <summary>
+		/// Returns the hash code for this instance.
+		/// </summary>
+		/// <returns>
+		/// A 32-bit signed integer that is the hash code for this instance.
+		/// </returns>
+		public override int GetHashCode()
+		{
+			return this.Number.GetHashCode() + this.Size.GetHashCode();
+		}
+
+		#endregion
+
+		#region [ Implementation of IComparable<PageNumberAndSize> and IEquatable<ITenantIdentifier> ]
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public int CompareTo(PageNumberAndSize other)
+		{
+			int thisComposite = this.Size * this.Number;
+			int otherComposite = other.Size * other.Number;
+
+			return thisComposite.CompareTo(otherComposite);
+		}
+
+		/// <summary>
+		/// Indicates whether this value and another
+		/// specified <see cref="PageNumberAndSize"/>
+		/// value are equal.
+		/// </summary>
+		/// <param name="other">
+		/// The <see cref="PageNumberAndSize"/> value
+		/// to compare with the current value.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="other"/> and this
+		/// value have the same <see cref="Number"/> and
+		/// <see cref="Size"/> values; otherwise, <c>false</c>.
+		/// </returns>
+		public bool Equals(PageNumberAndSize other)
+		{
+			return (this.Number == other.Number) && (this.Size == other.Size);
+		}
+
+		int IComparable<PageNumberAndSize>.CompareTo(PageNumberAndSize other)
+		{
+			// Return the public method.
+			// Using an explicit implementation is a way
+			// to avoid accidental boxing or unboxing.
+			return this.CompareTo(other);
+		}
 
 		bool IEquatable<PageNumberAndSize>.Equals(PageNumberAndSize other)
 		{
