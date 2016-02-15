@@ -95,7 +95,7 @@
 		/// <see cref="FirstPageNumber"/>.
 		/// </para>
 		/// <para>
-		/// If <see cref="IsValid"/> is
+		/// If <see cref="HasValue"/> is
 		/// <c>false</c>, this value will be
 		/// zero and <see cref="Index"/>
 		/// will equal negative one.
@@ -225,7 +225,7 @@
 		/// matching that of the <see cref="Empty"/> value,
 		/// is one less than zero.
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 3)]
+		[DataMember(IsRequired = false, Order = 2)]
 		public int Index
 		{
 			get { return this.Number - 1; }
@@ -243,7 +243,7 @@
 		/// is a risk of division by zero because the
 		/// <see cref="Size"/> value is zero.
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 4)]
+		[DataMember(IsRequired = false, Order = 3)]
 		public bool IsUnbounded
 		{
 			get { return (this.Size == byte.MinValue) && (this.Number == FirstPageNumber); }
@@ -254,9 +254,8 @@
 		/// <see cref="Number"/> and <see cref="Size"/>
 		/// values are valid.
 		/// </summary>
-		////	[DataMember(IsRequired = false, Order = 5)]
 		////	[NonSerialized] // (this is applicable only to fields, not properties)
-		public bool IsValid
+		public bool HasValue
 		{
 			get
 			{

@@ -17,7 +17,7 @@
 				string serializedPage = JsonConvert.SerializeObject(page);
 
 				Assert.AreEqual(
-					"{\"Number\":7,\"Size\":20,\"Index\":6,\"IsUnbounded\":false}", // ,\"IsValid\":true
+					"{\"Number\":7,\"Size\":20,\"Index\":6,\"IsUnbounded\":false}", // ,\"HasValue\":true
 					serializedPage);
 			}
 
@@ -27,7 +27,7 @@
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Unbounded);
 
 				Assert.AreEqual(
-					"{\"Number\":1,\"Size\":0,\"Index\":0,\"IsUnbounded\":true}", // ,\"IsValid\":true
+					"{\"Number\":1,\"Size\":0,\"Index\":0,\"IsUnbounded\":true}", // ,\"HasValue\":true
 					serializedPage);
 			}
 
@@ -37,7 +37,7 @@
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Empty);
 
 				Assert.AreEqual(
-					"{\"Number\":0,\"Size\":0,\"Index\":-1,\"IsUnbounded\":false}", // ,\"IsValid\":false
+					"{\"Number\":0,\"Size\":0,\"Index\":-1,\"IsUnbounded\":false}", // ,\"HasValue\":false
 					serializedPage);
 			}
 
@@ -58,7 +58,7 @@
 				PageNumberAndSize page = new PageNumberAndSize(7, 20);
 				PageNumberAndSize deserializedPage
 					= JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":7,\"Size\":20,\"Index\":1111111,\"IsUnbounded\":true}"); // ,\"IsValid\":false
+						"{\"Number\":7,\"Size\":20,\"Index\":1111111,\"IsUnbounded\":true}"); // ,\"HasValue\":false
 
 				AssertEquality(page, deserializedPage);
 			}
@@ -70,7 +70,7 @@
 					= JsonConvert.DeserializeObject<PageNumberAndSize>(
 						"{\"Number\":-7,\"Size\":10}");
 
-				Assert.IsFalse(deserializedPage.IsValid);
+				Assert.IsFalse(deserializedPage.HasValue);
 				Assert.IsFalse(deserializedPage.IsUnbounded);
 			}
 
@@ -110,12 +110,12 @@
 			Assert.AreEqual(expected.Size, actual.Size);
 			Assert.AreEqual(expected.Index, actual.Index);
 			Assert.AreEqual(expected.IsUnbounded, actual.IsUnbounded);
-			Assert.AreEqual(expected.IsValid, actual.IsValid);
+			Assert.AreEqual(expected.HasValue, actual.HasValue);
 		}
 
 		internal static void AssertIsEmpty(PageNumberAndSize page)
 		{
-			Assert.IsFalse(page.IsValid);
+			Assert.IsFalse(page.HasValue);
 			Assert.IsFalse(page.IsUnbounded);
 			Assert.AreEqual(byte.MinValue, page.Size);
 			Assert.AreEqual(0, page.Number);
@@ -124,7 +124,7 @@
 
 		internal static void AssertIsFirstPage(PageNumberAndSize page)
 		{
-			Assert.IsTrue(page.IsValid);
+			Assert.IsTrue(page.HasValue);
 			Assert.GreaterOrEqual(page.Size, byte.MinValue);
 			Assert.AreEqual(PageNumberAndSize.FirstPageNumber, page.Number);
 			Assert.AreEqual(0, page.Index);

@@ -1,12 +1,10 @@
 ﻿namespace MiscCorLib.Collections
 {
-	using System;
-	using Newtonsoft.Json;
 
 	using NUnit.Framework;
 
 	[TestFixture]
-	public sealed class PagingInfoTests
+	public sealed partial class PagingInfoTests
 	{
 		[TestFixture]
 		public sealed class DefaultValue
@@ -143,160 +141,6 @@
 				Assert.AreEqual(ZeroTotalItems, this.unboundedPagingInfo.TotalItems, "TotalItems");
 				Assert.AreEqual(ZeroTotalItems, this.unboundedPagingInfo.ItemCount, "ItemCount");
 				Assert.AreEqual(1, this.unboundedPagingInfo.TotalPages);
-			}
-		}
-
-		[TestFixture]
-		public sealed class JsonNetSerialization
-		{
-			private const Formatting DefaultFormatting = Formatting.Indented;
-
-			private readonly JsonSerializerSettings settings;
-
-			public JsonNetSerialization()
-			{
-				JsonSerializerSettings newSettings = new JsonSerializerSettings();
-
-				newSettings.Formatting = DefaultFormatting;
-
-				this.settings = newSettings;
-			}
-
-			[Test]
-			public void Serializes_All_Properties()
-			{
-				PagingInfo pagingInfo = new PagingInfo(7, 20, 1138);
-				string serializedPagingInfo = JsonConvert.SerializeObject(pagingInfo, DefaultFormatting, this.settings);
-				const string expectedSerialization = @"{
-  ""CurrentPage"": {
-    ""Number"": 7,
-    ""Size"": 20,
-    ""Index"": 6,
-    ""IsUnbounded"": false
-  },
-  ""TotalItems"": 1138,
-  ""TotalPages"": 57,
-  ""FirstItemNumber"": 121,
-  ""LastItemNumber"": 140,
-  ""FirstItemIndex"": 120,
-  ""LastItemIndex"": 139,
-  ""ItemCount"": 20,
-  ""NextPage"": {
-    ""Number"": 8,
-    ""Size"": 20,
-    ""Index"": 7,
-    ""IsUnbounded"": false
-  },
-  ""PreviousPage"": {
-    ""Number"": 6,
-    ""Size"": 20,
-    ""Index"": 5,
-    ""IsUnbounded"": false
-  },
-  ""FirstPage"": {
-    ""Number"": 1,
-    ""Size"": 20,
-    ""Index"": 0,
-    ""IsUnbounded"": false
-  },
-  ""LastPage"": {
-    ""Number"": 57,
-    ""Size"": 20,
-    ""Index"": 56,
-    ""IsUnbounded"": false
-  },
-  ""IsFirstPage"": false,
-  ""IsLastPage"": false
-}";
-
-				Console.WriteLine(serializedPagingInfo);
-
-				Assert.AreEqual(expectedSerialization,serializedPagingInfo);
-			}
-
-			[Test]
-			public void Serializes_Unbounded_Value()
-			{
-				PagingInfo pagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 1138);
-				string serializedPagingInfo = JsonConvert.SerializeObject(pagingInfo, DefaultFormatting, this.settings);
-
-				Assert.AreEqual(
-					"{\"Number\":1,\"Size\":0,\"Index\":0,\"IsUnbounded\":true}", // ,\"IsValid\":true
-					serializedPagingInfo);
-			}
-
-			[Test]
-			public void Serializes_Empty_Value()
-			{
-				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Empty);
-
-				Assert.AreEqual(
-					"{\"Number\":0,\"Size\":0,\"Index\":-1,\"IsUnbounded\":false}", // ,\"IsValid\":false
-					serializedPage);
-			}
-
-			[Test]
-			public void Deserializes_From_Minimal_Specification()
-			{
-				PagingInfo expectedPagingInfo = new PagingInfo(7, PageNumberAndSize.DefaultPageSize, 1138);
-				PagingInfo deserializedPagingInfo
-					= JsonConvert.DeserializeObject<PagingInfo>(
-						"{\"CurrentPage\":{\"Number\":7,\"Size\":10},\"TotalItems\":1138}", this.settings);
-
-				//Assert.AreEqual(expectedPagingInfo, deserializedPagingInfo);
-
-				Assert.AreEqual(expectedPagingInfo.CurrentPage.Number, deserializedPagingInfo.CurrentPage.Number);
-				Assert.AreEqual(expectedPagingInfo.CurrentPage.Size, deserializedPagingInfo.CurrentPage.Size);
-				Assert.AreEqual(expectedPagingInfo.TotalItems, deserializedPagingInfo.TotalItems);
-				Assert.AreEqual(expectedPagingInfo.TotalPages, deserializedPagingInfo.TotalPages);
-			}
-
-			/*
-			[Test]
-			public void Deserializes_And_Ignores_Inconsistency_From_Excessive_Specification()
-			{
-				PageNumberAndSize page = new PageNumberAndSize(7, 20);
-				PageNumberAndSize deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":7,\"Size\":20,\"Index\":1111111,\"IsUnbounded\":true}"); // ,\"IsValid\":false
-
-				AssertEquality(page, deserializedPage);
-			}
-			*/
-
-			[Test]
-			public void Deserializes_As_Invalid_From_Negative_Page_Number()
-			{
-				PageNumberAndSize deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":-7,\"Size\":10}");
-
-				Assert.IsFalse(deserializedPage.IsValid);
-				Assert.IsFalse(deserializedPage.IsUnbounded);
-			}
-
-			[Test]
-			public void Does_Not_Deserialize_From_Negative_Page_Size()
-			{
-				Assert.Throws<JsonSerializationException>(
-					() => JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":0,\"Size\":-1}"));
-			}
-
-			[Test]
-			public void Does_Not_Deserialize_From_Omitted_Page_Number()
-			{
-				Assert.Throws<JsonSerializationException>(
-					() => JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Size\":20}"));
-			}
-
-			[Test]
-			public void Does_Not_Deserialize_From_Omitted_Page_Size()
-			{
-				Assert.Throws<JsonSerializationException>(
-					() => JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":0}"));
 			}
 		}
 	}

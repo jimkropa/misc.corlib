@@ -21,6 +21,8 @@
 	{
 		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
 
+		internal readonly bool CalculateAllPagesAndItemNumbers;
+
 		public readonly PageNumberAndSize CurrentPage;
 		public readonly int TotalItems;
 
@@ -34,37 +36,17 @@
 		public readonly PageNumberAndSize LastPage;
 		public readonly bool IsFirstPage;
 		public readonly bool IsLastPage;
+
 		public readonly IReadOnlyList<PageNumberAndItemNumbers> Pages;
 
-		/*
-		internal IReadOnlyList<PageNumberAndItemNumbers> Pages
-		{
-			get
-			{
-				// ReSharper disable once InvertIf
-				if (this.pages == null)
-				{
-					List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
-					for (int pageNumber = this.FirstPage.Number; pageNumber <= this.LastPage.Number; pageNumber++)
-					{
-						list.Add(new PageNumberAndItemNumbers(pageNumber, this.CurrentPage.Size, this.TotalItems));
-					}
-
-					this.pages = list;
-				}
-
-				return this.pages;
-			}
-		}
-		*/
-
-		internal PagingInfoCalculator(PageNumberAndSize currentPage, int totalItems)
+		internal PagingInfoCalculator(PageNumberAndSize currentPage, int totalItems, bool calculateAllPagesAndItemNumbers)
 		{
 			Contract.Requires<ArgumentException>(
-				currentPage.IsValid, "The current page must have a value. \"Unbounded\" is an acceptable value.");
+				currentPage.HasValue, "The current page must have a value. \"Unbounded\" is an acceptable value.");
 			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!"); 
-			
+				totalItems >= 0, "The number of items in the list must not be negative!");
+
+			this.CalculateAllPagesAndItemNumbers = calculateAllPagesAndItemNumbers;
 			this.CurrentPage = currentPage;
 			this.TotalItems = totalItems;
 
@@ -87,11 +69,15 @@
 				this.NextPage = PageNumberAndSize.Empty;
 				this.FirstPage = this.CurrentPage;
 				this.LastPage = this.CurrentPage;
-				this.Pages = new List<PageNumberAndItemNumbers>
+
+				if (this.CalculateAllPagesAndItemNumbers)
 				{
-					new PageNumberAndItemNumbers(
-						this.CurrentPage.Number, this.CurrentPage.Size, this.TotalItems)
-				};
+					
+				}
+				else
+				{
+					this.Pages = null;
+				}
 			}
 			else
 			{
@@ -99,24 +85,7 @@
 
 				if ((this.TotalItems > 0) && (this.CurrentPage.Size > 0))
 				{
-					// This calculation is part of the calculation of total pages,
-					// which will produce an invalid value if the number of total items
-					// plus the page size exceeds the capacity of a 32-bit integer.
-					int extendedTotalItems = this.TotalItems + this.CurrentPage.Size - 1;
 
-					// CodeContracts gives a warning here, but that's
-					// expected in this extraordinary situation.
-					if (extendedTotalItems <= 0)
-					{
-						throw new OverflowException(
-							"There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
-					}
-
-					// There is no division by zero here, due to validation and logic
-					// above and within the PageNumberAndSize struct itself.
-					// The method of calculating total pages is shown here:
-					// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
-					this.TotalPages = extendedTotalItems / this.CurrentPage.Size;
 
 					// Handle the situation if someone turns past the last page.
 					if (this.CurrentPage.Number > this.TotalPages)
@@ -192,9 +161,13 @@
 			}
 		}
 
-		private static IReadOnlyList<PageNumberAndItemNumbers> CreatePageItemNumbersList(
-			byte pageSize, int totalPages, int totalItems)
+		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
+			byte pageSize, int totalItems, int totalPages)
 		{
+			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
+			Contract.Requires<ArgumentOutOfRangeException>(totalItems > 0);
+			Contract.Requires<ArgumentOutOfRangeException>(totalPages > 0);
+
 			List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
 			for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
 			{
@@ -202,6 +175,64 @@
 			}
 
 			return list;
+		}
+
+		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
+			byte pageSize, int totalItems)
+		{
+			if ((pageSize >= PageNumberAndSize.MinimumPageSize) && (totalItems > 0))
+			{
+				return AllPagesAndItemNumbers(pageSize, totalItems, CalculateTotalPages(pageSize, totalItems));
+			}
+
+			if (pageSize >= PageNumberAndSize.MinimumPageSize)
+			{
+				// This is an empty list of a fixed size.
+				return new List<PageNumberAndItemNumbers>
+				{
+					new PageNumberAndItemNumbers(
+						PageNumberAndSize.FirstPageNumber, pageSize, totalItems)
+				};
+			}
+
+			// The one unbounded
+			return new List<PageNumberAndItemNumbers>
+					{
+						new PageNumberAndItemNumbers(
+							this.CurrentPage.Number, this.CurrentPage.Size, this.TotalItems)
+					};
+		}
+
+
+		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
+			PagingInfo pagingInfo)
+		{
+			return AllPagesAndItemNumbers(pagingInfo.CurrentPage.Size, pagingInfo.TotalItems);
+		}
+
+		internal static int CalculateTotalPages(byte pageSize, int totalItems)
+		{
+			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
+			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
+
+			// This calculation is part of the calculation of total pages,
+			// which will produce an invalid value if the number of total items
+			// plus the page size exceeds the capacity of a 32-bit integer.
+			int extendedTotalItems = totalItems + pageSize - 1;
+
+			// CodeContracts gives a warning here, but that's
+			// expected in this extraordinary situation.
+			if (extendedTotalItems <= 0)
+			{
+				throw new OverflowException(
+					"There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
+			}
+
+			// There is no division by zero here, due to validation and logic
+			// above and within the PageNumberAndSize struct itself.
+			// The method of calculating total pages is shown here:
+			// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
+			return extendedTotalItems / pageSize;
 		}
 	}
 }

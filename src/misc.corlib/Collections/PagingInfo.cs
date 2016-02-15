@@ -36,6 +36,11 @@
 	{
 		#region [ Private Field and Property backing the Public Read-Only Properties ]
 
+		private const bool DefaultCalculateAllPagesAndItemNumbers = false;
+
+		[NonSerialized]
+		private readonly bool calculateAllPagesAndItemNumbers;
+
 		/// <summary>
 		/// Backing field of the internal
 		/// <see cref="Calculator"/>,
@@ -75,12 +80,12 @@
 		{
 			get
 			{
-				if (this.calculator.CurrentPage.IsValid)
+				if (this.calculator.CurrentPage.HasValue)
 				{
 					return this.calculator;
 				}
 
-				if (!this.CurrentPage.IsValid)
+				if (!this.CurrentPage.HasValue)
 				{
 					return PagingInfoCalculator.Empty;
 				}
@@ -130,7 +135,7 @@
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
-		public PagingInfo(int totalItems)
+		public PagingInfo(int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
 			: this(PageNumberAndSize.Unbounded, totalItems)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
@@ -151,8 +156,8 @@
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
-		public PagingInfo(int pageNumber, byte pageSize, int totalItems)
-			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems)
+		public PagingInfo(int pageNumber, byte pageSize, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
+			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems, calculateAllPagesAndItemNumbers)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
 				pageNumber >= PageNumberAndSize.FirstPageNumber,
@@ -181,11 +186,11 @@
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
-		public PagingInfo(PageNumberAndSize requestedPage, int totalItems)
-			: this(new PagingInfoCalculator(requestedPage, totalItems))
+		public PagingInfo(PageNumberAndSize requestedPage, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
+			: this(new PagingInfoCalculator(requestedPage, totalItems, calculateAllPagesAndItemNumbers))
 		{
 			Contract.Requires<ArgumentException>(
-				requestedPage.IsValid, "The current page must have a value. \"Unbounded\" is an acceptable value.");
+				requestedPage.HasValue, "The current page must have a value. \"Unbounded\" is an acceptable value.");
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
@@ -208,6 +213,7 @@
 			this.CurrentPage = calculator.CurrentPage;
 			this.TotalItems = calculator.TotalItems;
 			this.calculator = calculator;
+			this.calculateAllPagesAndItemNumbers = calculator.CalculateAllPagesAndItemNumbers;
 		}
 
 		#endregion
@@ -217,33 +223,37 @@
 		[DataMember(IsRequired = false, Order = 2)]
 		public int TotalPages { get { return this.Calculator.TotalPages; } }
 
+		[DataMember(IsRequired = false, Order = 12)]
+		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
+
+		[DataMember(IsRequired = false, Order = 13)]
+		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
+
 		[DataMember(IsRequired = false, Order = 3)]
 		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
 
 		[DataMember(IsRequired = false, Order = 4)]
 		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
 
-		/*
-			/// <summary>
-			/// Gets the zero-based index of an item within a "paged" collection of items,
-			/// equal to the value of <see cref="FirstItemNumber"/> minus one.
-			/// </summary>
-			[DataMember(IsRequired = false, Order = 5)]
-			public int FirstItemIndex
-			{
-				get { return this.FirstItemNumber - 1; }
-			}
+		/// <summary>
+		/// Gets the zero-based index of an item within a "paged" collection of items,
+		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
+		/// </summary>
+		[DataMember(IsRequired = false, Order = 5)]
+		public int FirstItemIndex
+		{
+			get { return this.FirstItemNumber - 1; }
+		}
 
-			/// <summary>
-			/// Gets the zero-based index of an item within a "paged" collection of items,
-			/// equal to the value of <see cref="LastItemNumber"/> minus one.
-			/// </summary>
-			[DataMember(IsRequired = false, Order = 6)]
-			public int LastItemIndex
-			{
-				get { return this.LastItemNumber - 1; }
-			}
-		*/
+		/// <summary>
+		/// Gets the zero-based index of an item within a "paged" collection of items,
+		/// equal to the value of <see cref="LastItemNumber"/> minus one.
+		/// </summary>
+		[DataMember(IsRequired = false, Order = 6)]
+		public int LastItemIndex
+		{
+			get { return this.LastItemNumber - 1; }
+		}
 
 		[DataMember(IsRequired = false, Order = 7)]
 		public int ItemCount { get { return this.Calculator.ItemCount; } }
@@ -260,14 +270,8 @@
 		[DataMember(IsRequired = false, Order = 11)]
 		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
 
-		[DataMember(IsRequired = false, Order = 12)]
-		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
-
-		[DataMember(IsRequired = false, Order = 13)]
-		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
-
-		[DataMember(IsRequired = false, Order = 14)]
-		public IReadOnlyList<PageNumberAndItemNumbers> Pages { get { return this.Calculator.Pages; } }
+		[DataMember(IsRequired = false, EmitDefaultValue = false, Order = 14)]
+		private IReadOnlyList<PageNumberAndItemNumbers> Pages { get { return this.Calculator.Pages; } }
 
 		#endregion
 

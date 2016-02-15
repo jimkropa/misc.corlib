@@ -67,6 +67,8 @@
     <Compile Include="Collections\Generic\ConvertStringsTests.cs" />
     <Compile Include="Collections\Generic\ConvertStructCollectionTests.cs" />
     <Compile Include="Collections\PageNumberAndSizeTests.cs" />
+    <Compile Include="Collections\PagingInfoTests-Serialization.cs" />
+    <Compile Include="Collections\PagingInfoTests-StringConstants.cs" />
     <Compile Include="Collections\PagingInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Cryptography\EncryptorTests.cs" />

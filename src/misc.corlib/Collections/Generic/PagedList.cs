@@ -37,7 +37,7 @@
 			/// </param>
 			public PagedList(PagingInfo pagingInfo)
 			{
-				Contract.Requires<ArgumentException>(pagingInfo.CurrentPage.IsValid);
+				Contract.Requires<ArgumentException>(pagingInfo.CurrentPage.HasValue);
 
 				this.pagingInfo = pagingInfo;
 			}
@@ -62,7 +62,7 @@
 		{
 			Contract.Requires<ArgumentNullException>(collection != null);
 			Contract.Requires<ArgumentException>(
-				pagingInfo.CurrentPage.IsValid,
+				pagingInfo.CurrentPage.HasValue,
 				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
 
 			int expectedCount = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;
@@ -95,7 +95,7 @@
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(capacity >= 0);
 			Contract.Requires<ArgumentException>(
-				pagingInfo.CurrentPage.IsValid,
+				pagingInfo.CurrentPage.HasValue,
 				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
 
 			int expectedCapacity = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;

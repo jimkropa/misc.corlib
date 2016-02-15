@@ -32,14 +32,14 @@
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
 
-			if (pageSize > 0)
+			if (pageSize >= PageNumberAndSize.MinimumPageSize)
 			{
 				this.PageNumber = pageNumber;
 				this.LastItemNumber = pageNumber * pageSize;
 				this.FirstItemNumber = this.LastItemNumber - pageSize + 1;
 
 				// Determine whether this is the last page.
-				if ((totalItems + pageSize - 1) / pageSize == this.PageNumber)
+				if (PagingInfoCalculator.CalculateTotalPages() == this.PageNumber)
 				{
 					this.LastItemNumber = totalItems;
 				}
