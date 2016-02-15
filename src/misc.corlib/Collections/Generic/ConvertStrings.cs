@@ -46,6 +46,38 @@ namespace MiscCorLib.Collections.Generic
 		public static readonly Predicate<string> IsNullOrWhiteSpace = string.IsNullOrWhiteSpace;
 
 		/// <summary>
+		/// Delegate contract for an optimization when
+		/// converting generic <see cref="ValueType"/>
+		/// values to string. The delegate signature matches
+		/// that of a "TryParse" method common to many
+		/// primitive <see cref="ValueType"/> classes, such as
+		/// <see cref="int.TryParse(string,out int)"/> from integers,
+		/// <see cref="DateTime.TryParse(string,out DateTime)"/>
+		/// from <see cref="DateTime"/>, or
+		/// <see cref="Guid.TryParse(string,out Guid)"/>
+		/// from <see cref="Guid"/>.
+		/// </summary>
+		/// <typeparam name="T">
+		/// A type of <see cref="ValueType"/> to parse from a string.
+		/// </typeparam>
+		/// <param name="s">
+		/// A string containing a <typeparamref name="T"/> value to convert.
+		/// </param>
+		/// <param name="result">
+		/// When this method returns, contains the <typeparamref name="T"/>
+		/// value equivalent of the string contained in <paramref name="s"/>
+		/// if the conversion succeeded, or the default value of
+		/// <typeparamref name="T"/> if the conversion failed.
+		/// This parameter is passed uninitialized; any value originally
+		/// supplied in <paramref name="result"/> will be overwritten.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="s"/> was
+		/// converted successfully; otherwise, <c>false</c>.
+		/// </returns>
+		public delegate bool TryParseFromString<T>(string s, out T result) where T : struct;
+
+		/// <summary>
 		/// Converts a string to a <see cref="ValueType"/>
 		/// of <typeparamref name="T"/>, optionally
 		/// suppressing exceptions in the conversion.
@@ -104,7 +136,7 @@ namespace MiscCorLib.Collections.Generic
 					return false;
 				}
 
-				result = (T) converted;
+				result = (T)converted;
 
 				return true;
 			}
@@ -148,38 +180,6 @@ namespace MiscCorLib.Collections.Generic
 				throw;
 			}
 		}
-
-		/// <summary>
-		/// Delegate contract for an optimization when
-		/// converting generic <see cref="ValueType"/>
-		/// values to string. The delegate signature matches
-		/// that of a "TryParse" method common to many
-		/// primitive <see cref="ValueType"/> classes, such as
-		/// <see cref="int.TryParse(string,out int)"/> from integers,
-		/// <see cref="DateTime.TryParse(string,out DateTime)"/>
-		/// from <see cref="DateTime"/>, or
-		/// <see cref="Guid.TryParse(string,out Guid)"/>
-		/// from <see cref="Guid"/>.
-		/// </summary>
-		/// <typeparam name="T">
-		/// A type of <see cref="ValueType"/> to parse from a string.
-		/// </typeparam>
-		/// <param name="s">
-		/// A string containing a <typeparamref name="T"/> value to convert.
-		/// </param>
-		/// <param name="result">
-		/// When this method returns, contains the <typeparamref name="T"/>
-		/// value equivalent of the string contained in <paramref name="s"/>
-		/// if the conversion succeeded, or the default value of
-		/// <typeparamref name="T"/> if the conversion failed.
-		/// This parameter is passed uninitialized; any value originally
-		/// supplied in <paramref name="result"/> will be overwritten.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if <paramref name="s"/> was
-		/// converted successfully; otherwise, <c>false</c>.
-		/// </returns>
-		public delegate bool TryParseFromString<T>(string s, out T result) where T : struct;
 
 		#endregion
 
@@ -283,7 +283,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -409,7 +409,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -570,7 +570,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>

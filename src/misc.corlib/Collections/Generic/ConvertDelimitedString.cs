@@ -26,7 +26,7 @@ namespace MiscCorLib.Collections.Generic
 		/// and from a delimited string, always a comma,
 		/// used by <see cref="string.Split(char[])"/>.
 		/// </summary>
-		public static readonly char[] DefaultStringSplitter = {','};
+		public static readonly char[] DefaultStringSplitter = { ',' };
 
 		#endregion
 
@@ -130,7 +130,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="ConvertStrings.TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -162,8 +162,8 @@ namespace MiscCorLib.Collections.Generic
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <param name="delimitedString">
-		/// A comma-delimited string containing
-		/// <typeparamref name="T"/> values to parse.
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
 		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
@@ -203,8 +203,8 @@ namespace MiscCorLib.Collections.Generic
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <param name="delimitedString">
-		/// A comma-delimited string containing
-		/// <typeparamref name="T"/> values to parse.
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
 		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
@@ -251,8 +251,8 @@ namespace MiscCorLib.Collections.Generic
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <param name="delimitedString">
-		/// A comma-delimited string containing
-		/// <typeparamref name="T"/> values to parse.
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
 		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
@@ -260,7 +260,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="ConvertStrings.TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -297,7 +297,10 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A comma-delimited string containing
+		/// <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
@@ -332,7 +335,10 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A comma-delimited string containing
+		/// <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="converter">
 		/// A <see cref="TypeConverter"/> to convert
 		/// strings to values of <typeparamref name="T"/>.
@@ -374,11 +380,14 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A comma-delimited string containing
+		/// <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="ConvertStrings.TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -410,13 +419,16 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
-		/// <param name="removeDuplicates">
-		/// Whether to remove duplicate items in the array returned.
-		/// Parameter is optional, default value is <c>false</c>.
+		/// <param name="delimitedString">
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
 		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
+		/// </param>
+		/// <param name="removeDuplicates">
+		/// Whether to remove duplicate items in the array returned.
+		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
 		/// Whether to throw any <see cref="FormatException"/>
@@ -449,7 +461,10 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
 		/// </param>
@@ -496,8 +511,8 @@ namespace MiscCorLib.Collections.Generic
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
 		/// <param name="delimitedString">
-		/// A comma-delimited string containing
-		/// <typeparamref name="T"/> values to parse.
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
 		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
@@ -505,7 +520,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="ConvertStrings.TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -542,7 +557,10 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A comma-delimited string containing
+		/// <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
@@ -577,7 +595,10 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A comma-delimited string containing
+		/// <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="converter">
 		/// A <see cref="TypeConverter"/> to convert
 		/// strings to values of <typeparamref name="T"/>.
@@ -619,11 +640,14 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A comma-delimited string containing
+		/// <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="ConvertStrings.TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -655,13 +679,16 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
-		/// <param name="removeDuplicates">
-		/// Whether to remove duplicate items in the array returned.
-		/// Parameter is optional, default value is <c>false</c>.
+		/// <param name="delimitedString">
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
 		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
+		/// </param>
+		/// <param name="removeDuplicates">
+		/// Whether to remove duplicate items in the array returned.
+		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
 		/// Whether to throw any <see cref="FormatException"/>
@@ -694,7 +721,10 @@ namespace MiscCorLib.Collections.Generic
 		/// The type of array to return, must
 		/// be a <see cref="ValueType"/>.
 		/// </typeparam>
-		/// <param name="delimitedString"></param>
+		/// <param name="delimitedString">
+		/// A <paramref name="separator"/>-delimited string
+		/// containing <typeparamref name="T"/> values to parse.
+		/// </param>
 		/// <param name="separator">
 		/// A string delimiter to use instead of a comma.
 		/// </param>
@@ -750,7 +780,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
 		/// <see cref="ConvertStrings.TryParseFromString{T}"/>
-		/// signature, for optimized type coversion
+		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
 		/// primitive <see cref="ValueType"/> classes.
 		/// </param>
@@ -790,8 +820,8 @@ namespace MiscCorLib.Collections.Generic
 			}
 
 			return separator.Length == 1
-				? delimitedString.Split(new[] {separator[0]}, StringSplitOptions.RemoveEmptyEntries)
-				: delimitedString.Split(new[] {separator}, StringSplitOptions.RemoveEmptyEntries);
+				? delimitedString.Split(new[] { separator[0] }, StringSplitOptions.RemoveEmptyEntries)
+				: delimitedString.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 		}
 	}
 }

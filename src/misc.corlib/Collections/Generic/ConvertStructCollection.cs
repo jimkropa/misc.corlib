@@ -2,6 +2,7 @@ namespace MiscCorLib.Collections.Generic
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics.Contracts;
 
 	/// <summary>
 	/// A set of static extension methods for converting generic
@@ -280,10 +281,7 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			if (string.IsNullOrWhiteSpace(separator))
-			{
-				
-			}
+			Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(separator));
 
 			return string.Join(
 				separator, collection.ToStringArray(toStringMethod, removeDuplicates));
