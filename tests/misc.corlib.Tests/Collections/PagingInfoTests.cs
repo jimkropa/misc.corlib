@@ -209,6 +209,8 @@
   ""IsLastPage"": false
 }";
 
+				Console.WriteLine(serializedPagingInfo);
+
 				Assert.AreEqual(expectedSerialization,serializedPagingInfo);
 			}
 
@@ -233,18 +235,23 @@
 					serializedPage);
 			}
 
-			/*
 			[Test]
 			public void Deserializes_From_Minimal_Specification()
 			{
-				PageNumberAndSize page = new PageNumberAndSize(7);
-				PageNumberAndSize deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndSize>(
-						"{\"Number\":7,\"Size\":10}");
+				PagingInfo expectedPagingInfo = new PagingInfo(7, PageNumberAndSize.DefaultPageSize, 1138);
+				PagingInfo deserializedPagingInfo
+					= JsonConvert.DeserializeObject<PagingInfo>(
+						"{\"CurrentPage\":{\"Number\":7,\"Size\":10},\"TotalItems\":1138}", this.settings);
 
-				AssertEquality(page, deserializedPage);
+				//Assert.AreEqual(expectedPagingInfo, deserializedPagingInfo);
+
+				Assert.AreEqual(expectedPagingInfo.CurrentPage.Number, deserializedPagingInfo.CurrentPage.Number);
+				Assert.AreEqual(expectedPagingInfo.CurrentPage.Size, deserializedPagingInfo.CurrentPage.Size);
+				Assert.AreEqual(expectedPagingInfo.TotalItems, deserializedPagingInfo.TotalItems);
+				Assert.AreEqual(expectedPagingInfo.TotalPages, deserializedPagingInfo.TotalPages);
 			}
 
+			/*
 			[Test]
 			public void Deserializes_And_Ignores_Inconsistency_From_Excessive_Specification()
 			{

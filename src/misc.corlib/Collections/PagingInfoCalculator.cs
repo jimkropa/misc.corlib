@@ -1,6 +1,7 @@
 ﻿namespace MiscCorLib.Collections
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
 
 	/// <summary>
@@ -33,6 +34,29 @@
 		public readonly PageNumberAndSize LastPage;
 		public readonly bool IsFirstPage;
 		public readonly bool IsLastPage;
+		public readonly IReadOnlyList<PageNumberAndItemNumbers> Pages;
+
+		/*
+		internal IReadOnlyList<PageNumberAndItemNumbers> Pages
+		{
+			get
+			{
+				// ReSharper disable once InvertIf
+				if (this.pages == null)
+				{
+					List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
+					for (int pageNumber = this.FirstPage.Number; pageNumber <= this.LastPage.Number; pageNumber++)
+					{
+						list.Add(new PageNumberAndItemNumbers(pageNumber, this.CurrentPage.Size, this.TotalItems));
+					}
+
+					this.pages = list;
+				}
+
+				return this.pages;
+			}
+		}
+		*/
 
 		internal PagingInfoCalculator(PageNumberAndSize currentPage, int totalItems)
 		{
@@ -63,6 +87,11 @@
 				this.NextPage = PageNumberAndSize.Empty;
 				this.FirstPage = this.CurrentPage;
 				this.LastPage = this.CurrentPage;
+				this.Pages = new List<PageNumberAndItemNumbers>
+				{
+					new PageNumberAndItemNumbers(
+						this.CurrentPage.Number, this.CurrentPage.Size, this.TotalItems)
+				};
 			}
 			else
 			{
@@ -133,6 +162,8 @@
 						this.NextPage = new PageNumberAndSize(
 							this.CurrentPage.Number + 1, this.CurrentPage.Size);
 					}
+
+					this.Pages = CreatePageItemNumbersList(this.CurrentPage.Size, this.TotalPages, this.TotalItems);
 				}
 				else
 				{
@@ -152,8 +183,25 @@
 					this.NextPage = PageNumberAndSize.Empty;
 					this.FirstPage = this.CurrentPage;
 					this.LastPage = this.CurrentPage;
+					this.Pages = new List<PageNumberAndItemNumbers>
+					{
+						new PageNumberAndItemNumbers(
+							this.CurrentPage.Number, this.CurrentPage.Size, this.TotalItems)
+					};
 				}
 			}
+		}
+
+		private static IReadOnlyList<PageNumberAndItemNumbers> CreatePageItemNumbersList(
+			byte pageSize, int totalPages, int totalItems)
+		{
+			List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
+			for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
+			{
+				list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems));
+			}
+
+			return list;
 		}
 	}
 }

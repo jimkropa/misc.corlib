@@ -1,6 +1,7 @@
 ﻿namespace MiscCorLib.Collections
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
 	using System.Runtime.Serialization;
 
@@ -222,25 +223,27 @@
 		[DataMember(IsRequired = false, Order = 4)]
 		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
 
-		/// <summary>
-		/// Gets the zero-based index of an item within a "paged" collection of items,
-		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
-		/// </summary>
-		[DataMember(IsRequired = false, Order = 5)]
-		public int FirstItemIndex
-		{
-			get { return this.FirstItemNumber - 1; }
-		}
+		/*
+			/// <summary>
+			/// Gets the zero-based index of an item within a "paged" collection of items,
+			/// equal to the value of <see cref="FirstItemNumber"/> minus one.
+			/// </summary>
+			[DataMember(IsRequired = false, Order = 5)]
+			public int FirstItemIndex
+			{
+				get { return this.FirstItemNumber - 1; }
+			}
 
-		/// <summary>
-		/// Gets the zero-based index of an item within a "paged" collection of items,
-		/// equal to the value of <see cref="LastItemNumber"/> minus one.
-		/// </summary>
-		[DataMember(IsRequired = false, Order = 6)]
-		public int LastItemIndex
-		{
-			get { return this.LastItemNumber - 1; }
-		}
+			/// <summary>
+			/// Gets the zero-based index of an item within a "paged" collection of items,
+			/// equal to the value of <see cref="LastItemNumber"/> minus one.
+			/// </summary>
+			[DataMember(IsRequired = false, Order = 6)]
+			public int LastItemIndex
+			{
+				get { return this.LastItemNumber - 1; }
+			}
+		*/
 
 		[DataMember(IsRequired = false, Order = 7)]
 		public int ItemCount { get { return this.Calculator.ItemCount; } }
@@ -262,6 +265,9 @@
 
 		[DataMember(IsRequired = false, Order = 13)]
 		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
+
+		[DataMember(IsRequired = false, Order = 14)]
+		public IReadOnlyList<PageNumberAndItemNumbers> Pages { get { return this.Calculator.Pages; } }
 
 		#endregion
 

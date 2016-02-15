@@ -270,28 +270,132 @@
 
 		#endregion
 
-		#region [ Public Static Overrides of Equality Operators ]
+		#region [ Public Static Overrides of Comparison and Equality Operators ]
 
 		/// <summary>
-		/// 
+		/// Returns a value that indicates whether a specified
+		/// <see cref="PageNumberAndSize"/> value is less than
+		/// another specified <see cref="PageNumberAndSize"/> value.
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <returns></returns>
-		public static bool operator ==(PageNumberAndSize x, PageNumberAndSize y)
+		/// <param name="left">
+		/// The first value to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second value to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/> is less than
+		/// <paramref name="right"/>; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool operator <(PageNumberAndSize left, PageNumberAndSize right)
 		{
-			return x.Equals(y);
+			return left.CreateComposite() < right.CreateComposite();
 		}
 
 		/// <summary>
-		/// 
+		/// Returns a value that indicates whether a specified
+		/// <see cref="PageNumberAndSize"/> value is greater than
+		/// another specified <see cref="PageNumberAndSize"/> value.
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <returns></returns>
-		public static bool operator !=(PageNumberAndSize x, PageNumberAndSize y)
+		/// <param name="left">
+		/// The first value to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second value to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/> is greater than
+		/// <paramref name="right"/>; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool operator >(PageNumberAndSize left, PageNumberAndSize right)
 		{
-			return !x.Equals(y);
+			return left.CreateComposite() > right.CreateComposite();
+		}
+
+		/// <summary>
+		/// Returns a value that indicates whether a specified
+		/// <see cref="PageNumberAndSize"/> value
+		/// is less than or equal to another specified
+		/// <see cref="PageNumberAndSize"/> value.
+		/// </summary>
+		/// <param name="left">
+		/// The first value to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second value to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/> is
+		/// less than or equal to <paramref name="right"/>;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		public static bool operator <=(PageNumberAndSize left, PageNumberAndSize right)
+		{
+			return left.CreateComposite() <= right.CreateComposite();
+		}
+
+		/// <summary>
+		/// Returns a value that indicates whether a specified
+		/// <see cref="PageNumberAndSize"/> value
+		/// is greater than or equal to another specified
+		/// <see cref="PageNumberAndSize"/> value.
+		/// </summary>
+		/// <param name="left">
+		/// The first value to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second value to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/> is
+		/// greater than or equal to <paramref name="right"/>;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		public static bool operator >=(PageNumberAndSize left, PageNumberAndSize right)
+		{
+			return left.CreateComposite() >= right.CreateComposite();
+		}
+
+		/// <summary>
+		/// Indicates whether the values of two
+		/// specified <see cref="PageNumberAndSize"/>
+		/// objects are equal.
+		/// </summary>
+		/// <param name="left">
+		/// The first object to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second object to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/>
+		/// and <paramref name="right"/> are equal;
+		/// otherwise <c>false</c>.
+		/// </returns>
+		public static bool operator ==(PageNumberAndSize left, PageNumberAndSize right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		/// Indicates whether the values of two
+		/// specified <see cref="PageNumberAndSize"/>
+		/// objects are not equal.
+		/// </summary>
+		/// <param name="left">
+		/// The first object to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second object to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/>
+		/// and <paramref name="right"/> are not equal;
+		/// otherwise <c>false</c>.
+		/// </returns>
+		public static bool operator !=(PageNumberAndSize left, PageNumberAndSize right)
+		{
+			return !left.Equals(right);
 		}
 
 		#endregion
@@ -367,14 +471,29 @@
 		#region [ Implementation of IComparable<PageNumberAndSize> and IEquatable<ITenantIdentifier> ]
 
 		/// <summary>
-		/// 
+		/// Compares the current value with another
+		/// <see cref="PageNumberAndSize"/> value
+		/// and returns an integer that indicates whether
+		/// the current instance precedes, follows, or occurs
+		/// in the same position in the sort order
+		/// as the <paramref name="other"/> value.
 		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
+		/// <param name="other">
+		/// An object to compare with this instance.
+		/// </param>
+		/// <returns>
+		/// A value that indicates the relative order of the objects being compared,
+		/// to implement <see cref="IComparable{T}.CompareTo"/>.
+		/// </returns>
+		/// <remarks>
+		/// In this case, the comparison is based on the
+		/// <see cref="Size"/> value multiplied by the
+		/// <see cref="Number"/> value.
+		/// </remarks>
 		public int CompareTo(PageNumberAndSize other)
 		{
-			int thisComposite = this.Size * this.Number;
-			int otherComposite = other.Size * other.Number;
+			int thisComposite = this.CreateComposite();
+			int otherComposite = other.CreateComposite();
 
 			return thisComposite.CompareTo(otherComposite);
 		}
@@ -396,6 +515,19 @@
 		public bool Equals(PageNumberAndSize other)
 		{
 			return (this.Number == other.Number) && (this.Size == other.Size);
+		}
+
+		/// <summary>
+		/// Returns a value to use for comparing
+		/// <see cref="PageNumberAndSize"/> values.
+		/// </summary>
+		/// <returns>
+		/// The value of <see cref="Size"/> multiplied
+		/// by the value of <see cref="Number"/>.
+		/// </returns>
+		private int CreateComposite()
+		{
+			return this.Size*this.Number;
 		}
 
 		int IComparable<PageNumberAndSize>.CompareTo(PageNumberAndSize other)
