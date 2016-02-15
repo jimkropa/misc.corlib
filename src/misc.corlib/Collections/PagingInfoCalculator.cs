@@ -21,7 +21,7 @@
 	{
 		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
 
-		internal readonly bool CalculateAllPagesAndItemNumbers;
+		internal readonly bool IncludeAllPagesAndItemNumbers;
 
 		public readonly PageNumberAndSize CurrentPage;
 		public readonly int TotalItems;
@@ -37,16 +37,17 @@
 		public readonly bool IsFirstPage;
 		public readonly bool IsLastPage;
 
-		public readonly IReadOnlyList<PageNumberAndItemNumbers> Pages;
+		public readonly IReadOnlyList<PageNumberAndItemNumbers> AllPages;
 
-		internal PagingInfoCalculator(PageNumberAndSize currentPage, int totalItems, bool calculateAllPagesAndItemNumbers)
+		internal PagingInfoCalculator(
+			PageNumberAndSize currentPage, int totalItems, bool includeAllPagesAndItemNumbers)
 		{
 			Contract.Requires<ArgumentException>(
 				currentPage.HasValue, "The current page must have a value. \"Unbounded\" is an acceptable value.");
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
 
-			this.CalculateAllPagesAndItemNumbers = calculateAllPagesAndItemNumbers;
+			this.IncludeAllPagesAndItemNumbers = includeAllPagesAndItemNumbers;
 			this.CurrentPage = currentPage;
 			this.TotalItems = totalItems;
 
@@ -58,8 +59,8 @@
 				// value of a byte, so the "page size" value remains as zero.
 				// Beware of division by zero!
 				// There are no calculations here based on the page size!
-				this.CurrentPage = PageNumberAndSize.Unbounded;
 				this.TotalPages = 1;
+				this.CurrentPage = PageNumberAndSize.Unbounded;
 				this.FirstItemNumber = this.TotalItems > 0 ? 1 : 0;
 				this.LastItemNumber = this.TotalItems;
 				this.ItemCount = this.TotalItems;
@@ -69,15 +70,6 @@
 				this.NextPage = PageNumberAndSize.Empty;
 				this.FirstPage = this.CurrentPage;
 				this.LastPage = this.CurrentPage;
-
-				if (this.CalculateAllPagesAndItemNumbers)
-				{
-					
-				}
-				else
-				{
-					this.Pages = null;
-				}
 			}
 			else
 			{
@@ -85,7 +77,8 @@
 
 				if ((this.TotalItems > 0) && (this.CurrentPage.Size > 0))
 				{
-
+					// Calculate the total pages for a fixed page size and at least one result.
+					this.TotalPages = CalculateTotalPages(this.CurrentPage.Size, this.TotalItems);
 
 					// Handle the situation if someone turns past the last page.
 					if (this.CurrentPage.Number > this.TotalPages)
@@ -131,8 +124,6 @@
 						this.NextPage = new PageNumberAndSize(
 							this.CurrentPage.Number + 1, this.CurrentPage.Size);
 					}
-
-					this.Pages = CreatePageItemNumbersList(this.CurrentPage.Size, this.TotalPages, this.TotalItems);
 				}
 				else
 				{
@@ -152,57 +143,59 @@
 					this.NextPage = PageNumberAndSize.Empty;
 					this.FirstPage = this.CurrentPage;
 					this.LastPage = this.CurrentPage;
-					this.Pages = new List<PageNumberAndItemNumbers>
-					{
-						new PageNumberAndItemNumbers(
-							this.CurrentPage.Number, this.CurrentPage.Size, this.TotalItems)
-					};
 				}
 			}
+
+			this.AllPages = this.IncludeAllPagesAndItemNumbers
+				? AllPagesAndItemNumbers(this.CurrentPage.Size, this.TotalItems, this.TotalPages)
+				: null;
 		}
 
 		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems, int totalPages)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
-			Contract.Requires<ArgumentOutOfRangeException>(totalItems > 0);
-			Contract.Requires<ArgumentOutOfRangeException>(totalPages > 0);
+			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
+			Contract.Requires<ArgumentOutOfRangeException>(totalPages >= 0);
 
-			List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
-			for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
+			// ReSharper disable once InvertIf
+			if ((pageSize >= PageNumberAndSize.MinimumPageSize)
+				&& (totalItems > 0) && (totalPages > 0))
 			{
-				list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems));
+				// Assume that the "totalPages" value is correct,
+				// having been calculated by the "CalculateTotalPages"
+				// function by some private operation within the calculator.
+				List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
+				for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
+				{
+					list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems));
+				}
+
+				return list;
 			}
 
-			return list;
+			return new List<PageNumberAndItemNumbers>
+			{
+				new PageNumberAndItemNumbers(
+					PageNumberAndSize.FirstPageNumber, pageSize, totalItems)
+			};
 		}
 
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems)
 		{
+			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
+
 			if ((pageSize >= PageNumberAndSize.MinimumPageSize) && (totalItems > 0))
 			{
 				return AllPagesAndItemNumbers(pageSize, totalItems, CalculateTotalPages(pageSize, totalItems));
 			}
 
-			if (pageSize >= PageNumberAndSize.MinimumPageSize)
-			{
-				// This is an empty list of a fixed size.
-				return new List<PageNumberAndItemNumbers>
-				{
-					new PageNumberAndItemNumbers(
-						PageNumberAndSize.FirstPageNumber, pageSize, totalItems)
-				};
-			}
-
-			// The one unbounded
 			return new List<PageNumberAndItemNumbers>
-					{
-						new PageNumberAndItemNumbers(
-							this.CurrentPage.Number, this.CurrentPage.Size, this.TotalItems)
-					};
+			{
+				new PageNumberAndItemNumbers(
+					PageNumberAndSize.FirstPageNumber, pageSize, totalItems)
+			};
 		}
-
 
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			PagingInfo pagingInfo)

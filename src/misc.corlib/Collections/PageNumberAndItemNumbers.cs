@@ -39,7 +39,7 @@
 				this.FirstItemNumber = this.LastItemNumber - pageSize + 1;
 
 				// Determine whether this is the last page.
-				if (PagingInfoCalculator.CalculateTotalPages() == this.PageNumber)
+				if (PagingInfoCalculator.CalculateTotalPages(pageSize, totalItems) == this.PageNumber)
 				{
 					this.LastItemNumber = totalItems;
 				}

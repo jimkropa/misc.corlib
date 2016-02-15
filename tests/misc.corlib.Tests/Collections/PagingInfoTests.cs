@@ -1,6 +1,5 @@
 ﻿namespace MiscCorLib.Collections
 {
-
 	using NUnit.Framework;
 
 	[TestFixture]

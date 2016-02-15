@@ -44,7 +44,7 @@
 		/// <see cref="Size"/> set to a default value of ten.
 		/// </summary>
 		public static readonly PageNumberAndSize Default
-			= new PageNumberAndSize(FirstPageNumber, DefaultPageSize);
+			= new PageNumberAndSize(FirstPageNumber);
 
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize"/>
@@ -125,24 +125,6 @@
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
-		/// using the <see cref="DefaultPageSize"/>.
-		/// </summary>
-		/// <param name="number">
-		/// A one-based ordinal position of a page
-		/// within a "paged" collection of items,
-		/// initial value of the immutable
-		/// <see cref="Number"/> field.
-		/// </param>
-		public PageNumberAndSize(int number)
-			: this(number, DefaultPageSize)
-		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				number >= FirstPageNumber,
-				"An ordinal page number is not a zero-based index. The number must be at least one.");
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
 		/// for a page size between 1 and 255.
 		/// </summary>
 		/// <param name="number">
@@ -157,7 +139,7 @@
 		/// initial value of the immutable
 		/// <see cref="Size"/> field.
 		/// </param>
-		public PageNumberAndSize(int number, byte size)
+		public PageNumberAndSize(int number, byte size = DefaultPageSize)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
 				number >= FirstPageNumber,
@@ -167,20 +149,6 @@
 			Contract.Requires<ArgumentOutOfRangeException>(
 				size >= MinimumPageSize,
 				"There must be at least one item per page or there could be division by zero!");
-
-			// With code contracts in place, the following generates compiler warnings:
-			////	if (number < FirstPageNumber)
-			////	{
-			////		throw new ArgumentOutOfRangeException(
-			////			"number", number, "An ordinal page number is not a zero-based index. The number must be at least one.");
-			////	}
-			////
-			////	if (size < MinimumPageSize)
-			////	{
-			////		// Beware of possible division by zero.
-			////		throw new ArgumentOutOfRangeException(
-			////			"size", size, "There must be at least one item per page or there could be division by zero!");
-			////	}
 
 			this.Number = number;
 			this.Size = size;
@@ -212,6 +180,24 @@
 		#endregion
 
 		#region [ Public ReadOnly HasValue and Index Properties ]
+
+		/// <summary>
+		/// Gets a value indicating whether the
+		/// <see cref="Number"/> and <see cref="Size"/>
+		/// values are valid.
+		/// </summary>
+		////	[NonSerialized] // (this is applicable only to fields, not properties)
+		public bool HasValue
+		{
+			get
+			{
+				return this.Number >= FirstPageNumber;
+
+				// This is redundant, unless the Size
+				// field changes to a signed integer:
+				////	&& this.Size >= byte.MinValue;
+			}
+		}
 
 		/// <summary>
 		/// Gets the zero-based index of a page within
@@ -247,24 +233,6 @@
 		public bool IsUnbounded
 		{
 			get { return (this.Size == byte.MinValue) && (this.Number == FirstPageNumber); }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether the
-		/// <see cref="Number"/> and <see cref="Size"/>
-		/// values are valid.
-		/// </summary>
-		////	[NonSerialized] // (this is applicable only to fields, not properties)
-		public bool HasValue
-		{
-			get
-			{
-				return this.Number >= FirstPageNumber;
-				
-				// This is redundant, unless the Size
-				// field changes to a signed integer:
-				////	&& this.Size >= byte.MinValue;
-			}
 		}
 
 		#endregion

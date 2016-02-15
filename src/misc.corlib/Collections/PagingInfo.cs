@@ -38,6 +38,8 @@
 
 		private const bool DefaultCalculateAllPagesAndItemNumbers = false;
 
+		//private static readonly PagingInfo Empty = new PagingInfo();
+
 		[NonSerialized]
 		private readonly bool calculateAllPagesAndItemNumbers;
 
@@ -95,7 +97,8 @@
 				// When deserialized, only the CurrentPage and
 				// TotalItems are required, then other values
 				// are calculated once into a "state" object.
-				PagingInfoCalculator newCalculator = new PagingInfoCalculator(this.CurrentPage, this.TotalItems);
+				PagingInfoCalculator newCalculator = new PagingInfoCalculator(
+					this.CurrentPage, this.TotalItems, this.calculateAllPagesAndItemNumbers);
 
 				// Having initialized the values,
 				// replace the original PagingInfo
@@ -135,8 +138,16 @@
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
-		public PagingInfo(int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
-			: this(PageNumberAndSize.Unbounded, totalItems)
+		/// <param name="calculateAllPagesAndItemNumbers">
+		/// Indicates whether to include a representation of every
+		/// page and its item numbers in the serialized version of
+		/// this <see cref="PagingInfo"/>, as a list of
+		/// <see cref="PageNumberAndItemNumbers"/>,
+		/// for a paging widget which may want to use them.
+		/// </param>
+		public PagingInfo(
+			int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
+			: this(PageNumberAndSize.Unbounded, totalItems, calculateAllPagesAndItemNumbers)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
@@ -156,7 +167,15 @@
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
-		public PagingInfo(int pageNumber, byte pageSize, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
+		/// <param name="calculateAllPagesAndItemNumbers">
+		/// Indicates whether to include a representation of every
+		/// page and its item numbers in the serialized version of
+		/// this <see cref="PagingInfo"/>, as a list of
+		/// <see cref="PageNumberAndItemNumbers"/>,
+		/// for a paging widget which may want to use them.
+		/// </param>
+		public PagingInfo(
+			int pageNumber, byte pageSize, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
 			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems, calculateAllPagesAndItemNumbers)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
@@ -186,7 +205,15 @@
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems"/> field.
 		/// </param>
-		public PagingInfo(PageNumberAndSize requestedPage, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
+		/// <param name="calculateAllPagesAndItemNumbers">
+		/// Indicates whether to include a representation of every
+		/// page and its item numbers in the serialized version of
+		/// this <see cref="PagingInfo"/>, as a list of
+		/// <see cref="PageNumberAndItemNumbers"/>,
+		/// for a paging widget which may want to use them.
+		/// </param>
+		public PagingInfo(
+			PageNumberAndSize requestedPage, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
 			: this(new PagingInfoCalculator(requestedPage, totalItems, calculateAllPagesAndItemNumbers))
 		{
 			Contract.Requires<ArgumentException>(
@@ -213,12 +240,24 @@
 			this.CurrentPage = calculator.CurrentPage;
 			this.TotalItems = calculator.TotalItems;
 			this.calculator = calculator;
-			this.calculateAllPagesAndItemNumbers = calculator.CalculateAllPagesAndItemNumbers;
+			this.calculateAllPagesAndItemNumbers = calculator.IncludeAllPagesAndItemNumbers;
 		}
 
 		#endregion
 
 		#region [ Public Read-Only Properties ]
+
+		/// <summary>
+		/// Gets a value indicating whether
+		/// the <see cref="CurrentPage"/>
+		/// and <see cref="TotalItems"/>
+		/// values are valid.
+		/// </summary>
+		////	[NonSerialized] // (this is applicable only to fields, not properties)
+		public bool HasValue
+		{
+			get { return this.CurrentPage.HasValue && this.TotalItems >= 0; }
+		}
 
 		[DataMember(IsRequired = false, Order = 2)]
 		public int TotalPages { get { return this.Calculator.TotalPages; } }
@@ -270,12 +309,17 @@
 		[DataMember(IsRequired = false, Order = 11)]
 		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
 
-		[DataMember(IsRequired = false, EmitDefaultValue = false, Order = 14)]
-		private IReadOnlyList<PageNumberAndItemNumbers> Pages { get { return this.Calculator.Pages; } }
+		[DataMember(IsRequired = false, Name="AllPages", EmitDefaultValue = false, Order = 14)]
+		private IReadOnlyList<PageNumberAndItemNumbers> AllPages { get { return this.Calculator.AllPages; } }
 
 		#endregion
 
 		#region [ Public TurnToPage Method ]
+
+		public IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers()
+		{
+			return this.AllPages ?? PagingInfoCalculator.AllPagesAndItemNumbers(this);
+		}
 
 		/// <summary>
 		/// Calculates a <see cref="PageNumberAndSize"/> for an

@@ -70,7 +70,7 @@ namespace MiscCorLib.Collections
     ""Number"": 3,
     ""Index"": 2
   },
-  ""Pages"": [
+  ""AllPages"": [
     {
       ""PageNumber"": 1,
       ""FirstItemNumber"": 1,
