@@ -179,6 +179,9 @@
 				return list;
 			}
 
+			// If the paged collection contains no items or
+			// is unbounded, return a list with a single item,
+			// representing the empty or unbounded page.
 			return new List<PageNumberAndItemNumbers>
 			{
 				new PageNumberAndItemNumbers(
@@ -197,6 +200,9 @@
 					pageSize, totalItems, CalculateTotalPages(pageSize, totalItems));
 			}
 
+			// If the paged collection contains no items or
+			// is unbounded, return a list with a single item,
+			// representing the empty or unbounded page.
 			return new List<PageNumberAndItemNumbers>
 			{
 				new PageNumberAndItemNumbers(
@@ -207,6 +213,8 @@
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			PagingInfo pagingInfo)
 		{
+			Contract.Requires<ArgumentException>(pagingInfo.HasValue);
+
 			return AllPagesAndItemNumbers(
 				pagingInfo.CurrentPage.Size, pagingInfo.TotalItems, pagingInfo.TotalPages);
 		}

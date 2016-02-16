@@ -14,6 +14,13 @@
 	public struct PageNumberAndItemNumbers
 		: IEquatable<PageNumberAndItemNumbers>, IComparable<PageNumberAndItemNumbers>
 	{
+		/// <summary>
+		/// A value of <see cref="PageNumberAndSize"/>
+		/// which is not valid, indicating an unspecified value.
+		/// </summary>
+		public static readonly PageNumberAndItemNumbers Empty
+			= new PageNumberAndItemNumbers();
+		
 		[DataMember(IsRequired = true, Order = 0)]
 		public readonly int PageNumber;
 
@@ -32,9 +39,9 @@
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
 
-			// Beware of possible division by zero.
 			if (pageSize >= PageNumberAndSize.MinimumPageSize)
 			{
+				// A page of fixed size which has items.
 				this.PageNumber = pageNumber;
 				this.LastItemNumber = pageNumber * pageSize;
 				this.FirstItemNumber = this.LastItemNumber - pageSize + 1;
@@ -47,6 +54,7 @@
 			}
 			else
 			{
+				// An unbounded or empty page.
 				this.PageNumber = PageNumberAndSize.FirstPageNumber;
 				this.FirstItemNumber = totalItems > 0 ? 1 : 0;
 				this.LastItemNumber = totalItems;
@@ -191,6 +199,20 @@
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets a value indicating whether the
+		/// <see cref="PageNumber"/> value is valid.
+		/// </summary>
+		////	[NonSerialized] // (this is applicable only to fields, not properties)
+		public bool HasValue
+		{
+			get
+			{
+				return this.PageNumber >= PageNumberAndSize.FirstPageNumber
+					&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;
+			}
+		}
 
 		/// <summary>
 		/// Converts this value to its equivalent string representation.

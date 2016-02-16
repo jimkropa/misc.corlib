@@ -32,8 +32,18 @@
 	{
 		#region [ Private Field and Property backing the Public Read-Only Properties ]
 
+		/// <summary>
+		/// A value to use when translating between collections of strings
+		/// and generic collections of <see cref="ValueType"/>,
+		/// indicating to preserve duplicate values
+		/// in the resulting collection by default.
+		/// </summary>
 		public const bool DefaultCalculateAllPagesAndItemNumbers = false;
 
+		/// <summary>
+		/// A value of <see cref="PageNumberAndSize"/>
+		/// which is not valid, indicating an unspecified value.
+		/// </summary>
 		public static readonly PagingInfo Empty = new PagingInfo();
 
 		[NonSerialized]

@@ -66,6 +66,7 @@
     <Compile Include="Collections\Generic\ConvertDelimitedStringTests.cs" />
     <Compile Include="Collections\Generic\ConvertStringsTests.cs" />
     <Compile Include="Collections\Generic\ConvertStructCollectionTests.cs" />
+    <Compile Include="Collections\PageNumberAndItemNumbersTests.cs" />
     <Compile Include="Collections\PageNumberAndSizeTests.cs" />
     <Compile Include="Collections\PagingInfoTests-Serialization.cs" />
     <Compile Include="Collections\PagingInfoTests-StringConstants.cs" />
