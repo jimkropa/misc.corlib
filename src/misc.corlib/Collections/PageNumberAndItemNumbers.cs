@@ -64,6 +64,8 @@
 		public static IReadOnlyList<PageNumberAndItemNumbers> CalculatePagesAndItemNumbers(
 			byte pageSize, int totalItems)
 		{
+			// Zero as page size is acceptable,
+			// indicating a single "unbounded" page.
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
 

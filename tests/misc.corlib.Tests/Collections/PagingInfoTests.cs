@@ -139,7 +139,7 @@
 				Assert.AreEqual(-1, this.unboundedPagingInfo.LastItemIndex, "LastItemIndex");
 				Assert.AreEqual(ZeroTotalItems, this.unboundedPagingInfo.TotalItems, "TotalItems");
 				Assert.AreEqual(ZeroTotalItems, this.unboundedPagingInfo.ItemCount, "ItemCount");
-				Assert.AreEqual(1, this.unboundedPagingInfo.TotalPages);
+				Assert.AreEqual(1, this.unboundedPagingInfo.TotalPages, "TotalPages");
 			}
 		}
 	}

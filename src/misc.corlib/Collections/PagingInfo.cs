@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	using System.Diagnostics.Contracts;
 	using System.Runtime.Serialization;
 
@@ -28,9 +29,10 @@
 	/// </para>
 	/// </remarks>
 	[CLSCompliant(true), Serializable, DataContract]
+	[SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Relay of read-only property from internal state.")]
 	public struct PagingInfo : IEquatable<PagingInfo>
 	{
-		#region [ Private Field and Property backing the Public Read-Only Properties ]
+		#region [ Public Constants for Default and Empty Values ]
 
 		/// <summary>
 		/// A value to use when translating between collections of strings
@@ -46,78 +48,9 @@
 		/// </summary>
 		public static readonly PagingInfo Empty = new PagingInfo();
 
-		[NonSerialized]
-		private readonly bool calculateAllPagesAndItemNumbers;
-
-		/// <summary>
-		/// Backing field of the internal
-		/// <see cref="Calculator"/>,
-		/// also used as a semaphore
-		/// indicating whether calculated
-		/// values have been initialized.
-		/// </summary>
-		[NonSerialized]
-		private readonly PagingInfoCalculator calculator;
-
-		/// <summary>
-		/// Gets an internal reference to all of the values
-		/// calculated based on initial <see cref="CurrentPage"/>
-		/// and <see cref="TotalItems"/> values.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This property does some clever sleight-of-hand
-		/// for the sake of optimizing serialization and deserialization.
-		/// When deserialized, only the <see cref="CurrentPage"/>
-		/// and <see cref="TotalItems"/> are required, then other
-		/// values are calculated once into a "state" object.
-		/// </para>
-		/// <para>
-		/// Internally, the first access of this property
-		/// also has the effect of replacing the parent
-		/// <see cref="PagingInfo"/> value.  It's a "lazy"
-		/// initialization optimized for <see cref="ValueType"/>
-		/// requiring this serialization feature.
-		/// </para>
-		/// <para>
-		/// This property backs all of the serialized public
-		/// read-only properties of <see cref="PagingInfo"/>.
-		/// </para>
-		/// </remarks>
-		private PagingInfoCalculator Calculator
-		{
-			get
-			{
-				if (this.calculator.CurrentPage.HasValue)
-				{
-					return this.calculator;
-				}
-
-				if (!this.CurrentPage.HasValue)
-				{
-					return PagingInfoCalculator.Empty;
-				}
-
-				// Some ridiculous sleight-of-hand for the sake
-				// of optimizing serialization and deserialization.
-				// When deserialized, only the CurrentPage and
-				// TotalItems are required, then other values
-				// are calculated once into a "state" object.
-				PagingInfoCalculator newCalculator = new PagingInfoCalculator(
-					this.CurrentPage, this.TotalItems, this.calculateAllPagesAndItemNumbers);
-
-				// Having initialized the values,
-				// replace the original PagingInfo
-				// with a fully-initialized value.
-				this = new PagingInfo(newCalculator);
-
-				return newCalculator;
-			}
-		}
-
 		#endregion
 
-		#region [ Immutable Public Fields CurrentPage and TotalItems ]
+		#region [ Immutable Fields CurrentPage and TotalItems ]
 
 		/// <summary>
 		/// The current page number and size.
@@ -133,10 +66,31 @@
 
 		#endregion
 
+		#region [ Private Semaphore Fields for Calculator ]
+
+		/// <summary>
+		/// Internal semaphore for whether to initialize the
+		/// <see cref="PagingInfoCalculator.AllPages"/>
+		/// property for serializing, usually <c>false</c>,
+		/// set by optional parameter to constructor.
+		/// </summary>
+		[NonSerialized]
+		private readonly bool calculateAllPagesAndItemNumbers;
+
+		/// <summary>
+		/// Backing field of the internal <see cref="Calculator"/>,
+		/// also used as a semaphore indicating whether calculated
+		/// values have been initialized.
+		/// </summary>
+		[NonSerialized]
+		private readonly PagingInfoCalculator calculator;
+
+		#endregion
+
 		#region [ Constructor Overloads ]
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
 		/// for having all of the items in a collection on a single page
 		/// as large as the number of <paramref name="totalItems"/>.
 		/// </summary>
@@ -160,7 +114,7 @@
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
 		/// for pages of a fixed size between 1 and 255.
 		/// </summary>
 		/// <param name="pageNumber">
@@ -197,7 +151,7 @@
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
 		/// based on a given <see cref="PageNumberAndSize"/> value.
 		/// </summary>
 		/// <param name="requestedPage">
@@ -229,9 +183,9 @@
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> class
+		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
 		/// upon deserialization of another <see cref="PagingInfo"/> which
-		/// this one replaces, used for lazy initializtion by the internal
+		/// this one replaces, used for lazy initialization by the internal
 		/// <see cref="Calculator"/> property.
 		/// </summary>
 		/// <param name="calculator">
@@ -251,7 +205,7 @@
 
 		#endregion
 
-		#region [ Public Read-Only Properties ]
+		#region [ Public Read-Only Properties and Private Calculator Property ]
 
 		/// <summary>
 		/// Gets a value indicating whether
@@ -310,23 +264,101 @@
 		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
 
 		/// <summary>
-		/// 
+		/// Gets a list of all pages and their first and last item numbers.
+		/// This may be useful for some paging UI components, and is
+		/// optionally serialized to JSON. The value may be <c>null</c>,
+		/// depending on whether <see cref="Calculator"/> was initialized with
+		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
 		/// </summary>
-		[DataMember(IsRequired = false, Name="AllPages", EmitDefaultValue = false, Order = 14)]
-		private IReadOnlyList<PageNumberAndItemNumbers> AllPages { get { return this.Calculator.AllPages; } }
+		/// <remarks>
+		/// The value of this property may be <c>null</c>,
+		/// depending on whether <see cref="Calculator"/> was initialized with
+		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
+		/// </remarks>
+		[DataMember(IsRequired = false, Name = "AllPages", EmitDefaultValue = false, Order = 14)]
+		private IReadOnlyList<PageNumberAndItemNumbers> AllPages
+		{
+			// This may return null, depending on whether
+			// Calculator was initialized with all pages.
+			get { return this.Calculator.AllPages; }
+		}
+
+		/// <summary>
+		/// Gets an internal reference to all of the values
+		/// calculated based on initial <see cref="CurrentPage"/>
+		/// and <see cref="TotalItems"/> values.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property does some clever sleight-of-hand
+		/// for the sake of optimizing serialization and deserialization.
+		/// When deserialized, only the <see cref="CurrentPage"/>
+		/// and <see cref="TotalItems"/> are required, then other
+		/// values are calculated once into a "state" object.
+		/// </para>
+		/// <para>
+		/// Internally, the first access of this property
+		/// also has the effect of replacing the parent
+		/// <see cref="PagingInfo"/> value.  It's a "lazy"
+		/// initialization optimized for <see cref="ValueType"/>
+		/// requiring this serialization feature.
+		/// </para>
+		/// <para>
+		/// This property backs all of the serialized public
+		/// read-only properties of <see cref="PagingInfo"/>.
+		/// </para>
+		/// </remarks>
+		private PagingInfoCalculator Calculator
+		{
+			get
+			{
+				// Is initialized already?
+				if (this.calculator.CurrentPage.HasValue)
+				{
+					return this.calculator;
+				}
+
+				// If this is an empty value,
+				// return a corresponding empty
+				// and skip calculations.
+				if (!this.CurrentPage.HasValue)
+				{
+					return PagingInfoCalculator.Empty;
+				}
+
+				// Some clever sleight-of-hand for the sake
+				// of optimizing serialization and deserialization.
+				// When deserialized, only the CurrentPage and
+				// TotalItems are required, then other values
+				// are calculated once into a "state" object.
+				PagingInfoCalculator newCalculator = new PagingInfoCalculator(
+					this.CurrentPage, this.TotalItems, this.calculateAllPagesAndItemNumbers);
+
+				// Having initialized the values,
+				// replace the original PagingInfo
+				// with a fully-initialized value.
+				this = new PagingInfo(newCalculator);
+
+				return newCalculator;
+			}
+		}
 
 		#endregion
 
-		#region [ Public TurnToPage and CalculateAllPagesAndItemNumbers Methods ]
+		#region [ Public TurnToPage and AllPagesAndItemNumbers Methods ]
 
 		/// <summary>
-		/// 
+		/// Returns a list of all pages and their first and last item numbers.
+		/// This may be useful for some paging UI components.
 		/// </summary>
 		/// <returns>
-		/// 
+		/// A sequenced list of <see cref="PageNumberAndItemNumbers"/>
+		/// values representing all of the pages of a "paged" collection
+		/// and each page's first and last item numbers.
 		/// </returns>
-		public IReadOnlyList<PageNumberAndItemNumbers> CalculateAllPagesAndItemNumbers()
+		public IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers()
 		{
+			// The value may have already been initialized...
 			return this.AllPages ?? PagingInfoCalculator.AllPagesAndItemNumbers(this);
 		}
 

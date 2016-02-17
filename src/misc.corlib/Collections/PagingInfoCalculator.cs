@@ -6,8 +6,10 @@
 
 	/// <summary>
 	/// An internal value backing the public properties
-	/// of the <see cref="PagingInfo"/> class,
-	/// for optimizing deserialization.
+	/// of the <see cref="PagingInfo"/> class, for
+	/// optimizing deserialization. Calculates and
+	/// holds values all based on initial <see cref="PagingInfo.CurrentPage"/>
+	/// and <see cref="PagingInfo.TotalItems"/> values.
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -20,10 +22,6 @@
 	internal struct PagingInfoCalculator
 	{
 		#region [ Fields and Constructor ]
-
-		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
-
-		internal readonly bool IncludeAllPagesAndItemNumbers;
 
 		public readonly PageNumberAndSize CurrentPage;
 		public readonly int TotalItems;
@@ -41,6 +39,45 @@
 
 		public readonly IReadOnlyList<PageNumberAndItemNumbers> AllPages;
 
+		/// <summary>
+		/// Used by the <see cref="PagingInfo.Calculator"/> property
+		/// </summary>
+		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
+
+		/// <summary>
+		/// Relays a value sent to the constructor back to the
+		/// <see cref="PagingInfo"/> which initialized this value.
+		/// </summary>
+		internal readonly bool IncludeAllPagesAndItemNumbers;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PagingInfoCalculator"/> struct.
+		/// Invoked by the private <see cref="PagingInfo.Calculator"/>
+		/// property of an owner <see cref="PagingInfo"/> value,
+		/// calculates metadata for paging UI, optionally including
+		/// a list of all pages and item numbers. For effective lazy
+		/// initialization following deserialization from bare essentials.
+		/// </summary>
+		/// <param name="currentPage">
+		/// The page <see cref="PageNumberAndSize.Number"/>
+		/// and <see cref="PageNumberAndSize.Size"/>.
+		/// If <see cref="PageNumberAndSize.Unbounded"/> is sent,
+		/// all of the items are returned on a single page as large
+		/// as the number of <paramref name="totalItems"/>.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in the collection to be paged,
+		/// initial value for the immutable <see cref="TotalItems"/> field.
+		/// </param>
+		/// <param name="includeAllPagesAndItemNumbers">
+		/// Whether to fill the set of <see cref="AllPages"/>
+		/// including the item numbers on each page,
+		/// which may be useful for some paging UI.
+		/// Relayed back to the <see cref="PagingInfo"/> via the
+		/// <see cref="IncludeAllPagesAndItemNumbers"/> field,
+		/// adds the private <see cref="PagingInfo.AllPages"/>
+		/// property to the serialization output for JSON.
+		/// </param>
 		internal PagingInfoCalculator(
 			PageNumberAndSize currentPage, int totalItems, bool includeAllPagesAndItemNumbers)
 		{
@@ -157,36 +194,29 @@
 
 		#region [ Static Methods ]
 
-		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
-			byte pageSize, int totalItems, int totalPages)
+		internal static int CalculateTotalPages(byte pageSize, int totalItems)
 		{
+			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
 			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
-			Contract.Requires<ArgumentOutOfRangeException>(totalPages >= 0);
 
-			// ReSharper disable once InvertIf
-			if ((pageSize >= PageNumberAndSize.MinimumPageSize)
-				&& (totalItems > 0) && (totalPages > 0))
+			// This calculation is part of the calculation of total pages,
+			// which will produce an invalid value if the number of total items
+			// plus the page size exceeds the capacity of a 32-bit integer.
+			int extendedTotalItems = totalItems + pageSize - 1;
+
+			// CodeContracts gives a warning here, but that's
+			// expected in this extraordinary situation.
+			if (extendedTotalItems <= 0)
 			{
-				// Assume that the "totalPages" value is correct,
-				// having been calculated by the "CalculateTotalPages"
-				// function by some private operation within the calculator.
-				List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
-				for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
-				{
-					list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems));
-				}
-
-				return list;
+				throw new OverflowException(
+					"There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
 			}
 
-			// If the paged collection contains no items or
-			// is unbounded, return a list with a single item,
-			// representing the empty or unbounded page.
-			return new List<PageNumberAndItemNumbers>
-			{
-				new PageNumberAndItemNumbers(
-					PageNumberAndSize.FirstPageNumber, pageSize, totalItems)
-			};
+			// There is no division by zero here, due to validation and logic
+			// above and within the PageNumberAndSize struct itself.
+			// The method of calculating total pages is shown here:
+			// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
+			return extendedTotalItems / pageSize;
 		}
 
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
@@ -219,29 +249,37 @@
 				pagingInfo.CurrentPage.Size, pagingInfo.TotalItems, pagingInfo.TotalPages);
 		}
 
-		internal static int CalculateTotalPages(byte pageSize, int totalItems)
+		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
+			byte pageSize, int totalItems, int totalPages)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
 			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
+			Contract.Requires<ArgumentOutOfRangeException>(totalPages >= 0);
 
-			// This calculation is part of the calculation of total pages,
-			// which will produce an invalid value if the number of total items
-			// plus the page size exceeds the capacity of a 32-bit integer.
-			int extendedTotalItems = totalItems + pageSize - 1;
-
-			// CodeContracts gives a warning here, but that's
-			// expected in this extraordinary situation.
-			if (extendedTotalItems <= 0)
+			// ReSharper disable once InvertIf
+			if ((pageSize >= PageNumberAndSize.MinimumPageSize)
+				&& (totalItems > 0) && (totalPages > 0))
 			{
-				throw new OverflowException(
-					"There has been an integer overflow in the calculation of paging. Please reduce the number of total items or the page size so that their sum is less than the maximum value of a 32-bit integer.");
+				// Assume that the "totalPages" value is correct,
+				// having been calculated by the "CalculateTotalPages"
+				// function by some private operation within the calculator.
+				// That is, the only routes here are through "CalculateTotalPages"
+				List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
+				for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
+				{
+					list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems));
+				}
+
+				return list;
 			}
 
-			// There is no division by zero here, due to validation and logic
-			// above and within the PageNumberAndSize struct itself.
-			// The method of calculating total pages is shown here:
-			// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
-			return extendedTotalItems / pageSize;
+			// If the paged collection contains no items or
+			// is unbounded, return a list with a single item,
+			// representing the empty or unbounded page.
+			return new List<PageNumberAndItemNumbers>
+			{
+				new PageNumberAndItemNumbers(
+					PageNumberAndSize.FirstPageNumber, pageSize, totalItems)
+			};
 		}
 
 		#endregion

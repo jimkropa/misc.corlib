@@ -210,7 +210,7 @@
 		/// This is also the index of a
 		/// <see cref="PageNumberAndItemNumbers"/>
 		/// value within a list such as the one returned by
-		/// <see cref="PagingInfo.CalculateAllPagesAndItemNumbers"/>.
+		/// <see cref="PagingInfo.AllPagesAndItemNumbers"/>.
 		/// </para>
 		/// <para>
 		/// If <see cref="IsUnbounded"/> is <c>true</c>,
