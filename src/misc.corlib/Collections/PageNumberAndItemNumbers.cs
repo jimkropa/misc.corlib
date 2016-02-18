@@ -39,7 +39,7 @@
 			Contract.Requires<ArgumentOutOfRangeException>(
 				totalItems >= 0, "The number of items in the list must not be negative!");
 
-			if (pageSize >= PageNumberAndSize.MinimumPageSize)
+			if (pageSize >= PageNumberAndSize.MinimumPageSize && (totalItems > 0))
 			{
 				// A page of fixed size which has items.
 				this.PageNumber = pageNumber;
@@ -61,6 +61,12 @@
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="pageSize"></param>
+		/// <param name="totalItems"></param>
+		/// <returns></returns>
 		public static IReadOnlyList<PageNumberAndItemNumbers> CalculatePagesAndItemNumbers(
 			byte pageSize, int totalItems)
 		{

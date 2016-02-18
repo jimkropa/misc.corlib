@@ -22,19 +22,27 @@ namespace MiscCorLib.Collections
   ""ItemCount"": 20,
   ""NextPage"": {
     ""Number"": 8,
-    ""Index"": 7
+    ""Size"": 20,
+    ""Index"": 7,
+    ""IsUnbounded"": false
   },
   ""PreviousPage"": {
     ""Number"": 6,
-    ""Index"": 5
+    ""Size"": 20,
+    ""Index"": 5,
+    ""IsUnbounded"": false
   },
   ""FirstPage"": {
     ""Number"": 1,
-    ""Index"": 0
+    ""Size"": 20,
+    ""Index"": 0,
+    ""IsUnbounded"": false
   },
   ""LastPage"": {
     ""Number"": 57,
-    ""Index"": 56
+    ""Size"": 20,
+    ""Index"": 56,
+    ""IsUnbounded"": false
   }
 }";
 
@@ -56,19 +64,27 @@ namespace MiscCorLib.Collections
   ""ItemCount"": 10,
   ""NextPage"": {
     ""Number"": 3,
-    ""Index"": 2
+    ""Size"": 10,
+    ""Index"": 2,
+    ""IsUnbounded"": false
   },
   ""PreviousPage"": {
     ""Number"": 1,
-    ""Index"": 0
+    ""Size"": 10,
+    ""Index"": 0,
+    ""IsUnbounded"": false
   },
   ""FirstPage"": {
     ""Number"": 1,
-    ""Index"": 0
+    ""Size"": 10,
+    ""Index"": 0,
+    ""IsUnbounded"": false
   },
   ""LastPage"": {
     ""Number"": 3,
-    ""Index"": 2
+    ""Size"": 10,
+    ""Index"": 2,
+    ""IsUnbounded"": false
   },
   ""AllPages"": [
     {
@@ -88,5 +104,9 @@ namespace MiscCorLib.Collections
     }
   ]
 }";
+
+		private const string Unbounded_Total_WithAllPages = @"";
+
+		private const string Unbounded_Total1138_WithAllPages = @"";
 	}
 }

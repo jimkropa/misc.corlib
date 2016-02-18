@@ -6,8 +6,6 @@
 	using System.Diagnostics.Contracts;
 	using System.Runtime.Serialization;
 
-	// TODO: Test JSON Serializability, test ToString();
-
 	/// <summary>
 	/// A simple struct with a robust set of metadata
 	/// about a page within a "paged" collection of items,
@@ -271,12 +269,18 @@
 		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// The value of this property may be <c>null</c>,
 		/// depending on whether <see cref="Calculator"/> was initialized with
 		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
+		/// </para>
+		/// <para>
+		/// This property could be private, but is given internal access
+		/// so that it may be used by unit tests.
+		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = false, Name = "AllPages", EmitDefaultValue = false, Order = 14)]
-		private IReadOnlyList<PageNumberAndItemNumbers> AllPages
+		internal IReadOnlyList<PageNumberAndItemNumbers> AllPages
 		{
 			// This may return null, depending on whether
 			// Calculator was initialized with all pages.
@@ -356,10 +360,26 @@
 		/// values representing all of the pages of a "paged" collection
 		/// and each page's first and last item numbers.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// This method is marked as <see cref="PureAttribute"/>
+		/// though this is not strictly true. Still, because of the
+		/// internals of this simple struct, it's okay to treat this
+		/// as a pure function.
+		/// </para>
+		/// <para>
+		/// This method could have been written as a property,
+		/// but this a clever scheme to optimize the operation
+		/// and serialization of <see cref="PagingInfo"/>.
+		/// </para>
+		/// </remarks>
+		[Pure]
 		public IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers()
 		{
 			// The value may have already been initialized...
-			return this.AllPages ?? PagingInfoCalculator.AllPagesAndItemNumbers(this);
+			return this.AllPages ?? (this.CurrentPage.HasValue
+				? PagingInfoCalculator.AllPagesAndItemNumbers(this)
+				: new PageNumberAndItemNumbers[0]);
 		}
 
 		/// <summary>
@@ -402,6 +422,7 @@
 		/// is higher than the total number of pages.
 		/// </para>
 		/// </remarks>
+		[Pure]
 		public PageNumberAndSize TurnToPage(int pageNumber)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(

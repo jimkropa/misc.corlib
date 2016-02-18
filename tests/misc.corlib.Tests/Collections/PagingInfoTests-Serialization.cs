@@ -1,7 +1,9 @@
 ﻿namespace MiscCorLib.Collections
 {
 	using System;
+
 	using Newtonsoft.Json;
+
 	using NUnit.Framework;
 
 	// This is a partial class. Refer to PagingInfoTests.cs for the main part.
@@ -26,8 +28,8 @@
 			[Test]
 			public void Scratchpad()
 			{
-				PagingInfo pagingInfo1 = new PagingInfo(2, 10, 27, true);
-				PagingInfo pagingInfo2 = new PagingInfo(3, 9, 25);
+				PagingInfo pagingInfo1 = new PagingInfo(PageNumberAndSize.Unbounded, 1701);
+				PagingInfo pagingInfo2 = new PagingInfo(PageNumberAndSize.Unbounded, 1138, true);
 
 				string serializedPagingInfo1 = JsonConvert.SerializeObject(pagingInfo1, DefaultFormatting, this.settings);
 				string serializedPagingInfo2 = JsonConvert.SerializeObject(pagingInfo2, DefaultFormatting, this.settings);

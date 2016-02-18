@@ -104,8 +104,16 @@
 		internal static void AssertEquality(
 			PageNumberAndSize expected, PageNumberAndSize actual)
 		{
+			Assert.IsTrue(expected == actual);
+			Assert.IsFalse(expected != actual);
 			Assert.IsTrue(expected.Equals(actual));
 			Assert.AreEqual(expected, actual);
+
+			Assert.IsTrue(actual == expected);
+			Assert.IsFalse(actual != expected);
+			Assert.IsTrue(actual.Equals(expected));
+			Assert.AreEqual(actual, expected);
+
 			Assert.AreEqual(expected.Number, actual.Number);
 			Assert.AreEqual(expected.Size, actual.Size);
 			Assert.AreEqual(expected.Index, actual.Index);
@@ -113,29 +121,29 @@
 			Assert.AreEqual(expected.HasValue, actual.HasValue);
 		}
 
-		internal static void AssertIsEmpty(PageNumberAndSize page)
+		internal static void AssertIsEmpty(PageNumberAndSize emptyPage)
 		{
-			Assert.IsFalse(page.HasValue);
-			Assert.IsFalse(page.IsUnbounded);
-			Assert.AreEqual(byte.MinValue, page.Size);
-			Assert.AreEqual(0, page.Number);
-			Assert.AreEqual(-1, page.Index);
+			Assert.IsFalse(emptyPage.HasValue);
+			Assert.IsFalse(emptyPage.IsUnbounded);
+			Assert.AreEqual(byte.MinValue, emptyPage.Size);
+			Assert.AreEqual(0, emptyPage.Number);
+			Assert.AreEqual(-1, emptyPage.Index);
 		}
 
-		internal static void AssertIsFirstPage(PageNumberAndSize page)
+		internal static void AssertIsFirstPage(PageNumberAndSize firstPage)
 		{
-			Assert.IsTrue(page.HasValue);
-			Assert.GreaterOrEqual(page.Size, byte.MinValue);
-			Assert.AreEqual(PageNumberAndSize.FirstPageNumber, page.Number);
-			Assert.AreEqual(0, page.Index);
+			Assert.IsTrue(firstPage.HasValue);
+			Assert.GreaterOrEqual(firstPage.Size, byte.MinValue);
+			Assert.AreEqual(PageNumberAndSize.FirstPageNumber, firstPage.Number);
+			Assert.AreEqual(0, firstPage.Index);
 		}
 
-		internal static void AssertIsUnbounded(PageNumberAndSize page)
+		internal static void AssertIsUnbounded(PageNumberAndSize unboundedPage)
 		{
-			Assert.IsTrue(page.IsUnbounded);
-			Assert.AreEqual(byte.MinValue, page.Size);
+			Assert.IsTrue(unboundedPage.IsUnbounded);
+			Assert.AreEqual(byte.MinValue, unboundedPage.Size);
 
-			AssertIsFirstPage(page);
+			AssertIsFirstPage(unboundedPage);
 		}
 
 		#endregion

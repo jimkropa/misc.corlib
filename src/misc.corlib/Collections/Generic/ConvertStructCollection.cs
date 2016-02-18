@@ -281,7 +281,7 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(separator));
+			Contract.Requires<ArgumentException>(!ConvertStrings.IsNullOrWhiteSpace(separator));
 
 			return string.Join(
 				separator, collection.ToStringArray(toStringMethod, removeDuplicates));
