@@ -14,8 +14,20 @@
 			private readonly PagingInfo defaultPagingInfo = new PagingInfo(PageNumberAndSize.Default, TestTotalItems);
 
 			[Test]
+			public void HasValidItemNumbers()
+			{
+				Assert.AreEqual(1, this.defaultPagingInfo.FirstItemNumber);
+				Assert.AreEqual(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.LastItemNumber);
+
+				Assert.AreEqual(this.defaultPagingInfo.FirstItemNumber - 1, this.defaultPagingInfo.FirstItemIndex);
+				Assert.AreEqual(this.defaultPagingInfo.LastItemNumber - 1, this.defaultPagingInfo.LastItemIndex);
+			}
+
+			[Test]
 			public void HasValidFirstAndLastPages()
 			{
+				AssertFirstPage(this.defaultPagingInfo);
+
 				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.CurrentPage);
 				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.FirstPage);
 
@@ -75,6 +87,82 @@
 		}
 
 		[TestFixture]
+		public sealed class DefaultValueOnLastPage
+		{
+			private const int TestTotalItems = 1138;
+			private readonly PagingInfo defaultPagingInfoLastPage = new PagingInfo(250, 10, TestTotalItems);
+
+			[Test]
+			public void HasValidItemNumbers()
+			{
+				Assert.AreEqual(1131, this.defaultPagingInfoLastPage.FirstItemNumber);
+				Assert.AreEqual(1138, this.defaultPagingInfoLastPage.LastItemNumber);
+
+				Assert.AreEqual(this.defaultPagingInfoLastPage.FirstItemNumber - 1, this.defaultPagingInfoLastPage.FirstItemIndex);
+				Assert.AreEqual(this.defaultPagingInfoLastPage.LastItemNumber - 1, this.defaultPagingInfoLastPage.LastItemIndex);
+			}
+
+			[Test]
+			public void HasValidFirstAndLastPages()
+			{
+				AssertLastPage(this.defaultPagingInfoLastPage);
+
+				Assert.Greater(this.defaultPagingInfoLastPage.CurrentPage.Size, byte.MinValue);
+				Assert.Greater(this.defaultPagingInfoLastPage.FirstPage.Size, byte.MinValue);
+				Assert.Greater(this.defaultPagingInfoLastPage.LastPage.Size, byte.MinValue);
+
+				Assert.IsNull(this.defaultPagingInfoLastPage.AllPages);
+				Assert.AreEqual(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.ItemCount);
+				Assert.AreEqual(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.CurrentPage.Size);
+				Assert.AreEqual(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.FirstPage.Size);
+				Assert.AreEqual(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.LastPage.Size);
+				Assert.AreEqual(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.ItemCount);
+			}
+
+			[Test]
+			public void HasValidNextPageAndEmptyPreviousPage()
+			{
+				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfoLastPage.NextPage);
+
+				Assert.AreEqual(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.CurrentPage.Size);
+				Assert.AreEqual(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.PreviousPage.Size);
+			}
+
+			[Test]
+			public void HasFullSetOfAllPages()
+			{
+				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfoLastPage.AllPagesAndItemNumbers();
+
+				Assert.AreEqual(114, pages.Count);
+				Assert.AreEqual(
+					this.defaultPagingInfoLastPage.TotalItems,
+					pages[pages.Count - 1].LastItemNumber);
+
+				int lastItemNumber = 0;
+				for (int i = PageNumberAndSize.FirstPageNumber; i <= pages.Count; i++)
+				{
+					int firstItemNumber = lastItemNumber + 1;
+					int pageIndex = i - 1;
+					PageNumberAndItemNumbers page = pages[pageIndex];
+
+					Assert.AreEqual(i, page.PageNumber);
+					Assert.AreEqual(firstItemNumber, page.FirstItemNumber);
+
+					lastItemNumber = page.LastItemNumber;
+				}
+
+				Assert.AreEqual(this.defaultPagingInfoLastPage.TotalItems, lastItemNumber);
+				Assert.IsTrue(pages[0].HasValue);
+			}
+
+			[Test]
+			public void ConvertsToString()
+			{
+				Assert.AreEqual("PagingInfo[Page[Number=114,Size=10],TotalItems=1138]", this.defaultPagingInfoLastPage.ToString());
+			}
+		}
+
+		[TestFixture]
 		public sealed class DefaultValueWithNoItems
 		{
 			private const int ZeroTotalItems = 0;
@@ -82,10 +170,22 @@
 				new PageNumberAndSize(250, 20), ZeroTotalItems);
 
 			[Test]
+			public void HasValidItemNumbers()
+			{
+				Assert.AreEqual(0, this.defaultPagingInfo.FirstItemNumber);
+				Assert.AreEqual(0, this.defaultPagingInfo.LastItemNumber);
+				Assert.AreEqual(-1, this.defaultPagingInfo.FirstItemIndex);
+				Assert.AreEqual(-1, this.defaultPagingInfo.LastItemIndex);
+			}
+
+			[Test]
 			public void HasValidFirstAndLastPages()
 			{
 				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.CurrentPage);
 				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.FirstPage);
+
+				AssertFirstPage(this.defaultPagingInfo);
+				AssertLastPage(this.defaultPagingInfo);
 
 				Assert.AreEqual(20, this.defaultPagingInfo.CurrentPage.Size);
 				Assert.AreEqual(20, this.defaultPagingInfo.FirstPage.Size);
@@ -135,6 +235,15 @@
 		public sealed class EmptyValue
 		{
 			private readonly PagingInfo emptyPagingInfo = new PagingInfo();
+
+			[Test]
+			public void HasValidItemNumbers()
+			{
+				Assert.AreEqual(0, this.emptyPagingInfo.FirstItemNumber);
+				Assert.AreEqual(0, this.emptyPagingInfo.LastItemNumber);
+				Assert.AreEqual(-1, this.emptyPagingInfo.FirstItemIndex);
+				Assert.AreEqual(-1, this.emptyPagingInfo.LastItemIndex);
+			}
 
 			[Test]
 			public void HasEmptyPages()
@@ -189,11 +298,24 @@
 				PageNumberAndSize.Unbounded, TestTotalItems);
 
 			[Test]
+			public void HasValidItemNumbers()
+			{
+				Assert.AreEqual(1, this.unboundedPagingInfo.FirstItemNumber);
+				Assert.AreEqual(this.unboundedPagingInfo.TotalItems, this.unboundedPagingInfo.LastItemNumber);
+
+				Assert.AreEqual(this.unboundedPagingInfo.FirstItemNumber - 1, this.unboundedPagingInfo.FirstItemIndex);
+				Assert.AreEqual(this.unboundedPagingInfo.LastItemNumber - 1, this.unboundedPagingInfo.LastItemIndex);
+			}
+
+			[Test]
 			public void HasValidFirstAndLastPages()
 			{
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.CurrentPage);
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.FirstPage);
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.LastPage);
+
+				AssertFirstPage(this.unboundedPagingInfo);
+				AssertLastPage(this.unboundedPagingInfo);
 
 				Assert.AreEqual(this.unboundedPagingInfo.TotalItems, this.unboundedPagingInfo.ItemCount);
 				Assert.IsNull(this.unboundedPagingInfo.AllPages);
@@ -245,11 +367,23 @@
 				PageNumberAndSize.Unbounded, ZeroTotalItems);
 
 			[Test]
+			public void HasValidItemNumbers()
+			{
+				Assert.AreEqual(0, this.unboundedPagingInfo.FirstItemNumber);
+				Assert.AreEqual(0, this.unboundedPagingInfo.LastItemNumber);
+				Assert.AreEqual(-1, this.unboundedPagingInfo.FirstItemIndex);
+				Assert.AreEqual(-1, this.unboundedPagingInfo.LastItemIndex);
+			}
+
+			[Test]
 			public void HasValidFirstAndLastPages()
 			{
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.CurrentPage);
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.FirstPage);
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.LastPage);
+
+				AssertFirstPage(this.unboundedPagingInfo);
+				AssertLastPage(this.unboundedPagingInfo);
 
 				Assert.AreEqual(this.unboundedPagingInfo.TotalItems, this.unboundedPagingInfo.ItemCount);
 				Assert.IsNull(this.unboundedPagingInfo.AllPages);
@@ -318,7 +452,7 @@
 			{
 				PagingInfo deserializedPagingInfo
 					= Newtonsoft.Json.JsonConvert.DeserializeObject<PagingInfo>(
-						Page7_Size20_Total1138);
+						Deserialize_Page7_Size20_Total1138);
 
 				Assert.IsNull(deserializedPagingInfo.AllPages);
 
@@ -336,6 +470,16 @@
 
 				Assert.IsFalse(deserializedPagingInfo.IsFirstPage);
 				Assert.IsFalse(deserializedPagingInfo.IsLastPage);
+			}
+
+			[Test]
+			public void MovesToLastPageWhenTurningPast()
+			{
+				PagingInfo pagingInfo = new PagingInfo(27, 20, 39);
+
+				Assert.AreEqual(2, pagingInfo.CurrentPage.Number);
+
+				AssertLastPage(pagingInfo);
 			}
 		}
 
@@ -368,7 +512,7 @@
 			{
 				PagingInfo deserializedPagingInfo
 					= Newtonsoft.Json.JsonConvert.DeserializeObject<PagingInfo>(
-						@"{""CurrentPage"":{""Number"":7,""Size"":20},""TotalItems"":1138}");
+						Deserialize_Page7_Size20_Total1138);
 
 				AssertEquality(this.samplePagingInfo, deserializedPagingInfo);
 			}
@@ -441,6 +585,37 @@
 			Assert.IsTrue(actual != expected);
 			Assert.IsFalse(actual.Equals(expected));
 			Assert.AreNotEqual(actual, expected);
+		}
+
+		internal static void AssertFirstPage(PagingInfo firstPageInfo)
+		{
+			PageNumberAndSizeTests.AssertIsFirstPage(firstPageInfo.CurrentPage);
+
+			Assert.AreEqual(0, firstPageInfo.CurrentPage.Index);
+			Assert.AreEqual(
+				PageNumberAndSize.FirstPageNumber,
+				firstPageInfo.CurrentPage.Number);
+
+			Assert.IsTrue(firstPageInfo.HasValue);
+			Assert.IsFalse(firstPageInfo.PreviousPage.HasValue);
+			Assert.IsTrue(firstPageInfo.IsFirstPage);
+
+			PageNumberAndSizeTests.AssertEquality(
+				firstPageInfo.FirstPage, firstPageInfo.CurrentPage);
+		}
+
+		internal static void AssertLastPage(PagingInfo lastPageInfo)
+		{
+			Assert.AreEqual(
+				lastPageInfo.LastPage.Number,
+				lastPageInfo.CurrentPage.Number);
+
+			Assert.IsTrue(lastPageInfo.HasValue);
+			Assert.IsFalse(lastPageInfo.NextPage.HasValue);
+			Assert.IsTrue(lastPageInfo.IsLastPage);
+
+			PageNumberAndSizeTests.AssertEquality(
+				lastPageInfo.LastPage, lastPageInfo.CurrentPage);
 		}
 	}
 }

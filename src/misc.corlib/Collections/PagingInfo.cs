@@ -218,32 +218,58 @@
 		}
 
 		/// <summary>
-		/// 
+		/// Gets the calculated value of
+		/// the total number of pages.
 		/// </summary>
 		[DataMember(IsRequired = false, Order = 2)]
 		public int TotalPages { get { return this.Calculator.TotalPages; } }
 
 		/// <summary>
-		/// 
+		/// Gets a value indicating whether the
+		/// <see cref="PageNumberAndSize.Number"/>
+		/// of the <see cref="CurrentPage"/> matches
+		/// <see cref="PageNumberAndSize.FirstPageNumber"/>.
 		/// </summary>
+		/// <remarks>
+		/// If <c>true</c>, <see cref="PreviousPage"/>
+		/// will be <see cref="Empty"/>.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 3)]
 		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
 
 		/// <summary>
-		/// 
+		/// Gets a value indicating whether the
+		/// <see cref="PageNumberAndSize.Number"/>
+		/// of the <see cref="CurrentPage"/> matches
+		/// the number of <see cref="TotalPages"/>.
 		/// </summary>
+		/// <remarks>
+		/// If <c>true</c>, <see cref="NextPage"/>
+		/// will be <see cref="Empty"/>.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 4)]
 		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
 
 		/// <summary>
-		/// 
+		/// Gets the one-based ordinal number
+		/// of the first item on this page.
 		/// </summary>
+		/// <remarks>
+		/// If the "paged" collection is empty,
+		/// this value will be zero.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 5)]
 		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
 
 		/// <summary>
-		/// 
+		/// Gets the one-based ordinal number of an
+		/// item within a "paged" collection of items
+		/// which is the first item on this page.
 		/// </summary>
+		/// <remarks>
+		/// If the "paged" collection is empty,
+		/// this value will be zero.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 6)]
 		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
 
@@ -251,6 +277,10 @@
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
 		/// </summary>
+		/// <remarks>
+		/// If the "paged" collection is empty,
+		/// this value will be -1.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 7)]
 		public int FirstItemIndex { get { return this.FirstItemNumber - 1; } }
 
@@ -258,6 +288,10 @@
 		/// Gets the zero-based index of an item within a "paged" collection of items,
 		/// equal to the value of <see cref="LastItemNumber"/> minus one.
 		/// </summary>
+		/// <remarks>
+		/// If the "paged" collection is empty,
+		/// this value will be -1.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 8)]
 		public int LastItemIndex { get { return this.LastItemNumber - 1; } }
 

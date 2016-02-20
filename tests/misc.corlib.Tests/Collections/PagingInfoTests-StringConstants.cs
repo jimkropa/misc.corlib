@@ -105,13 +105,8 @@ namespace MiscCorLib.Collections
   ]
 }";
 
-		private const string Deserialize_Page7_Size20_Total1138 = @"{
-  ""CurrentPage"": {
-    ""Number"": 7,
-    ""Size"": 20
-  },
-  ""TotalItems"": 1138
-}";
+		private const string Deserialize_Page7_Size20_Total1138
+			= @"{""CurrentPage"":{""Number"":7,""Size"":20},""TotalItems"":1138}";
 
 		private const string Unbounded_Total_WithAllPages = @"";
 
