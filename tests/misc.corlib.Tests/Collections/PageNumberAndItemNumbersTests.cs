@@ -86,8 +86,16 @@
 		internal static void AssertEquality(
 			PageNumberAndItemNumbers expected, PageNumberAndItemNumbers actual)
 		{
-			Assert.IsTrue(expected.Equals(actual), "PageNumberAndItemNumbers.Equals");
-			Assert.AreEqual(expected, actual, "Object Equality");
+			Assert.IsTrue(expected == actual);
+			Assert.IsFalse(expected != actual);
+			Assert.IsTrue(expected.Equals(actual));
+			Assert.AreEqual(expected, actual);
+
+			Assert.IsTrue(actual == expected);
+			Assert.IsFalse(actual != expected);
+			Assert.IsTrue(actual.Equals(expected));
+			Assert.AreEqual(actual, expected);
+
 			Assert.AreEqual(expected.PageNumber, actual.PageNumber, "PageNumber");
 			Assert.AreEqual(expected.FirstItemNumber, actual.FirstItemNumber, "FirstItemNumber");
 			Assert.AreEqual(expected.LastItemNumber, actual.LastItemNumber, "LastItemNumber");

@@ -217,18 +217,33 @@
 			get { return this.CurrentPage.HasValue && this.TotalItems >= 0; }
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 2)]
 		public int TotalPages { get { return this.Calculator.TotalPages; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 3)]
 		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 4)]
 		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 5)]
 		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 6)]
 		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
 
@@ -246,18 +261,33 @@
 		[DataMember(IsRequired = false, Order = 8)]
 		public int LastItemIndex { get { return this.LastItemNumber - 1; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 9)]
 		public int ItemCount { get { return this.Calculator.ItemCount; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 10)]
 		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 11)]
 		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 12)]
 		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[DataMember(IsRequired = false, Order = 13)]
 		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
 
@@ -275,8 +305,8 @@
 		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
 		/// </para>
 		/// <para>
-		/// This property could be private, but is given internal access
-		/// so that it may be used by unit tests.
+		/// This property could be private, but is given internal
+		/// access so that it may be used by unit tests.
 		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = false, Name = "AllPages", EmitDefaultValue = false, Order = 14)]
@@ -345,6 +375,52 @@
 
 				return newCalculator;
 			}
+		}
+
+		#endregion
+
+		#region [ Public Static Overrides of Equality Operators ]
+
+		/// <summary>
+		/// Indicates whether the values of two
+		/// specified <see cref="PagingInfo"/>
+		/// objects are equal.
+		/// </summary>
+		/// <param name="left">
+		/// The first object to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second object to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/>
+		/// and <paramref name="right"/> are equal;
+		/// otherwise <c>false</c>.
+		/// </returns>
+		public static bool operator ==(PagingInfo left, PagingInfo right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		/// Indicates whether the values of two
+		/// specified <see cref="PagingInfo"/>
+		/// objects are not equal.
+		/// </summary>
+		/// <param name="left">
+		/// The first object to compare.
+		/// </param>
+		/// <param name="right">
+		/// The second object to compare.
+		/// </param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left"/>
+		/// and <paramref name="right"/> are not equal;
+		/// otherwise <c>false</c>.
+		/// </returns>
+		public static bool operator !=(PagingInfo left, PagingInfo right)
+		{
+			return !left.Equals(right);
 		}
 
 		#endregion

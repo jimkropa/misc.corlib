@@ -342,78 +342,105 @@
 		[TestFixture]
 		public sealed class Equality
 		{
-			public static void IsTrueWhenSame()
+			private readonly PagingInfo samplePagingInfo = new PagingInfo(
+				new PageNumberAndSize(7, 20), 1138);
+
+			[Test]
+			public void IsTrueWhenSame()
+			{
+				PagingInfo samePagingInfo = new PagingInfo(7, 20, 1138);
+
+				AssertEquality(this.samplePagingInfo, samePagingInfo);
+			}
+
+			[Test]
+			public void IsTrueWhenEmpty()
 			{
 				PagingInfo empty1 = new PagingInfo();
-				PagingInfo empty2 = new PagingInfo();
+				PagingInfo empty2 = PagingInfo.Empty;
+
+				AssertEquality(empty1, empty2);
+				AssertInequality(this.samplePagingInfo, PagingInfo.Empty);
 			}
 
-			public static void IsTrueWhenDeserialized()
+			[Test]
+			public void IsTrueWhenDeserialized()
 			{
-				PagingInfo empty1 = new PagingInfo();
-				PagingInfo empty2 = new PagingInfo();
+				PagingInfo deserializedPagingInfo
+					= Newtonsoft.Json.JsonConvert.DeserializeObject<PagingInfo>(
+						@"{""CurrentPage"":{""Number"":7,""Size"":20},""TotalItems"":1138}");
+
+				AssertEquality(this.samplePagingInfo, deserializedPagingInfo);
 			}
 
-			public static void IsTrueWhenHasAllPages()
+			[Test]
+			public void IsTrueWhenHasAllPages()
 			{
-				PagingInfo empty1 = new PagingInfo();
-				PagingInfo empty2 = new PagingInfo();
+				PagingInfo samePagingInfo = new PagingInfo(7, 20, 1138, true);
+
+				AssertEquality(this.samplePagingInfo, samePagingInfo);
 			}
 
-			public static void IsFalseWhenDifferentPageNumber()
+			[Test]
+			public void IsFalseWhenDifferentPageNumber()
 			{
-				
+				PagingInfo differentPageNumber = new PagingInfo(8, 20, 1138);
+
+				AssertInequality(samplePagingInfo, differentPageNumber);
 			}
 
-			public static void IsFalseWhenDifferentPageSize()
+			[Test]
+			public void IsFalseWhenDifferentPageSize()
 			{
+				PagingInfo differentPageSize = new PagingInfo(7, 19, 1138);
 
+				AssertInequality(samplePagingInfo, differentPageSize);
 			}
 
-			public static void IsFalseWhenDifferentTotalItems()
+			public void IsFalseWhenDifferentTotalItems()
 			{
-				
+				PagingInfo differentTotalItems = new PagingInfo(7, 20, 1137);
+
+				AssertInequality(samplePagingInfo, differentTotalItems);
 			}
 		}
 
-		internal void AssertEquality(PagingInfo x, PagingInfo y)
+		internal static void AssertEquality(PagingInfo expected, PagingInfo actual)
 		{
-			Assert.IsTrue(x == y);
-			Assert.IsTrue(y == x);
-			Assert.IsFalse(x != y);
-			Assert.IsFalse(y != x);
+			Assert.IsTrue(expected == actual);
+			Assert.IsFalse(expected != actual);
+			Assert.IsTrue(expected.Equals(actual));
+			Assert.AreEqual(expected, actual);
 
-			Assert.IsTrue(x.CurrentPage.Equals(y.CurrentPage));
-			Assert.IsTrue(y.CurrentPage.Equals(x.CurrentPage));
-			Assert.IsTrue(x.CurrentPage == y.CurrentPage);
-			Assert.IsTrue(y.CurrentPage == x.CurrentPage);
-			Assert.IsFalse(x.CurrentPage != y.CurrentPage);
-			Assert.IsFalse(y.CurrentPage != x.CurrentPage);
+			Assert.IsTrue(actual == expected);
+			Assert.IsFalse(actual != expected);
+			Assert.IsTrue(actual.Equals(expected));
+			Assert.AreEqual(actual, expected);
 
-			Assert.AreEqual(x, y);
-			Assert.AreEqual(y, x);
+			Assert.IsTrue(expected.CurrentPage.Equals(actual.CurrentPage));
+			Assert.IsTrue(actual.CurrentPage.Equals(expected.CurrentPage));
+			Assert.IsTrue(expected.CurrentPage == actual.CurrentPage);
+			Assert.IsTrue(actual.CurrentPage == expected.CurrentPage);
+			Assert.IsFalse(expected.CurrentPage != actual.CurrentPage);
+			Assert.IsFalse(actual.CurrentPage != expected.CurrentPage);
 
-			Assert.IsTrue(x.Equals(y));
-			Assert.IsTrue(y.Equals(x));
-
-			Assert.AreEqual(x.CurrentPage, y.CurrentPage);
-			Assert.AreEqual(x.CurrentPage.Number, y.CurrentPage.Number);
-			Assert.AreEqual(x.CurrentPage.Size, y.CurrentPage.Size);
-			Assert.AreEqual(x.TotalItems, y.TotalItems);
+			Assert.AreEqual(expected.CurrentPage, actual.CurrentPage);
+			Assert.AreEqual(expected.CurrentPage.Number, actual.CurrentPage.Number);
+			Assert.AreEqual(expected.CurrentPage.Size, actual.CurrentPage.Size);
+			Assert.AreEqual(expected.TotalItems, actual.TotalItems);
 		}
 
-		internal void AssertInequality(PagingInfo x, PagingInfo y)
+		internal static void AssertInequality(PagingInfo expected, PagingInfo actual)
 		{
-			Assert.IsFalse(x == y);
-			Assert.IsFalse(y == x);
-			Assert.IsTrue(x != y);
-			Assert.IsTrue(y != x);
+			Assert.IsFalse(expected == actual);
+			Assert.IsTrue(expected != actual);
+			Assert.IsFalse(expected.Equals(actual));
+			Assert.AreNotEqual(expected, actual);
 
-			Assert.AreNotEqual(x, y);
-			Assert.AreNotEqual(y, x);
-
-			Assert.IsTrue(x.Equals(y));
-			Assert.IsTrue(y.Equals(x));
+			Assert.IsFalse(actual == expected);
+			Assert.IsTrue(actual != expected);
+			Assert.IsFalse(actual.Equals(expected));
+			Assert.AreNotEqual(actual, expected);
 		}
 	}
 }
