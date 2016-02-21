@@ -127,6 +127,7 @@
     <None Include="..\..\boilerplate.licenseheader">
       <Link>boilerplate.licenseheader</Link>
     </None>
+    <None Include="Collections\PagingClassDiagram.cd" />
     <None Include="misc.corlib.nuspec" />
     <None Include="packages.config" />
     <None Include="Settings.StyleCop" />

@@ -14,6 +14,8 @@
 	public struct PageNumberAndItemNumbers
 		: IEquatable<PageNumberAndItemNumbers>, IComparable<PageNumberAndItemNumbers>
 	{
+		#region [ Public Fields and Internal Constructor ]
+
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize"/>
 		/// which is not valid, indicating an unspecified value.
@@ -21,17 +23,47 @@
 		public static readonly PageNumberAndItemNumbers Empty
 			= new PageNumberAndItemNumbers();
 		
+		/// <summary>
+		/// The one-based ordinal number of
+		/// this page within a "paged" collection.
+		/// </summary>
 		[DataMember(IsRequired = true, Order = 0)]
 		public readonly int PageNumber;
 
+		/// <summary>
+		/// The one-based ordinal number
+		/// of the first item on this page.
+		/// </summary>
 		[DataMember(IsRequired = true, Order = 1)]
 		public readonly int FirstItemNumber;
 
+		/// <summary>
+		/// The one-based ordinal number
+		/// of the last item on this page.
+		/// </summary>
 		[DataMember(IsRequired = true, Order = 2)]
 		public readonly int LastItemNumber;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers"/> struct.
+		/// </summary>
+		/// <param name="pageNumber">
+		/// Initial value for the <see cref="PageNumber"/> field.
+		/// </param>
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size"/>
+		/// of each page in a "paged" collection.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection.
+		/// </param>
+		/// <param name="isLastPage">
+		/// Optional signal for setting the <see cref="LastItemNumber"/>
+		/// value, whether to calculate if <paramref name="pageNumber"/>
+		/// is the last page or to use this value.
+		/// </param>
 		internal PageNumberAndItemNumbers(
-			int pageNumber, byte pageSize, int totalItems)
+			int pageNumber, byte pageSize, int totalItems, bool? isLastPage = null)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
 				pageNumber >= PageNumberAndSize.FirstPageNumber,
@@ -46,9 +78,14 @@
 				this.LastItemNumber = pageNumber * pageSize;
 				this.FirstItemNumber = this.LastItemNumber - pageSize + 1;
 
-				// Determine whether this is the last page.
-				if (PagingInfoCalculator.CalculateTotalPages(pageSize, totalItems) == this.PageNumber)
+				// Determine whether this is the last page,
+				// either by a parameter value or by calculation.
+				if ((isLastPage.HasValue && isLastPage.Value)
+					|| (PagingInfoCalculator.CalculateTotalPages(pageSize, totalItems) == this.PageNumber))
 				{
+					// If is the last page, replace the
+					// calculated LastItemNumber with
+					// the totalItems value.
 					this.LastItemNumber = totalItems;
 				}
 			}
@@ -61,12 +98,27 @@
 			}
 		}
 
+		#endregion
+
 		/// <summary>
-		/// 
+		/// Calculates the full set of page numbers and item
+		/// numbers from given <paramref name="pageSize"/>
+		/// and <paramref name="totalItems"/> values.
 		/// </summary>
-		/// <param name="pageSize"></param>
-		/// <param name="totalItems"></param>
-		/// <returns></returns>
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size"/>
+		/// of each page in a "paged" collection.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection.
+		/// </param>
+		/// <returns>
+		/// The full set of page numbers and item numbers.
+		/// </returns>
+		/// <remarks>
+		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)"/>
+		/// method of <see cref="PagingInfoCalculator"/>.
+		/// </remarks>
 		public static IReadOnlyList<PageNumberAndItemNumbers> CalculatePagesAndItemNumbers(
 			byte pageSize, int totalItems)
 		{

@@ -262,13 +262,18 @@
 		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
 
 		/// <summary>
-		/// Gets the one-based ordinal number of an
-		/// item within a "paged" collection of items
-		/// which is the first item on this page.
+		/// Gets the one-based ordinal number
+		/// of the last item on this page.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// If the "paged" collection is empty,
 		/// this value will be zero.
+		/// </para>
+		/// <para>
+		/// If the paging is <see cref="PageNumberAndSize.Unbounded"/>,
+		/// this value will equal <see cref="TotalItems"/>.
+		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 6)]
 		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
@@ -296,31 +301,58 @@
 		public int LastItemIndex { get { return this.LastItemNumber - 1; } }
 
 		/// <summary>
-		/// 
+		/// Gets the number of items on this page.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If the "paged" collection is empty,
+		/// this value will be zero.
+		/// </para>
+		/// <para>
+		/// In most other cases, this value will be the same
+		/// as the <see cref="PageNumberAndSize.Size"/>
+		/// of the <see cref="CurrentPage"/>, but if
+		/// <see cref="IsLastPage"/> is <c>true</c>,
+		/// this value may be less than the page size.
+		/// </para>
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 9)]
 		public int ItemCount { get { return this.Calculator.ItemCount; } }
 
 		/// <summary>
-		/// 
+		/// Gets the <see cref="PageNumberAndSize"/>
+		/// of the next page of items.
 		/// </summary>
+		/// <remarks>
+		/// If <see cref="IsLastPage"/> is <c>true</c>
+		/// or the paging is <see cref="PageNumberAndSize.Unbounded"/>
+		/// this value will be <see cref="PageNumberAndSize.Empty"/>.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 10)]
 		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
 
 		/// <summary>
-		/// 
+		/// Gets the <see cref="PageNumberAndSize"/>
+		/// of the previous page of items.
 		/// </summary>
+		/// <remarks>
+		/// If <see cref="IsFirstPage"/> is <c>true</c>
+		/// or the paging is <see cref="PageNumberAndSize.Unbounded"/>
+		/// this value will be <see cref="PageNumberAndSize.Empty"/>.
+		/// </remarks>
 		[DataMember(IsRequired = false, Order = 11)]
 		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
 
 		/// <summary>
-		/// 
+		/// Gets the <see cref="PageNumberAndSize"/>
+		/// of the first page of items.
 		/// </summary>
 		[DataMember(IsRequired = false, Order = 12)]
 		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
 
 		/// <summary>
-		/// 
+		/// Gets the <see cref="PageNumberAndSize"/>
+		/// of the last page of items.
 		/// </summary>
 		[DataMember(IsRequired = false, Order = 13)]
 		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }

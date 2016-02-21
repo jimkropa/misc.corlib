@@ -4,6 +4,8 @@
 
 	using NUnit.Framework;
 
+	// TODO: Test ToString
+	// TODO: Test AllPagesAndItemNumbers
 	[TestFixture]
 	public sealed class PageNumberAndItemNumbersTests
 	{

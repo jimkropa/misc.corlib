@@ -194,10 +194,32 @@
 
 		#region [ Static Methods ]
 
+		/// <summary>
+		/// Calculates the total number of pages in
+		/// a "paged" collection given the number of
+		/// items on each page and the total number
+		/// of items in the collection.
+		/// </summary>
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size"/>
+		/// of each page in a "paged" collection.
+		/// Must be greater than zero so that there
+		/// is no risk of division by zero.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection.
+		/// Must be greater than zero, since this method
+		/// ought never be invoked for an empty collection.
+		/// </param>
+		/// <returns>
+		/// The total number of pages, approximately
+		/// <paramref name="totalItems"/> divided by
+		/// <paramref name="pageSize"/>, rounding up.
+		/// </returns>
 		internal static int CalculateTotalPages(byte pageSize, int totalItems)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
-			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
+			Contract.Requires<ArgumentOutOfRangeException>(totalItems > 0);
 
 			// This calculation is part of the calculation of total pages,
 			// which will produce an invalid value if the number of total items
@@ -219,6 +241,22 @@
 			return extendedTotalItems / pageSize;
 		}
 
+		/// <summary>
+		/// Calculates the full set of page numbers and item numbers
+		/// from parameters relayed by the public static
+		/// <see cref="PageNumberAndItemNumbers.CalculatePagesAndItemNumbers"/>
+		/// method of <see cref="PageNumberAndItemNumbers"/>.
+		/// </summary>
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size"/>
+		/// of each page in a "paged" collection.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection.
+		/// </param>
+		/// <returns>
+		/// The full set of page numbers and item numbers.
+		/// </returns>
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems)
 		{
@@ -240,6 +278,20 @@
 			};
 		}
 
+		/// <summary>
+		/// Calculates the full set of page numbers and item numbers
+		/// for the <see cref="PagingInfo.AllPages"/> property of a
+		/// given <see cref="PagingInfo"/> value.
+		/// </summary>
+		/// <param name="pagingInfo">
+		/// A <see cref="PagingInfo"/> value from which to gather
+		/// page <see cref="PageNumberAndSize.Size"/>,
+		/// <see cref="PagingInfo.TotalItems"/>, and
+		/// <see cref="PagingInfo.TotalPages"/> values.
+		/// </param>
+		/// <returns>
+		/// The full set of page numbers and item numbers.
+		/// </returns>
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			PagingInfo pagingInfo)
 		{
@@ -249,6 +301,30 @@
 				pagingInfo.CurrentPage.Size, pagingInfo.TotalItems, pagingInfo.TotalPages);
 		}
 
+		/// <summary>
+		/// Private overload shared by the two internal overloads,
+		/// assumes that <paramref name="totalPages"/> value
+		/// is correct, having already been calculated by the
+		/// <see cref="CalculateTotalPages"/> method.
+		/// </summary>
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size"/>
+		/// of each page in a "paged" collection.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection,
+		/// corresponding to the <see cref="PagingInfo.TotalItems"/>
+		/// of a <see cref="PagingInfo"/> value.
+		/// </param>
+		/// <param name="totalPages">
+		/// The total number of items in a "paged" collection,
+		/// corresponding to the <see cref="PagingInfo.TotalPages"/>
+		/// of a <see cref="PagingInfo"/> value, or otherwise calculated
+		/// by the <see cref="CalculateTotalPages"/> method.
+		/// </param>
+		/// <returns>
+		/// The full set of page numbers and item numbers.
+		/// </returns>
 		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems, int totalPages)
 		{
@@ -266,7 +342,7 @@
 				List<PageNumberAndItemNumbers> list = new List<PageNumberAndItemNumbers>();
 				for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
 				{
-					list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems));
+					list.Add(new PageNumberAndItemNumbers(pageNumber, pageSize, totalItems, pageNumber == totalPages));
 				}
 
 				return list;
@@ -274,7 +350,8 @@
 
 			// If the paged collection contains no items or
 			// is unbounded, return a list with a single item,
-			// representing the empty or unbounded page.
+			// representing the empty (totalItems == 0)
+			// or unbounded (pageSize == 0) page.
 			return new List<PageNumberAndItemNumbers>
 			{
 				new PageNumberAndItemNumbers(
