@@ -98,37 +98,21 @@
 			}
 		}
 
-		#endregion
-
 		/// <summary>
-		/// Calculates the full set of page numbers and item
-		/// numbers from given <paramref name="pageSize"/>
-		/// and <paramref name="totalItems"/> values.
+		/// Gets a value indicating whether the
+		/// <see cref="PageNumber"/> value is valid.
 		/// </summary>
-		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size"/>
-		/// of each page in a "paged" collection.
-		/// </param>
-		/// <param name="totalItems">
-		/// The total number of items in a "paged" collection.
-		/// </param>
-		/// <returns>
-		/// The full set of page numbers and item numbers.
-		/// </returns>
-		/// <remarks>
-		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)"/>
-		/// method of <see cref="PagingInfoCalculator"/>.
-		/// </remarks>
-		public static IReadOnlyList<PageNumberAndItemNumbers> CalculatePagesAndItemNumbers(
-			byte pageSize, int totalItems)
+		////	[NonSerialized] // (this is applicable only to fields, not properties)
+		public bool HasValue
 		{
-			// Zero as page size is acceptable,
-			// indicating a single "unbounded" page.
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
-
-			return PagingInfoCalculator.AllPagesAndItemNumbers(pageSize, totalItems);
+			get
+			{
+				return this.PageNumber >= PageNumberAndSize.FirstPageNumber
+					&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;
+			}
 		}
+
+		#endregion
 
 		#region [ Public Static Overrides of Comparison and Equality Operators ]
 
@@ -261,17 +245,33 @@
 		#endregion
 
 		/// <summary>
-		/// Gets a value indicating whether the
-		/// <see cref="PageNumber"/> value is valid.
+		/// Calculates the full set of page numbers and item
+		/// numbers from given <paramref name="pageSize"/>
+		/// and <paramref name="totalItems"/> values.
 		/// </summary>
-		////	[NonSerialized] // (this is applicable only to fields, not properties)
-		public bool HasValue
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size"/>
+		/// of each page in a "paged" collection.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection.
+		/// </param>
+		/// <returns>
+		/// The full set of page numbers and item numbers.
+		/// </returns>
+		/// <remarks>
+		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)"/>
+		/// method of <see cref="PagingInfoCalculator"/>.
+		/// </remarks>
+		public static IReadOnlyList<PageNumberAndItemNumbers> CalculatePagesAndItemNumbers(
+			byte pageSize, int totalItems)
 		{
-			get
-			{
-				return this.PageNumber >= PageNumberAndSize.FirstPageNumber
-					&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;
-			}
+			// Zero as page size is acceptable,
+			// indicating a single "unbounded" page.
+			Contract.Requires<ArgumentOutOfRangeException>(
+				totalItems >= 0, "The number of items in the list must not be negative!");
+
+			return PagingInfoCalculator.AllPagesAndItemNumbers(pageSize, totalItems);
 		}
 
 		/// <summary>
