@@ -571,9 +571,16 @@
 				pageNumber >= PageNumberAndSize.FirstPageNumber,
 				"An ordinal page number is not a zero-based index. The number must be at least one.");
 
-			// Always return the unbounded page if the current page is unbounded.
-			return this.CurrentPage.IsUnbounded ? PageNumberAndSize.Unbounded
-				: new PageNumberAndSize(pageNumber, this.CurrentPage.Size);
+			// Prevent a runtime exception from possible division by zero.
+			if (this.CurrentPage.HasValue)
+			{
+				// Always return the unbounded page if the current page is unbounded.
+				return this.CurrentPage.IsUnbounded ? PageNumberAndSize.Unbounded
+					: new PageNumberAndSize(pageNumber, this.CurrentPage.Size);
+			}
+
+			// Return empty if uninitialized.
+			return PageNumberAndSize.Empty;
 		}
 
 		#endregion

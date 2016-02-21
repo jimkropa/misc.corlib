@@ -263,7 +263,7 @@
 		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)"/>
 		/// method of <see cref="PagingInfoCalculator"/>.
 		/// </remarks>
-		public static IReadOnlyList<PageNumberAndItemNumbers> CalculatePagesAndItemNumbers(
+		public static IReadOnlyList<PageNumberAndItemNumbers> Calculate(
 			byte pageSize, int totalItems)
 		{
 			// Zero as page size is acceptable,

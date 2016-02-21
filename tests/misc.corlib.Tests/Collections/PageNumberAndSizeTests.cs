@@ -5,6 +5,7 @@
 	using NUnit.Framework;
 
 	// TODO: Test ToString
+	// TODO: Test IComparable
 	[TestFixture]
 	public sealed class PageNumberAndSizeTests
 	{

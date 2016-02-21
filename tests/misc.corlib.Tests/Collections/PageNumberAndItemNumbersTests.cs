@@ -1,11 +1,14 @@
 ﻿namespace MiscCorLib.Collections
 {
+	using System;
+	using System.Collections.Generic;
+
 	using Newtonsoft.Json;
 
 	using NUnit.Framework;
 
 	// TODO: Test ToString
-	// TODO: Test AllPagesAndItemNumbers
+	// TODO: Test IComparable
 	[TestFixture]
 	public sealed class PageNumberAndItemNumbersTests
 	{
@@ -80,6 +83,79 @@
 				Assert.Throws<JsonSerializationException>(
 					() => JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
 						"{\"PageNumber\":7,\"FirstItemNumber\":20}"));
+			}
+		}
+
+		[TestFixture]
+		public sealed class AllPagesAndItemNumbers
+		{
+			[Test]
+			public void CaclucatesCorrectlyFromValidSizes()
+			{
+				IReadOnlyList<PageNumberAndItemNumbers> pages
+					= PageNumberAndItemNumbers.Calculate(20, 119);
+
+				Assert.IsNotNull(pages);
+				Assert.AreEqual(6, pages.Count);
+				Assert.AreEqual(119, pages[pages.Count - 1].LastItemNumber);
+
+				int lastItemNumber = 0;
+				for (int i = PageNumberAndSize.FirstPageNumber; i <= pages.Count; i++)
+				{
+					int firstItemNumber = lastItemNumber + 1;
+					int pageIndex = i - 1;
+					PageNumberAndItemNumbers page = pages[pageIndex];
+
+					Assert.AreEqual(i, page.PageNumber);
+					Assert.AreEqual(firstItemNumber, page.FirstItemNumber);
+
+					lastItemNumber = page.LastItemNumber;
+				}
+
+				Assert.AreEqual(119, lastItemNumber);
+				Assert.IsTrue(pages[0].HasValue);
+			}
+
+			[Test]
+			public void ReturnsOnePageForZeroItems()
+			{
+				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesWithSize
+					= PageNumberAndItemNumbers.Calculate(20, 0);
+
+				Assert.IsNotNull(zeroPagesWithSize);
+				Assert.AreEqual(1, zeroPagesWithSize.Count);
+				Assert.AreEqual(1, zeroPagesWithSize[0].PageNumber);
+				Assert.AreEqual(0, zeroPagesWithSize[0].FirstItemNumber);
+				Assert.AreEqual(0, zeroPagesWithSize[0].LastItemNumber);
+
+				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesUnbounded
+					= PageNumberAndItemNumbers.Calculate(0, 0);
+
+				Assert.IsNotNull(zeroPagesUnbounded);
+				Assert.AreEqual(1, zeroPagesUnbounded.Count);
+				Assert.AreEqual(1, zeroPagesUnbounded[0].PageNumber);
+				Assert.AreEqual(0, zeroPagesUnbounded[0].FirstItemNumber);
+				Assert.AreEqual(0, zeroPagesUnbounded[0].LastItemNumber);
+			}
+
+			[Test]
+			public void ReturnsOnePageForUnbounded()
+			{
+				IReadOnlyList<PageNumberAndItemNumbers> pagesUnbounded
+					= PageNumberAndItemNumbers.Calculate(0, 57);
+
+				Assert.IsNotNull(pagesUnbounded);
+				Assert.AreEqual(1, pagesUnbounded.Count);
+				Assert.AreEqual(1, pagesUnbounded[0].PageNumber);
+				Assert.AreEqual(1, pagesUnbounded[0].FirstItemNumber);
+				Assert.AreEqual(57, pagesUnbounded[0].LastItemNumber);
+			}
+
+			[Test]
+			public void DoesNotAllowInvalidSizes()
+			{
+				Assert.Throws<ArgumentOutOfRangeException>(
+					() => PageNumberAndItemNumbers.Calculate(0, -1));
 			}
 		}
 

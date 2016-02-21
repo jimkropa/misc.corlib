@@ -187,6 +187,11 @@
 		/// <see cref="Number"/> and <see cref="Size"/>
 		/// values are valid.
 		/// </summary>
+		/// <remarks>
+		/// The <see cref="byte"/> type ensures that the
+		/// <see cref="Size"/> value will never be invalid.
+		/// Zero indicates <see cref="IsUnbounded"/>.
+		/// </remarks>
 		////	[NonSerialized] // (this is applicable only to fields, not properties)
 		public bool HasValue
 		{

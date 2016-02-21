@@ -5,7 +5,6 @@
 
 	using NUnit.Framework;
 
-	// TODO: Test TurnToPage
 	[TestFixture]
 	public sealed partial class PagingInfoTests
 	{
@@ -566,6 +565,53 @@
 			}
 		}
 
+		[TestFixture]
+		public sealed class TurnToPage
+		{
+			[Test]
+			public void DefaultCaseReusesSize()
+			{
+				PagingInfo validPagingInfo = new PagingInfo(3, 10, 57);
+				PageNumberAndSize newPage = validPagingInfo.TurnToPage(2);
+
+				Assert.AreEqual(2, newPage.Number);
+				Assert.AreEqual(10, newPage.Size);
+				Assert.IsFalse(newPage.IsUnbounded);
+			}
+
+			[Test]
+			public void AllowsTurningPastLastPage()
+			{
+				PagingInfo validPagingInfo = new PagingInfo(3, 10, 57);
+				PageNumberAndSize newPage = validPagingInfo.TurnToPage(8);
+
+				Assert.AreEqual(8, newPage.Number);
+				Assert.AreEqual(10, newPage.Size);
+				Assert.IsFalse(newPage.IsUnbounded);
+			}
+
+			[Test]
+			public void ReturnsUnboundedFromUnbounded()
+			{
+				PagingInfo unboundedPagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 57);
+				PageNumberAndSize newPage = unboundedPagingInfo.TurnToPage(8);
+
+				Assert.AreEqual(1, newPage.Number);
+				Assert.AreEqual(0, newPage.Size);
+				Assert.IsTrue(newPage.IsUnbounded);
+			}
+
+			[Test]
+			public void ReturnsEmptyFromEmpty()
+			{
+				PageNumberAndSize newPage = PagingInfo.Empty.TurnToPage(6);
+
+				PageNumberAndSizeTests.AssertIsEmpty(newPage);
+			}
+		}
+
+		#region [ Internal Static Test Assertion Methods ]
+
 		internal static void AssertEquality(PagingInfo expected, PagingInfo actual)
 		{
 			Assert.IsTrue(expected == actual);
@@ -634,5 +680,7 @@
 			PageNumberAndSizeTests.AssertEquality(
 				lastPageInfo.LastPage, lastPageInfo.CurrentPage);
 		}
+
+		#endregion
 	}
 }

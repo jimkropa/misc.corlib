@@ -244,7 +244,7 @@
 		/// <summary>
 		/// Calculates the full set of page numbers and item numbers
 		/// from parameters relayed by the public static
-		/// <see cref="PageNumberAndItemNumbers.CalculatePagesAndItemNumbers"/>
+		/// <see cref="PageNumberAndItemNumbers.Calculate"/>
 		/// method of <see cref="PageNumberAndItemNumbers"/>.
 		/// </summary>
 		/// <param name="pageSize">
