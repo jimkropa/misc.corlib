@@ -83,6 +83,8 @@
 	public class Encryptor<T> : SymmetricTransformer<T>
 		where T : SymmetricAlgorithm
 	{
+		#region [ Internal Constructor Overloads used by Encryption.CreateEncryptor ]
+
 		internal Encryptor(
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
@@ -127,6 +129,8 @@
 			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
 
+		#endregion
+
 		public byte[] Encrypt([NotNull] byte[] plaintextBytes)
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
@@ -134,15 +138,9 @@
 			return this.Transform(plaintextBytes);
 		}
 
-		public string EncryptToString([NotNull] string plaintext)
-		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
-
-			return this.EncryptToString(
-				plaintext, Encryption.DefaultTextEncoding, Encryption.DefaultCipherEncoding);
-		}
-
-		public string EncryptToString(string plaintext, CipherEncoding encoding)
+		public string EncryptToString(
+			[NotNull] string plaintext,
+			ByteArrayStringEncoding encoding = Encryption.DefaultByteArrayStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(plaintext != null);
 
@@ -150,17 +148,10 @@
 				plaintext, Encryption.DefaultTextEncoding, encoding);
 		}
 
-		public string EncryptToString(string plaintext, [NotNull] Encoding encoding)
-		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
-			Contract.Requires<ArgumentNullException>(encoding != null);
-
-			return this.EncryptToString(
-				plaintext, encoding, Encryption.DefaultCipherEncoding);
-		}
-		
 		public string EncryptToString(
-			[NotNull] string plaintext, [NotNull] Encoding textEncoding, CipherEncoding cipherEncoding)
+			[NotNull] string plaintext,
+			[NotNull] Encoding textEncoding,
+			ByteArrayStringEncoding cipherEncoding = Encryption.DefaultByteArrayStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(plaintext != null);
 			Contract.Requires<ArgumentNullException>(textEncoding != null);
@@ -169,20 +160,13 @@
 				textEncoding.GetBytes(plaintext), cipherEncoding);
 		}
 
-		public string EncryptToString([NotNull] byte[] plaintextBytes)
-		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
-
-			return this.EncryptToString(
-				plaintextBytes, Encryption.DefaultCipherEncoding);
-		}
-
 		public string EncryptToString(
-			[NotNull] byte[] plaintextBytes, CipherEncoding encoding)
+			[NotNull] byte[] plaintextBytes,
+			ByteArrayStringEncoding encoding = Encryption.DefaultByteArrayStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
 
-			return encoding == CipherEncoding.Hexadecimal
+			return encoding == ByteArrayStringEncoding.Hexadecimal
 				? this.Transform(plaintextBytes).ToHexadecimalString()
 				: this.Transform(plaintextBytes).ToBase64String();
 		}

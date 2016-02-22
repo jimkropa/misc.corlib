@@ -15,10 +15,11 @@
 	/// </remarks>
 	public static partial class Encryption
 	{
-		private const int DefaultSaltSize = 8;
-		public const CipherEncoding DefaultCipherEncoding = CipherEncoding.Base64;
+		public const ByteArrayStringEncoding DefaultByteArrayStringEncoding = ByteArrayStringEncoding.Base64;
 		public static readonly Encoding DefaultTextEncoding = Encoding.UTF8;
 		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
+
+		private const int DefaultSaltSize = 8;
 
 		private static byte[] DeriveEncryptionKeyFromPassword(string password, int keySize, int saltSize, out byte[] salt)
 		{

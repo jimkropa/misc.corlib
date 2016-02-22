@@ -141,14 +141,17 @@
 			}
 		}
 
+		// TODO: Remove [NotNull] and simply return null for null.
 		protected byte[] Transform([NotNull] byte[] plaintextBytes)
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
 
 			// TODO: Here is where to implement looping over a buffer.
+			// The other place is in ConvertByteArray.ToText
 			return this.Transformer.TransformFinalBlock(plaintextBytes, 0, 0);
 		}
 
+		// TODO: Remove [NotNull] and simply return null for null.
 		protected byte[] Transform([NotNull] string plaintext, [NotNull] Encoding encoding)
 		{
 			Contract.Requires<ArgumentNullException>(plaintext != null);

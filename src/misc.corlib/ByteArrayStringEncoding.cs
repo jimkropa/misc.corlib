@@ -1,10 +1,10 @@
-﻿namespace MiscCorLib.Security.Cryptography
+﻿namespace MiscCorLib
 {
 	/// <summary>
 	/// Enumeration of options for encoding
 	/// byte arrays to and from strings.
 	/// </summary>
-	public enum CipherEncoding : byte
+	public enum ByteArrayStringEncoding : byte
 	{
 		/// <summary>
 		/// Indication to use
@@ -15,7 +15,7 @@
 
 		/// <summary>
 		/// Indication to use
-		/// <see cref="ConvertByteArray.ToHexadecimalString"/>
+		/// <see cref="ConvertByteArray.ToHexadecimalString(byte[])"/>
 		/// when encoding a byte array to string.
 		/// </summary>
 		Hexadecimal = byte.MaxValue

@@ -11,9 +11,11 @@
 		/// Unless a different <see cref="Encoding"/> is specified,
 		/// when a string is hashed using one of the extension
 		/// methods in this class, the string is assumed to be
-		/// encoded as <see cref="Encoding.UTF8"/>.
+		/// encoded as <see cref="Encoding.UTF8"/>, the same
+		/// as <see cref="Encryption.DefaultTextEncoding"/>
+		/// for <see cref="Encryption"/>.
 		/// </summary>
-		public static readonly Encoding DefaultEncoding = Encoding.UTF8;
+		public static readonly Encoding DefaultEncoding = Encryption.DefaultTextEncoding;
 
 		#region [ ComputeHash Overloads returning Byte Array ]
 

@@ -1,16 +1,18 @@
 ﻿namespace MiscCorLib
 {
 	using System;
+	using System.Diagnostics.CodeAnalysis;
 	using System.Diagnostics.Contracts;
 	using System.Text;
 
 	using JetBrains.Annotations;
 
-	using MiscCorLib.Security.Cryptography;
-
+	/// <summary>
+	/// A set of static extension methods for byte arrays
+	/// </summary>
 	public static class ConvertByteArray
 	{
-		private const string NullBytesString = @"(null)";
+		private const string NullBytesString = null; // @"(null)";
 
 		public static string ToBase64String([NotNull] this byte[] inArray)
 		{
@@ -54,32 +56,91 @@
 			return hashedStringBuilder.ToString().ToLowerInvariant();
 		}
 
-		public static string ToEncodedString([NotNull] this byte[] inArray, CipherEncoding encoding)
+		public static string ToHexadecimalString(this byte[] inArray, bool allowNulls)
+		{
+			if (allowNulls && (inArray == null))
+			{
+				return NullBytesString;
+			}
+
+			return inArray.ToHexadecimalString();
+		}
+
+		public static string ToEncodedString([NotNull] this byte[] inArray, ByteArrayStringEncoding encoding)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 
 			// ReSharper disable once ConvertIfStatementToSwitchStatement
-			if (encoding == CipherEncoding.Base64)
+			if (encoding == ByteArrayStringEncoding.Base64)
 			{
 				return inArray.ToBase64String();
 			}
 
-			if (encoding == CipherEncoding.Hexadecimal)
+			if (encoding == ByteArrayStringEncoding.Hexadecimal)
 			{
 				return inArray.ToHexadecimalString();
 			}
 
-			throw new ArgumentOutOfRangeException("encoding", encoding, "Invalid value for CipherEncoding enumeration.");
+			throw new ArgumentOutOfRangeException("encoding", encoding, "Invalid value for ByteArrayStringEncoding enumeration.");
 		}
 
-		public static string ToText([NotNull] this byte[] inArray, Encoding encoding)
+		public static string ToEncodedString(this byte[] inArray, ByteArrayStringEncoding encoding, bool allowNulls)
+		{
+			if (allowNulls && (inArray == null))
+			{
+				return NullBytesString;
+			}
+
+			return inArray.ToEncodedString(encoding);
+		}
+
+		public static string ToText([NotNull] this byte[] inArray, [NotNull] Encoding encoding)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 			Contract.Requires<ArgumentNullException>(encoding != null);
 
 			// Simple double-dispatch.
 			// TODO: Loop over buffer if array is large.
+			// The other place is in SymmetricTransformer.Transform
 			return encoding.GetString(inArray);
+		}
+
+		public static string ToText(this byte[] inArray, [NotNull] Encoding encoding, bool allowNulls)
+		{
+			if (allowNulls && (inArray == null))
+			{
+				return NullBytesString;
+			}
+
+			return inArray.ToText(encoding);
+		}
+
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		public static string ToASCII([NotNull] this byte[] inArray)
+		{
+			Contract.Requires<ArgumentNullException>(inArray != null);
+
+			return inArray.ToText(Encoding.ASCII);
+		}
+
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		public static string ToASCII(this byte[] inArray, bool allowNulls)
+		{
+			return inArray.ToText(Encoding.ASCII, allowNulls);
+		}
+
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		public static string ToUTF8([NotNull] this byte[] inArray)
+		{
+			Contract.Requires<ArgumentNullException>(inArray != null);
+
+			return inArray.ToText(Encoding.UTF8);
+		}
+
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		public static string ToUTF8(this byte[] inArray, bool allowNulls)
+		{
+			return inArray.ToText(Encoding.UTF8, allowNulls);
 		}
 
 		// Below works for syntactic sugar, but an abstract factory like

@@ -42,14 +42,14 @@
 			return CreateEncryptor<T>(
 				DefaultKeyEncoding,
 				encryptionKey,
-				DefaultCipherEncoding,
+				DefaultByteArrayStringEncoding,
 				out initializationVector);
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] Encoding keyEncoding,
 			[NotNull] string encryptionKey,
-			CipherEncoding cipherEncoding,
+			ByteArrayStringEncoding cipherEncoding,
 			out string initializationVector)
 			where T : SymmetricAlgorithm
 		{

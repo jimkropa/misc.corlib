@@ -90,6 +90,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ByteArrayStringEncoding.cs" />
     <Compile Include="Collections\Generic\ConvertDelimitedString.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -111,7 +112,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Cryptography\ByteArrayEncryption.cs" />
     <Compile Include="Security\Cryptography\ByteArrayHashing.cs" />
-    <Compile Include="Security\Cryptography\CipherEncodingEnum.cs" />
     <Compile Include="Security\Cryptography\Decryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateDecryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateEncryptor.cs" />
@@ -128,6 +128,7 @@
       <Link>boilerplate.licenseheader</Link>
     </None>
     <None Include="Collections\PagingClassDiagram.cd" />
+    <None Include="ConvertByteArrayDiagram.cd" />
     <None Include="misc.corlib.nuspec" />
     <None Include="packages.config" />
     <None Include="Settings.StyleCop" />

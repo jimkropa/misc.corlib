@@ -71,6 +71,8 @@
     <Compile Include="Collections\PagingInfoTests-Serialization.cs" />
     <Compile Include="Collections\PagingInfoTests-StringConstants.cs" />
     <Compile Include="Collections\PagingInfoTests.cs" />
+    <Compile Include="ConvertByteArrayTests.cs" />
+    <Compile Include="FormatStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Cryptography\EncryptorTests.cs" />
     <Compile Include="Security\Cryptography\StringHashingExtensionsTests.cs" />

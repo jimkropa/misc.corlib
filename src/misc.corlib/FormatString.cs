@@ -269,13 +269,10 @@ namespace MiscCorLib
 		/// </returns>
 		public static string ToAlphanumeric(this string value)
 		{
-			if (string.IsNullOrWhiteSpace(value))
-			{
-				return string.Empty;
-			}
+			return string.IsNullOrWhiteSpace(value) ? string.Empty
+				: Regex.Replace(value, @"[^\w]", string.Empty).Replace("_", string.Empty);
 
 			// Replace invalid characters with empty strings.
-			return Regex.Replace(value, @"[^\w]", string.Empty).Replace("_", string.Empty);
 		}
 	}
 }
