@@ -107,6 +107,7 @@
     <Compile Include="Collections\PageNumberAndSize.cs" />
     <Compile Include="Collections\PagingInfo.cs" />
     <Compile Include="Collections\Specialized\NameValueCollectionExtensions.cs" />
+    <Compile Include="ConvertEncodedString.cs" />
     <Compile Include="ConvertEnum.cs" />
     <Compile Include="FormatString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -131,6 +132,7 @@
     <None Include="ConvertByteArrayDiagram.cd" />
     <None Include="misc.corlib.nuspec" />
     <None Include="packages.config" />
+    <None Include="Security\Cryptography\CryptoDiagram.cd" />
     <None Include="Settings.StyleCop" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,7 +11,7 @@
 	{
 		/// <summary>
 		/// When a string is passed to the overload of
-		/// <see cref="ComputeHash{T}(byte[],string)"/>
+		/// <see cref="Encrypt"/>
 		/// to be used as the <see cref="SymmetricAlgorithm.Key"/>
 		/// for a <see cref="SymmetricAlgorithm"/>, unless
 		/// another <see cref="Encoding"/> is provided,
@@ -43,6 +43,8 @@
 			Contract.Requires<ArgumentNullException>(salt != null);
 
 			byte[] encryptedBytes;
+
+			// TODO: Stop hiding the generated IV.
 			byte[] initializationVector;
 			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey, out initializationVector))
 			{
@@ -65,7 +67,12 @@
 			return Encrypt<T>(plaintextBytes, encryptionKey, DefaultKeyEncoding, iv, DefaultIVEncoding);
 		}
 
-		public static byte[] Encrypt<T>([NotNull] this byte[] plaintextBytes, [NotNull] string key, [NotNull] Encoding keyEncoding, [NotNull] string iv, [NotNull] Encoding ivEncoding)
+		public static byte[] Encrypt<T>(
+			[NotNull] this byte[] plaintextBytes,
+			[NotNull] string key,
+			[NotNull] Encoding keyEncoding,
+			[NotNull] string iv,
+			[NotNull] Encoding ivEncoding)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);

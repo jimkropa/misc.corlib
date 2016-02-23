@@ -138,37 +138,54 @@
 			return this.Transform(plaintextBytes);
 		}
 
-		public string EncryptToString(
-			[NotNull] string plaintext,
-			ByteArrayStringEncoding encoding = Encryption.DefaultByteArrayStringEncoding)
+		public byte[] Encrypt(
+			[NotNull] string plaintext)
 		{
 			Contract.Requires<ArgumentNullException>(plaintext != null);
 
-			return this.EncryptToString(
-				plaintext, Encryption.DefaultTextEncoding, encoding);
+			return this.Encrypt(
+				plaintext, Encryption.DefaultTextEncoding);
+		}
+
+		public byte[] Encrypt(
+			[NotNull] string plaintext,
+			[NotNull] Encoding plaintextEncoding)
+		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+
+			return this.Transform(plaintextEncoding.GetBytes(plaintext));
 		}
 
 		public string EncryptToString(
 			[NotNull] string plaintext,
-			[NotNull] Encoding textEncoding,
-			ByteArrayStringEncoding cipherEncoding = Encryption.DefaultByteArrayStringEncoding)
+			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(plaintext != null);
-			Contract.Requires<ArgumentNullException>(textEncoding != null);
 
 			return this.EncryptToString(
-				textEncoding.GetBytes(plaintext), cipherEncoding);
+				plaintext, Encryption.DefaultTextEncoding, cipherTextEncoding);
+		}
+
+		public string EncryptToString(
+			[NotNull] string plaintext,
+			[NotNull] Encoding plaintextEncoding,
+			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
+		{
+			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+
+			return this.EncryptToString(
+				plaintextEncoding.GetBytes(plaintext), ciphertextEncoding);
 		}
 
 		public string EncryptToString(
 			[NotNull] byte[] plaintextBytes,
-			ByteArrayStringEncoding encoding = Encryption.DefaultByteArrayStringEncoding)
+			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
 
-			return encoding == ByteArrayStringEncoding.Hexadecimal
-				? this.Transform(plaintextBytes).ToHexadecimalString()
-				: this.Transform(plaintextBytes).ToBase64String();
+			return this.Transform(plaintextBytes).ToEncodedString(cipherTextEncoding);
 		}
 	}
 }

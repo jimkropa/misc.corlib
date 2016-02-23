@@ -15,7 +15,6 @@
 	/// </remarks>
 	public static partial class Encryption
 	{
-		public const ByteArrayStringEncoding DefaultByteArrayStringEncoding = ByteArrayStringEncoding.Base64;
 		public static readonly Encoding DefaultTextEncoding = Encoding.UTF8;
 		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
 

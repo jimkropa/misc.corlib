@@ -42,7 +42,7 @@
 			return CreateEncryptor<T>(
 				DefaultKeyEncoding,
 				encryptionKey,
-				DefaultByteArrayStringEncoding,
+				ConvertByteArray.DefaultStringEncoding,
 				out initializationVector);
 		}
 

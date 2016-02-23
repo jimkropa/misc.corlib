@@ -62,7 +62,6 @@
     <Compile Include="..\..\src\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ByteArrayExtensionsTests.cs" />
     <Compile Include="Collections\Generic\ConvertDelimitedStringTests.cs" />
     <Compile Include="Collections\Generic\ConvertStringsTests.cs" />
     <Compile Include="Collections\Generic\ConvertStructCollectionTests.cs" />
@@ -75,7 +74,7 @@
     <Compile Include="FormatStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Cryptography\EncryptorTests.cs" />
-    <Compile Include="Security\Cryptography\StringHashingExtensionsTests.cs" />
+    <Compile Include="Security\Cryptography\StringHashingTests.cs" />
     <Compile Include="Security\Cryptography\TestObjectFactory.cs" />
   </ItemGroup>
   <ItemGroup>

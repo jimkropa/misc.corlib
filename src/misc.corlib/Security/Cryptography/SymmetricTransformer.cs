@@ -29,33 +29,74 @@
 	public abstract class SymmetricTransformer<T> : IDisposable
 		where T : SymmetricAlgorithm
 	{
+		/// <summary>
+		/// Private backing field for <see cref="IsEncryptor"/>
+		/// and <see cref="IsDecryptor"/> properties.
+		/// </summary>
 		private readonly bool isEncryptor;
+
+		/// <summary>
+		/// An internal semaphore indicating responsibility for disposing
+		/// an internal instance of <see cref="SymmetricAlgorithm"/>.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If <c>true</c>, the internal instance of
+		/// <see cref="SymmetricAlgorithm"/>
+		/// should <em>not</em> be disposed, even when
+		/// <see cref="Dispose"/> is invoked.
+		/// The instance of <see cref="SymmetricAlgorithm"/>
+		/// was passed to a constructor overload, and its
+		/// creator assumes responsibility for its disposal.
+		/// If it were disposed here, the absence of the object
+		/// might cause other trouble later.
+		/// </para>
+		/// <para>
+		/// If <c>false</c>, the <see cref="SymmetricAlgorithm"/>
+		/// was created internally by the lazy initializer of
+		/// the <see cref="Algorithm"/> property, so this
+		/// object is responsible for disposing it.
+		/// </para>
+		/// </remarks>
+		private readonly bool preserveAlgorithm;
+		
 		private readonly byte[] encryptionKey;
 		private readonly byte[] initializationVector;
-		private readonly bool preserveAlgorithm;
 
 		private T algorithm;
 		private ICryptoTransform transform;
 
-		public bool IsEncryptor { get { return this.isEncryptor; } }
-
-		public bool IsDecryptor { get { return !this.IsEncryptor; } }
-
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the <see cref="SymmetricTransformer{T}"/> class
+		/// using a given <see cref="SymmetricAlgorithm"/> instance.
 		/// </summary>
-		/// <param name="algorithm"></param>
+		/// <param name="algorithm">
+		/// An instance of <see cref="SymmetricAlgorithm"/>
+		/// to use for encryption or decryption.
+		/// Beware of side effect: The values
+		/// of its <see cref="SymmetricAlgorithm.Key"/>
+		/// and <see cref="SymmetricAlgorithm.IV"/>
+		/// properties will be changed.
+		/// </param>
 		/// <param name="isEncryptor"></param>
 		/// <param name="encryptionKey"></param>
 		/// <param name="initializationVector"></param>
 		/// <remarks>
 		/// <para>
-		/// Beware of side effects. If a <see cref="SymmetricAlgorithm"/>
-		/// instance is passed to this constructor, the values of
-		/// its <see cref="SymmetricAlgorithm.Key"/>
+		/// This is <em>not a pure method</em>, so beware of this side effect:
+		/// When the given <see cref="SymmetricAlgorithm"/>
+		/// instance is passed to this constructor, the values
+		/// of its <see cref="SymmetricAlgorithm.Key"/>
 		/// and <see cref="SymmetricAlgorithm.IV"/>
 		/// properties will be changed by code inside
-		/// the constructor.
+		/// this constructor.
+		/// </para>
+		/// <para>
+		/// Also note that the instance of <see cref="SymmetricAlgorithm"/>
+		/// will not be disposed when this transformer object's
+		/// <see cref="Dispose"/> method is invoked, so the
+		/// same algorithm object may be re-used later, and its
+		/// creator assumes responsibility to dispose of it.
 		/// </para>
 		/// </remarks>
 		protected SymmetricTransformer(
@@ -116,6 +157,11 @@
 			}
 		}
 
+		/// <summary>
+		/// Gets a reference to an <see cref="ICryptoTransform"/>
+		/// used for encryption or decryption, initializing the
+		/// reference if none exists.
+		/// </summary>
 		private ICryptoTransform Transformer
 		{
 			get
@@ -127,6 +173,18 @@
 						: this.Algorithm.CreateDecryptor());
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this object
+		/// encrypts plaintext bytes to ciphertext bytes.
+		/// </summary>
+		public bool IsEncryptor { get { return this.isEncryptor; } }
+
+		/// <summary>
+		/// Gets a value indicating whether this object
+		/// decrypts ciphertext bytes to plaintext bytes.
+		/// </summary>
+		public bool IsDecryptor { get { return !this.IsEncryptor; } }
 
 		public void Dispose()
 		{
@@ -162,12 +220,17 @@
 
 		#region [ Private Methods to Create a SymmetricAlgorithm Instance based on its Generic Type Name ]
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		private static T CreateAlgorithm()
 		{
 			T algorithm = SymmetricAlgorithm.Create(typeof(T).ToString()) as T;
 			if (algorithm == null)
 			{
-				throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a symmetric encryption algorithm!"));
+				throw new InvalidOperationException(
+					string.Concat(typeof(T).FullName, " is not a symmetric encryption algorithm!"));
 			}
 
 			return algorithm;
@@ -213,7 +276,17 @@
 			}
 		}
 
-		// Method for lazy initialization of algorithm field.
+		/// <summary>
+		/// Internal method for lazy initialization
+		/// of the <see cref="algorithm"/> field by
+		/// the <see cref="Algorithm"/> property.
+		/// </summary>
+		/// <returns>
+		/// An instance of <see cref="SymmetricAlgorithm"/>
+		/// initialized using the <see cref="encryptionKey"/>
+		/// and <see cref="initializationVector"/> values
+		/// passed to the constructor.
+		/// </returns>
 		private T CreateValidAlgorithm()
 		{
 			T validAlgorithm = CreateAlgorithm();
@@ -224,7 +297,8 @@
 
 			if (this.initializationVector == null)
 			{
-				// If encrypting, use a different initialization vector
+				// If encrypting and the algorithm is lazily initialized,
+				// use a different initialization vector
 				// for each instance of an encryptor.
 				validAlgorithm.GenerateIV();
 			}
