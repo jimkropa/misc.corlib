@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
+	using System.IO;
 	using System.Security.Cryptography;
 	using System.Text;
 	using System.Threading;
@@ -59,7 +60,9 @@
 		/// </para>
 		/// </remarks>
 		private readonly bool preserveAlgorithm;
-		
+
+		private readonly bool allowNulls;
+
 		private readonly byte[] encryptionKey;
 		private readonly byte[] initializationVector;
 
@@ -81,6 +84,7 @@
 		/// <param name="isEncryptor"></param>
 		/// <param name="encryptionKey"></param>
 		/// <param name="initializationVector"></param>
+		/// <param name="allowNulls"></param>
 		/// <remarks>
 		/// <para>
 		/// This is <em>not a pure method</em>, so beware of this side effect:
@@ -100,8 +104,12 @@
 		/// </para>
 		/// </remarks>
 		protected SymmetricTransformer(
-			[NotNull] T algorithm, bool isEncryptor, [NotNull] byte[] encryptionKey, byte[] initializationVector)
-			: this(isEncryptor, encryptionKey, initializationVector)
+			[NotNull] T algorithm,
+			bool isEncryptor,
+			[NotNull] byte[] encryptionKey,
+			byte[] initializationVector,
+			bool allowNulls)
+			: this(isEncryptor, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -135,14 +143,19 @@
 		/// <param name="isEncryptor"></param>
 		/// <param name="encryptionKey"></param>
 		/// <param name="initializationVector"></param>
+		/// <param name="allowNulls"></param>
 		protected SymmetricTransformer(
-			bool isEncryptor, [NotNull] byte[] encryptionKey, byte[] initializationVector)
+			bool isEncryptor,
+			[NotNull] byte[] encryptionKey,
+			byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
 			this.initializationVector = initializationVector;
+			this.allowNulls = allowNulls;
 		}
 
 		protected internal T Algorithm
@@ -199,23 +212,33 @@
 			}
 		}
 
-		// TODO: Remove [NotNull] and simply return null for null.
-		protected byte[] Transform([NotNull] byte[] plaintextBytes)
+		/// <summary>
+		/// Encrypts or decrypts.
+		/// </summary>
+		/// <param name="originalBytes"></param>
+		/// <returns></returns>
+		protected byte[] Transform(byte[] originalBytes)
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+			Contract.Requires<ArgumentNullException>(this.allowNulls || originalBytes != null);
+			if (originalBytes == null) return null;
 
 			// TODO: Here is where to implement looping over a buffer.
 			// The other place is in ConvertByteArray.ToText
-			return this.Transformer.TransformFinalBlock(plaintextBytes, 0, 0);
-		}
+			byte[] transformedBytes;
+			using (MemoryStream backingStream = new MemoryStream())
+			{
+				using (CryptoStream cryptoStream = new CryptoStream(
+					backingStream, this.Transformer, CryptoStreamMode.Write))
+				{
+					cryptoStream.Write(originalBytes, 0, originalBytes.Length);
+					cryptoStream.FlushFinalBlock();
+					cryptoStream.Close();
+				}
 
-		// TODO: Remove [NotNull] and simply return null for null.
-		protected byte[] Transform([NotNull] string plaintext, [NotNull] Encoding encoding)
-		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
-			Contract.Requires<ArgumentNullException>(encoding != null);
+				transformedBytes = backingStream.ToArray();
+			}
 
-			return Transform(encoding.GetBytes(plaintext));
+			return transformedBytes;
 		}
 
 		#region [ Private Methods to Create a SymmetricAlgorithm Instance based on its Generic Type Name ]

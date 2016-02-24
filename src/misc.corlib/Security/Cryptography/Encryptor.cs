@@ -88,8 +88,9 @@
 		internal Encryptor(
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
-			out byte[] initializationVector)
-			: base(algorithm, true, encryptionKey, null)
+			out byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(algorithm, true, encryptionKey, null, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -101,8 +102,9 @@
 		internal Encryptor(
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector)
-			: base(algorithm, true, encryptionKey, initializationVector)
+			[NotNull] byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(algorithm, true, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -111,8 +113,9 @@
 
 		internal Encryptor(
 			[NotNull] byte[] encryptionKey,
-			out byte[] initializationVector)
-			: base(true, encryptionKey, null)
+			out byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(true, encryptionKey, null, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 

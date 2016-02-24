@@ -9,10 +9,16 @@
 	public sealed class EncryptorTests
 	{
 		[TestFixture]
+		public sealed class Constructor
+		{
+			
+		}
+
+		[TestFixture]
 		public sealed class Encrypt
 		{
 			[Test]
-			public void ReturnsInitializationVector()
+			public void Returns_InitializationVector()
 			{
 				using (SymmetricAlgorithm algorithm = TestObjectFactory.CreateAlgorithm())
 				{

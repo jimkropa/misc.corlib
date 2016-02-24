@@ -15,24 +15,29 @@
 	/// </remarks>
 	public static partial class Encryption
 	{
+		public const bool DefaultAllowNulls = true;
+		public const int DefaultSaltSize = 8;
+
 		public static readonly Encoding DefaultTextEncoding = Encoding.UTF8;
 		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
 
-		private const int DefaultSaltSize = 8;
-
-		private static byte[] DeriveEncryptionKeyFromPassword(string password, int keySize, int saltSize, out byte[] salt)
+		private static byte[] DeriveEncryptionKeyFromPassword(
+			string password, int keySize, int saltSize, out byte[] salt)
 		{
 			byte[] encryptionKey;
 			using (Rfc2898DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, saltSize))
 			{
 				encryptionKey = keyBytes.GetBytes(keySize);
+
+				// Does this actually generate something?
 				salt = keyBytes.Salt;
 			}
 
 			return encryptionKey;
 		}
 
-		private static byte[] DeriveDecryptionKeyFromPassword(string password, int keySize, byte[] salt)
+		private static byte[] DeriveDecryptionKeyFromPassword(
+			string password, int keySize, byte[] salt)
 		{
 			byte[] decryptionKey;
 			using (Rfc2898DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, salt))

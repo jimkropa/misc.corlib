@@ -13,7 +13,9 @@
 		public static Encryptor CreateEncryptor(
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
-			out byte[] initializationVector)
+			out byte[] initializationVector,
+			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding,
+			bool allowNulls = DefaultAllowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -23,7 +25,9 @@
 
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] byte[] encryptionKey,
-			out byte[] initializationVector)
+			out byte[] initializationVector,
+			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding,
+			bool allowNulls = DefaultAllowNulls)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -32,9 +36,23 @@
 			return new Encryptor<T>(encryptionKey, out initializationVector);
 		}
 
+		/// <summary>
+		/// Creates a new generic <see cref="Encryptor{T}"/> using a given
+		/// ASCII-encoded string <paramref name="encryptionKey"/>, and
+		/// generating a one-time <paramref name="initializationVector"/>
+		/// needed for decryption, returned to the caller
+		/// as an ASCII-encoded string.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="encryptionKey"></param>
+		/// <param name="initializationVector"></param>
+		/// <param name="allowNulls"></param>
+		/// <returns></returns>
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] string encryptionKey,
-			out string initializationVector)
+			out string initializationVector,
+			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding,
+			bool allowNulls = DefaultAllowNulls)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -43,14 +61,16 @@
 				DefaultKeyEncoding,
 				encryptionKey,
 				ConvertByteArray.DefaultStringEncoding,
-				out initializationVector);
+				out initializationVector,
+				allowNulls);
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] Encoding keyEncoding,
 			[NotNull] string encryptionKey,
-			ByteArrayStringEncoding cipherEncoding,
-			out string initializationVector)
+			out string initializationVector,
+			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding,
+			bool allowNulls = DefaultAllowNulls)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(keyEncoding != null);
@@ -60,7 +80,7 @@
 			Encryptor<T> encryptor = CreateEncryptor<T>(
 				keyEncoding.GetBytes(encryptionKey), out ivbytes);
 
-			initializationVector = ivbytes.ToEncodedString(cipherEncoding);
+			initializationVector = ivbytes.ToEncodedString(ciphertextEncoding);
 
 			return encryptor;
 		}
