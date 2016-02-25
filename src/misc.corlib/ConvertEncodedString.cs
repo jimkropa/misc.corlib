@@ -1,19 +1,58 @@
 ﻿namespace MiscCorLib
 {
 	using System;
+	using System.Diagnostics.Contracts;
 
-	public static class ConvertBase64String
+	using JetBrains.Annotations;
+
+	public static class ConvertEncodedString
 	{
-		public static byte[] ToByteArray(this string encodedString)
+		#region [ Constants and Delegates describing Common Method Signatures ]
+
+		/// <summary>
+		/// Byte array value to return from <c>null</c> string input.
+		/// </summary>
+		/// <value><c>null</c></value>
+		internal const byte[] NullByteArray = null;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="encodedString"></param>
+		/// <returns></returns>
+		public delegate string ConvertNonNullString([NotNull] string encodedString);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="encodedString"></param>
+		/// <param name="allowNulls"></param>
+		/// <returns></returns>
+		public delegate string ConvertString(string encodedString, bool allowNulls);
+
+		#endregion
+
+		public static byte[] FromBase64([NotNull] this string encodedString)
 		{
+			Contract.Requires<ArgumentNullException>(encodedString != null);
+
 			return Convert.FromBase64String(encodedString);
 		}
-	}
 
-	public static class ConvertHexadecimalString
-	{
-		public static byte[] ToByteArray(this string encodedString)
+		public static byte[] FromBase64(this string encodedString, bool allowNulls)
 		{
+			if (allowNulls && (encodedString == null))
+			{
+				return NullByteArray;
+			}
+
+			return encodedString.FromBase64();
+		}
+		
+		public static byte[] FromHexadecimal([NotNull] this string encodedString)
+		{
+			Contract.Requires<ArgumentNullException>(encodedString != null);
+
 			int length = encodedString.Length / 2;
 			byte[] outArray = new byte[length];
 			for (int i = 0; i < length; i++)
@@ -23,27 +62,49 @@
 
 			return outArray;
 		}
-	}
 
-	public static class ConvertEncodedString
-	{
+		public static byte[] FromHexadecimal(this string encodedString, bool allowNulls)
+		{
+			if (allowNulls && (encodedString == null))
+			{
+				return NullByteArray;
+			}
+
+			return encodedString.FromHexadecimal();
+		}
+		
 		public static byte[] ToByteArray(
-			this string encodedString,
+			[NotNull] this string encodedString,
 			ByteArrayStringEncoding fromEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
+			Contract.Requires<ArgumentNullException>(encodedString != null);
+
 			// ReSharper disable once ConvertIfStatementToSwitchStatement
 			if (fromEncoding == ByteArrayStringEncoding.Base64)
 			{
-				return ConvertBase64String.ToByteArray(encodedString);
+				return encodedString.FromBase64();
 			}
 	
 			// ReSharper disable once InvertIf
 			if (fromEncoding == ByteArrayStringEncoding.Hexadecimal)
 			{
-				return ConvertHexadecimalString.ToByteArray(encodedString);
+				return encodedString.FromBase64();
 			}
 
 			throw new ArgumentOutOfRangeException();
+		}
+
+		public static byte[] ToByteArray(
+			this string encodedString,
+			bool allowNulls,
+			ByteArrayStringEncoding fromEncoding = ConvertByteArray.DefaultStringEncoding)
+		{
+			if (allowNulls && (encodedString == null))
+			{
+				return NullByteArray;
+			}
+
+			return encodedString.ToByteArray(fromEncoding);
 		}
 	}
 }

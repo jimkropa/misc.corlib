@@ -125,8 +125,9 @@
 
 		internal Encryptor(
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector)
-			: base(true, encryptionKey, initializationVector)
+			[NotNull] byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(true, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(initializationVector != null);

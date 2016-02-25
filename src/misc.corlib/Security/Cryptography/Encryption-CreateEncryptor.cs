@@ -47,6 +47,7 @@
 		/// <param name="encryptionKey"></param>
 		/// <param name="initializationVector"></param>
 		/// <param name="allowNulls"></param>
+		/// <param name="ciphertextEncoding"></param>
 		/// <returns></returns>
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] string encryptionKey,
@@ -60,8 +61,8 @@
 			return CreateEncryptor<T>(
 				DefaultKeyEncoding,
 				encryptionKey,
-				ConvertByteArray.DefaultStringEncoding,
 				out initializationVector,
+				ciphertextEncoding,
 				allowNulls);
 		}
 

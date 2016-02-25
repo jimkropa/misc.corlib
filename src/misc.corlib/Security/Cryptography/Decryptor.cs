@@ -39,8 +39,9 @@
 		public Decryptor(
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector)
-			: base(algorithm, true, encryptionKey, initializationVector)
+			[NotNull] byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(algorithm, true, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -49,8 +50,9 @@
 
 		public Decryptor(
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector)
-			: base(true, encryptionKey, initializationVector)
+			[NotNull] byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(true, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(initializationVector != null);

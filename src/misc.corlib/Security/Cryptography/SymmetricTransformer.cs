@@ -61,7 +61,7 @@
 		/// </remarks>
 		private readonly bool preserveAlgorithm;
 
-		private readonly bool allowNulls;
+		public readonly bool AllowNulls;
 
 		private readonly byte[] encryptionKey;
 		private readonly byte[] initializationVector;
@@ -148,14 +148,14 @@
 			bool isEncryptor,
 			[NotNull] byte[] encryptionKey,
 			byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
 			this.initializationVector = initializationVector;
-			this.allowNulls = allowNulls;
+			this.AllowNulls = allowNulls;
 		}
 
 		protected internal T Algorithm
@@ -219,7 +219,7 @@
 		/// <returns></returns>
 		protected byte[] Transform(byte[] originalBytes)
 		{
-			Contract.Requires<ArgumentNullException>(this.allowNulls || originalBytes != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || originalBytes != null);
 			if (originalBytes == null) return null;
 
 			// TODO: Here is where to implement looping over a buffer.
