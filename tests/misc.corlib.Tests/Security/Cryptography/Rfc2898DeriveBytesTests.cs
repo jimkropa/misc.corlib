@@ -2,9 +2,11 @@
 {
 	using System;
 	using System.IO;
+	using System.Linq;
+	using System.Net.Mail;
 	using System.Security.Cryptography;
 	using System.Text;
-
+	using MiscCorLib.Collections.Generic;
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -106,23 +108,31 @@
 			Console.WriteLine((new byte[0]).ToBase64String());
 			Console.WriteLine();
 
-			int keySize;
+			int keySize, blockSize;
 			using (SymmetricAlgorithm alg = TripleDES.Create())
 			{
 				Console.WriteLine("alg.Key");
 				Console.WriteLine(alg.Key.ToBase64String(false));
+				Console.WriteLine(alg.Key.Length);
 				Console.WriteLine(); 
 
 				Console.WriteLine("alg.IV");
 				Console.WriteLine(alg.IV.ToBase64String(false));
+				Console.WriteLine(alg.IV.Length);
 				Console.WriteLine();
 
 				keySize = alg.KeySize;
+				blockSize = alg.BlockSize;
+
+				Console.WriteLine("keySize = {0}", keySize);
+				Console.WriteLine();
+				Console.WriteLine("blockSize = {0}", blockSize);
+				Console.WriteLine();
+				Console.WriteLine("blockSizes = [ {0} ]", alg.LegalBlockSizes.Select(a => a.MaxSize).ToDelimitedString());
+				Console.WriteLine();
 			}
 
-			Console.WriteLine("keySize = {0}", keySize);
-			Console.WriteLine();
-
+			byte[] salt1;
 			using (Rfc2898DeriveBytes k1 = new Rfc2898DeriveBytes("whatever", keySize))
 			{
 				Console.WriteLine("k1.GetBytes(16)");
@@ -133,6 +143,61 @@
 				Console.WriteLine();
 				Console.WriteLine("k1.Salt");
 				Console.WriteLine(k1.Salt.ToBase64String(false));
+				Console.WriteLine(k1.Salt.Length);
+				Console.WriteLine();
+
+				salt1 = k1.Salt;
+			}
+
+			byte[] salt2;
+			using (Rfc2898DeriveBytes k2 = new Rfc2898DeriveBytes("whatever", keySize))
+			{
+				Console.WriteLine("k2.GetBytes(16)");
+				Console.WriteLine(k2.GetBytes(16).ToBase64String(false));
+				Console.WriteLine();
+				Console.WriteLine("k2.GetBytes(16) again");
+				Console.WriteLine(k2.GetBytes(16).ToBase64String(false));
+				Console.WriteLine();
+				Console.WriteLine("k2.Salt");
+				Console.WriteLine(k2.Salt.ToBase64String(false));
+				Console.WriteLine(k2.Salt.Length);
+				Console.WriteLine();
+
+				salt2 = k2.Salt;
+			}
+
+			Assert.AreNotEqual(salt1, salt2);
+
+			using (Rfc2898DeriveBytes k3 = new Rfc2898DeriveBytes("whatever", salt2))
+			{
+				Console.WriteLine("k3.GetBytes(16)");
+				Console.WriteLine(k3.GetBytes(16).ToBase64String(false));
+				Console.WriteLine();
+				Console.WriteLine("k3.GetBytes(16) again");
+				Console.WriteLine(k3.GetBytes(16).ToBase64String(false));
+				Console.WriteLine();
+				Console.WriteLine("k3.Salt");
+				Console.WriteLine(k3.Salt.ToBase64String(false));
+				Console.WriteLine(k3.Salt.Length);
+				Console.WriteLine();
+
+				Assert.AreEqual(salt2, k3.Salt);
+			}
+
+			using (SymmetricAlgorithm alg = TripleDES.Create())
+			{
+				Console.WriteLine("alg.Key");
+				Console.WriteLine(alg.Key.ToBase64String(false));
+				Console.WriteLine();
+
+				Console.WriteLine("alg.IV");
+				Console.WriteLine(alg.IV.ToBase64String(false));
+				Console.WriteLine();
+
+				alg.GenerateIV();
+
+				Console.WriteLine("alg.IV again");
+				Console.WriteLine(alg.IV.ToBase64String(false));
 				Console.WriteLine();
 			}
 		}

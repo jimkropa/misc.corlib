@@ -88,7 +88,7 @@
 			// ReSharper disable once InvertIf
 			if (fromEncoding == ByteArrayStringEncoding.Hexadecimal)
 			{
-				return encodedString.FromBase64();
+				return encodedString.FromHexadecimal();
 			}
 
 			throw new ArgumentOutOfRangeException();

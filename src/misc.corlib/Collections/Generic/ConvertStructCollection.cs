@@ -4,6 +4,8 @@ namespace MiscCorLib.Collections.Generic
 	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
 
+	using JetBrains.Annotations;
+
 	/// <summary>
 	/// A set of static extension methods for converting generic
 	/// collections of <see cref="ValueType"/> (a.k.a. "struct" values)
@@ -235,10 +237,12 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		public static string ToDelimitedString<T>(
 			this IEnumerable<T> collection,
-			string separator,
+			[NotNull] string separator,
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
+			Contract.Requires<ArgumentException>(!ConvertStrings.IsNullOrWhiteSpace(separator));
+
 			return collection.ToDelimitedString(
 				null, separator, removeDuplicates);
 		}
@@ -277,7 +281,7 @@ namespace MiscCorLib.Collections.Generic
 		public static string ToDelimitedString<T>(
 			this IEnumerable<T> collection,
 			Func<T, string> toStringMethod,
-			string separator,
+			[NotNull] string separator,
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{

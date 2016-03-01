@@ -619,5 +619,37 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		#endregion
+
+		#region [ ToDelimitedString Extension Method for String Collections ]
+
+		/// <summary>
+		/// Converts a generic collection of <see cref="ValueType"/>
+		/// to a <see cref="string"/> delimited by the value
+		/// of the <paramref name="separator"/> parameter.
+		/// A cousin of a method of the same name in
+		/// <see cref="ConvertStructCollection"/>, and of
+		/// <see cref="string.Join(string,IEnumerable{string})"/>.
+		/// </summary>
+		/// <param name="collection">
+		/// A generic collection of strings.
+		/// </param>
+		/// <param name="separator">
+		/// A string delimiter to use instead of a comma.
+		/// </param>
+		/// <returns>
+		/// A <paramref name="separator"/>-delimited string.
+		/// </returns>
+		public static string ToDelimitedString(
+			this IEnumerable<string> collection,
+			[NotNull] string separator = ConvertDelimitedString.DefaultSeparator)
+		{
+			Contract.Requires<ArgumentException>(!IsNullOrWhiteSpace(separator));
+
+			// If the collection is null, return an empty string,
+			// the same as ConvertStructCollection.ToDelimitedString
+			return collection == null ? string.Empty : string.Join(separator, collection);
+		}
+
+		#endregion
 	}
 }
