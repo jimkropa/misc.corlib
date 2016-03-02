@@ -1,4 +1,5 @@
-﻿namespace MiscCorLib.Security.Cryptography
+﻿// TODO: Enable IOC of injection of SymmetricAlgorithm by non-static Encryptor Factory and Decryptor Factory
+namespace MiscCorLib.Security.Cryptography
 {
 	using System.Security.Cryptography;
 

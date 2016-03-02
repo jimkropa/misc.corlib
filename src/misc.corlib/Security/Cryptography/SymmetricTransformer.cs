@@ -5,7 +5,6 @@
 	using System.Diagnostics.Contracts;
 	using System.IO;
 	using System.Security.Cryptography;
-	using System.Text;
 	using System.Threading;
 
 	using JetBrains.Annotations;
@@ -158,6 +157,12 @@
 			this.AllowNulls = allowNulls;
 		}
 
+		/// <summary>
+		/// Lazy initializer of an internal instance of
+		/// a <see cref="SymmetricAlgorithm"/>
+		/// of type <typeparamref name="T"/>,
+		/// created by <see cref="CreateValidAlgorithm"/>.
+		/// </summary>
 		protected internal T Algorithm
 		{
 			get
@@ -243,11 +248,7 @@
 
 		#region [ Private Methods to Create a SymmetricAlgorithm Instance based on its Generic Type Name ]
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		private static T CreateAlgorithm()
+		internal static T CreateAlgorithm()
 		{
 			T algorithm = SymmetricAlgorithm.Create(typeof(T).ToString()) as T;
 			if (algorithm == null)
@@ -259,6 +260,10 @@
 			return algorithm;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		private static void ValidateKeySize(
 			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> encryptionKey)
 		{

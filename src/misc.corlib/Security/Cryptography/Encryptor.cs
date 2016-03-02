@@ -47,22 +47,26 @@
 		/// <paramref name="encryptionKey"/>, to decrypt
 		/// ciphertext created by this <see cref="Encryptor"/>.
 		/// </param>
+		/// <param name="allowNulls">
+		/// 
+		/// </param>
 		internal Encryptor(
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
-			out byte[] initializationVector)
-			: base(algorithm, encryptionKey, out initializationVector)
+			out byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(algorithm, encryptionKey, out initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 		}
 
-		// TODO: Enable IOC of injection of SymmetricAlgorithm by non-static Encryptor Factory and Decryptor Factory
 		internal Encryptor(
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector)
-			: base(algorithm, encryptionKey, initializationVector)
+			[NotNull] byte[] initializationVector,
+			bool allowNulls = Encryption.DefaultAllowNulls)
+			: base(algorithm, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -135,48 +139,47 @@
 
 		#endregion
 
-		public byte[] Encrypt([NotNull] byte[] plaintextBytes)
+		public byte[] Encrypt(byte[] plaintextBytes)
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintextBytes != null);
 
 			return this.Transform(plaintextBytes);
 		}
 
-		public byte[] Encrypt(
-			[NotNull] string plaintext)
+		public byte[] Encrypt(string plaintext)
 		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
 
 			return this.Encrypt(
 				plaintext, Encryption.DefaultTextEncoding);
 		}
 
 		public byte[] Encrypt(
-			[NotNull] string plaintext,
+			string plaintext,
 			[NotNull] Encoding plaintextEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
 			return this.Transform(plaintextEncoding.GetBytes(plaintext));
 		}
 
 		public string EncryptToString(
-			[NotNull] string plaintext,
+			string plaintext,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
 
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, cipherTextEncoding);
 		}
 
 		public string EncryptToString(
-			[NotNull] string plaintext,
+			string plaintext,
 			[NotNull] Encoding plaintextEncoding,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
 			return this.EncryptToString(
@@ -184,12 +187,12 @@
 		}
 
 		public string EncryptToString(
-			[NotNull] byte[] plaintextBytes,
+			byte[] plaintextBytes,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
+			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintextBytes != null);
 
-			return this.Transform(plaintextBytes).ToEncodedString(cipherTextEncoding);
+			return this.Encrypt(plaintextBytes).ToEncodedString(cipherTextEncoding);
 		}
 	}
 }

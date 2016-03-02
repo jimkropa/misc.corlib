@@ -116,13 +116,13 @@
     <Compile Include="Security\Cryptography\Decryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateDecryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateEncryptor.cs" />
-    <Compile Include="Security\Cryptography\Encryption-CreateEncryptorWithGivenIV.cs" />
     <Compile Include="Security\Cryptography\Encryption.cs" />
     <Compile Include="Security\Cryptography\Encryptor.cs" />
     <Compile Include="Security\Cryptography\Hasher.cs" />
     <Compile Include="Security\Cryptography\StringEncryption.cs" />
     <Compile Include="Security\Cryptography\StringHashing.cs" />
     <Compile Include="Security\Cryptography\SymmetricTransformer.cs" />
+    <Compile Include="Security\Cryptography\SymmetricTransformerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\boilerplate.licenseheader">

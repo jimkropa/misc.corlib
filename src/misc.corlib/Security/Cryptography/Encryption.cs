@@ -1,7 +1,11 @@
 ﻿namespace MiscCorLib.Security.Cryptography
 {
+	using System;
+	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 	using System.Text;
+
+	using JetBrains.Annotations;
 
 	/// <summary>
 	/// Factory producting <see cref="Encryptor"/>
@@ -19,26 +23,34 @@
 		public const int DefaultSaltSize = 8;
 
 		public static readonly Encoding DefaultTextEncoding = Encoding.UTF8;
-		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
 
-		private static byte[] DeriveEncryptionKeyFromPassword(
-			string password, int keySize, int saltSize, out byte[] salt)
+		public static byte[] DeriveEncryptionKeyAndSaltFromPassword(
+			[NotNull] string password, int keySize, int saltSize, out byte[] randomSalt)
 		{
+			Contract.Requires<ArgumentNullException>(password != null);
+
 			byte[] encryptionKey;
 			using (Rfc2898DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, saltSize))
 			{
+				// Get an encryption key of pseudo-random
+				// bytes derived from the given password.
 				encryptionKey = keyBytes.GetBytes(keySize);
 
-				// Does this actually generate something?
-				salt = keyBytes.Salt;
+				// The salt is a random value,
+				// uniquely identifying this instance
+				// of the encryption operations,
+				// and needed for decryption.
+				randomSalt = keyBytes.Salt;
 			}
 
 			return encryptionKey;
 		}
 
-		private static byte[] DeriveDecryptionKeyFromPassword(
-			string password, int keySize, byte[] salt)
+		public static byte[] DeriveEncryptionKeyFromPasswordAndSalt(
+			[NotNull] string password, int keySize, [NotNull] byte[] salt)
 		{
+			Contract.Requires<ArgumentNullException>(password != null);
+
 			byte[] decryptionKey;
 			using (Rfc2898DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, salt))
 			{

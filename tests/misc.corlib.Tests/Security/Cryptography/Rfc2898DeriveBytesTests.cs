@@ -3,10 +3,11 @@
 	using System;
 	using System.IO;
 	using System.Linq;
-	using System.Net.Mail;
 	using System.Security.Cryptography;
 	using System.Text;
+
 	using MiscCorLib.Collections.Generic;
+
 	using NUnit.Framework;
 
 	[TestFixture]
@@ -99,7 +100,7 @@
 		}
 
 		[Test]
-		public void SpecifyingSaltSizeGeneratesSalt()
+		public void SpecifyingSaltSizeGeneratesRandomSalt()
 		{
 			////	byte[] nullArray = null;
 			////	Assert.Throws<ArgumentNullException>(() => nullArray.ToBase64String());
@@ -124,13 +125,14 @@
 				keySize = alg.KeySize;
 				blockSize = alg.BlockSize;
 
-				Console.WriteLine("keySize = {0}", keySize);
-				Console.WriteLine();
-				Console.WriteLine("blockSize = {0}", blockSize);
-				Console.WriteLine();
 				Console.WriteLine("blockSizes = [ {0} ]", alg.LegalBlockSizes.Select(a => a.MaxSize).ToDelimitedString());
 				Console.WriteLine();
 			}
+
+			Console.WriteLine("keySize = {0}", keySize);
+			Console.WriteLine();
+			Console.WriteLine("blockSize = {0}", blockSize);
+			Console.WriteLine();
 
 			byte[] salt1;
 			using (Rfc2898DeriveBytes k1 = new Rfc2898DeriveBytes("whatever", keySize))

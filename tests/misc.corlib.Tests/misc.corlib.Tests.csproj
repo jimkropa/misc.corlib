@@ -73,6 +73,7 @@
     <Compile Include="ConvertByteArrayTests.cs" />
     <Compile Include="FormatStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Cryptography\EncryptionTests.cs" />
     <Compile Include="Security\Cryptography\EncryptorTests.cs" />
     <Compile Include="Security\Cryptography\Rfc2898DeriveBytesTests.cs" />
     <Compile Include="Security\Cryptography\StringHashingTests.cs" />
