@@ -47,6 +47,7 @@
 				byte[] keyFromDifferentSalt = Encryption.DeriveEncryptionKeyAndSaltFromPassword(
 					password, KeySize, BlockSize, out differentSalt);
 
+				Assert.AreNotEqual(salt, differentSalt);
 				Assert.AreNotEqual(originalKey, keyFromDifferentSalt);
 			}
 
