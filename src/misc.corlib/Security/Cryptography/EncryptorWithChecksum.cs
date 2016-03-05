@@ -20,6 +20,7 @@
 			: base(symmetricAlgorithm, checksumHasher, encryptionKey, out initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(symmetricAlgorithm != null);
+			Contract.Requires<ArgumentNullException>(checksumHasher != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 		}
 
@@ -32,6 +33,7 @@
 			: base(symmetricAlgorithm, checksumHasher, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(symmetricAlgorithm != null);
+			Contract.Requires<ArgumentNullException>(checksumHasher != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
@@ -46,7 +48,10 @@
 		where TEncryptor: SymmetricAlgorithm
 		where THasher: KeyedHashAlgorithm
 	{
-		private readonly Hasher<THasher> hasher;
+		// This delegate really belongs to DecryptorWithChecksum...
+		//public delegate void HandleChecksumFailure()
+
+		private readonly KeyedHasher<THasher> hasher;
 
 		internal EncryptorWithChecksum(
 			[NotNull] TEncryptor symmetricAlgorithm,
@@ -56,7 +61,8 @@
 			bool allowNulls)
 			: base(symmetricAlgorithm, encryptionKey, out initializationVector, allowNulls)
 		{
-			this.hasher = new Hasher<THasher>(checksumHasher, initializationVector, allowNulls);
+			this.hasher = new KeyedHasher<THasher>(
+				checksumHasher, encryptionKey, initializationVector, allowNulls);
 		}
 
 		internal EncryptorWithChecksum(
@@ -67,7 +73,8 @@
 			bool allowNulls)
 			: base(algorithm, encryptionKey, initializationVector, allowNulls)
 		{
-			this.hasher = new Hasher<THasher>(checksumHasher, initializationVector, allowNulls);
+			this.hasher = new KeyedHasher<THasher>(
+				checksumHasher, encryptionKey, initializationVector, allowNulls);
 		}
 
 		internal EncryptorWithChecksum(
@@ -76,7 +83,8 @@
 			bool allowNulls)
 			: base(encryptionKey, out initializationVector, allowNulls)
 		{
-			this.hasher = new Hasher<THasher>(initializationVector, allowNulls);
+			this.hasher = new KeyedHasher<THasher>(
+				encryptionKey, initializationVector, allowNulls);
 		}
 
 		internal EncryptorWithChecksum(
@@ -85,7 +93,8 @@
 			bool allowNulls)
 			: base(encryptionKey, initializationVector, allowNulls)
 		{
-			this.hasher = new Hasher<THasher>(initializationVector, allowNulls);
+			this.hasher = new KeyedHasher<THasher>(
+				encryptionKey, initializationVector, allowNulls);
 		}
 
 		public byte[] Encrypt(byte[] plaintextBytes, out byte[] checksum)
@@ -126,12 +135,12 @@
 		public string EncryptToString(
 			string plaintext,
 			out string checksum,
-			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
+			ByteArrayStringEncoding cipherTextAndChecksumEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 
 			return this.EncryptToString(
-				plaintext, Encryption.DefaultTextEncoding, out checksum, cipherTextEncoding);
+				plaintext, Encryption.DefaultTextEncoding, out checksum, cipherTextAndChecksumEncoding);
 		}
 
 		public string EncryptToString(
@@ -158,14 +167,14 @@
 		public string EncryptToString(
 			byte[] plaintextBytes,
 			out string checksum,
-			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
+			ByteArrayStringEncoding cipherTextAndChecksumEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
 
 			byte[] checksumBytes;
-			string encryptedString = this.Encrypt(plaintextBytes, out checksumBytes).ToEncodedString(cipherTextEncoding);
+			string encryptedString = this.Encrypt(plaintextBytes, out checksumBytes).ToEncodedString(cipherTextAndChecksumEncoding);
 
-			checksum = checksumBytes.ToEncodedString(cipherTextEncoding);
+			checksum = checksumBytes.ToEncodedString(cipherTextAndChecksumEncoding);
 
 			return encryptedString;
 		}

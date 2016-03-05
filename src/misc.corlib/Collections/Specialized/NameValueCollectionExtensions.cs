@@ -3,7 +3,6 @@ namespace MiscCorLib.Collections.Specialized
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.Specialized;
-	using System.ComponentModel;
 	using System.Diagnostics.Contracts;
 
 	using JetBrains.Annotations;
@@ -56,6 +55,9 @@ namespace MiscCorLib.Collections.Specialized
 		/// <param name="collection">
 		/// An instance of <see cref="NameValueCollection"/> to check for the value.
 		/// </param>
+		/// <param name="tryParseDelegate">
+		/// 
+		/// </param>
 		/// <param name="name">
 		/// The indexer for the <see cref="NameValueCollection"/>.
 		/// </param>
@@ -68,34 +70,17 @@ namespace MiscCorLib.Collections.Specialized
 		/// <returns>
 		/// True if the named value was converted successfully, otherwise false.
 		/// </returns>
-		public static bool TryParseValue<T>(this NameValueCollection collection, string name, out T result)
+		public static bool TryParseValue<T>(
+			[NotNull] this NameValueCollection collection,
+			[NotNull] ConvertStrings.TryParseFromString<T> tryParseDelegate,
+			string name,
+			out T result)
+			where T : struct
 		{
-			if (collection == null)
-			{
-				throw new ArgumentNullException("collection", "The instance of NameValueCollection is a null reference!");
-			}
+			Contract.Requires<ArgumentNullException>(collection != null);
+			Contract.Requires<ArgumentNullException>(tryParseDelegate != null);
 
-			string s = collection[name];
-
-			if (string.IsNullOrEmpty(s))
-			{
-				result = default(T);
-				return false;
-			}
-
-			TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
-
-			try
-			{
-				object converted = converter.ConvertFrom(s);
-				result = (T)converted;
-				return true;
-			}
-			catch (Exception)
-			{
-				result = default(T);
-				return false;
-			}
+			return tryParseDelegate(collection[name], out result);
 		}
 
 		/// <summary>
@@ -123,6 +108,9 @@ namespace MiscCorLib.Collections.Specialized
 		/// An instance of <see cref="NameValueCollection"/>
 		/// from which to retrieve the value.
 		/// </param>
+		/// <param name="tryParseDelegate">
+		/// 
+		/// </param>
 		/// <param name="name">
 		/// The indexer for the <see cref="NameValueCollection"/>.
 		/// </param>
@@ -136,10 +124,18 @@ namespace MiscCorLib.Collections.Specialized
 		/// the generic type parameter <typeparamref name="T"/>,
 		/// or the value of the <paramref name="defaultReturn"/> parameter.
 		/// </returns>
-		public static T GetValue<T>(this NameValueCollection collection, string name, T defaultReturn)
+		public static T GetValue<T>(
+			[NotNull] this NameValueCollection collection,
+			[NotNull] ConvertStrings.TryParseFromString<T> tryParseDelegate, 
+			string name,
+			T defaultReturn)
+			where T : struct
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+			Contract.Requires<ArgumentNullException>(tryParseDelegate != null);
+
 			T result;
-			if (!TryParseValue(collection, name, out result))
+			if (!collection.TryParseValue(tryParseDelegate, name, out result))
 			{
 				result = defaultReturn;
 			}
@@ -174,6 +170,9 @@ namespace MiscCorLib.Collections.Specialized
 		/// <param name="name">
 		/// The indexer for the <see cref="NameValueCollection"/>.
 		/// </param>
+		/// <param name="tryParseDelegate">
+		/// 
+		/// </param>
 		/// <returns>
 		/// The value from the <see cref="NameValueCollection"/>
 		/// matching the <paramref name="name"/> parameter,
@@ -181,9 +180,16 @@ namespace MiscCorLib.Collections.Specialized
 		/// the generic type parameter <typeparamref name="T"/>,
 		/// or the type's default value.
 		/// </returns>
-		public static T GetValue<T>(this NameValueCollection collection, string name)
+		public static T GetValue<T>(
+			[NotNull] this NameValueCollection collection,
+			[NotNull] ConvertStrings.TryParseFromString<T> tryParseDelegate, 
+			string name)
+			where T : struct
 		{
-			return GetValue(collection, name, default(T));
+			Contract.Requires<ArgumentNullException>(collection != null);
+			Contract.Requires<ArgumentNullException>(tryParseDelegate != null);
+
+			return GetValue(collection, tryParseDelegate, name, default(T));
 		}
 
 		#endregion
@@ -277,706 +283,6 @@ namespace MiscCorLib.Collections.Specialized
 			}
 
 			return result;
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseBoolean and GetBoolean Overloads ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="bool"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="bool"/>, or false if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseBoolean(this NameValueCollection collection, string name, out bool result)
-		{
-			return bool.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="bool"/>,
-		/// returning false if the item could not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/>
-		/// from which to retrieve the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or false if none could be found.
-		/// </returns>
-		public static bool GetBoolean([NotNull] this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetBoolean(collection, name, false);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="bool"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/>
-		/// from which to retrieve the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static bool GetBoolean(this NameValueCollection collection, string name, bool defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			bool result;
-			if (!TryParseBoolean(collection, name, out result))
-			{
-				return defaultReturn;
-			}
-
-			return result;
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseByte, GetByte Overloads, and GetBytes ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="byte"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="byte"/>, or zero if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseByte(this NameValueCollection collection, string name, out byte result)
-		{
-			return byte.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="byte"/>,
-		/// returning zero if the item could not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or zero if none could be found.
-		/// </returns>
-		public static byte GetByte(this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetByte(collection, name, 0);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="byte"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static byte GetByte(this NameValueCollection collection, string name, byte defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			byte result;
-			if (!TryParseByte(collection, name, out result))
-			{
-				return defaultReturn;
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to a
-		/// one-dimensional array of <see cref="byte"/>, assuming that a value
-		/// defined more than once is represented as a comma-delimited string.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// An array of the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter.
-		/// </returns>
-		public static IEnumerable<byte> GetBytes(this NameValueCollection collection, string name)
-		{
-			if (string.IsNullOrEmpty(collection[name]))
-			{
-				return new byte[0];
-			}
-
-			return ConvertDelimitedString.ToEnumerable<byte>(collection[name], DefaultSeparator);
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseInt16, GetInt16 Overloads, and GetInt16s ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="short"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="short"/>, or zero if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseInt16(this NameValueCollection collection, string name, out short result)
-		{
-			return short.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="short"/>,
-		/// returning zero if the item could not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or zero if none could be found.
-		/// </returns>
-		public static short GetInt16(this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetInt16(collection, name, 0);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="short"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static short GetInt16(this NameValueCollection collection, string name, short defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			short result;
-			if (!TryParseInt16(collection, name, out result))
-			{
-				return defaultReturn;
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to a
-		/// one-dimensional array of <see cref="short"/>, assuming that a value
-		/// defined more than once is represented as a comma-delimited string.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// An array of the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter.
-		/// </returns>
-		public static IEnumerable<short> GetInt16s(this NameValueCollection collection, string name)
-		{
-			if (string.IsNullOrEmpty(collection[name]))
-			{
-				return new short[0];
-			}
-
-			return ConvertDelimitedString.ToEnumerable<short>(collection[name], DefaultSeparator);
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseInt32, GetInt32 Overloads, and GetInt32s ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="int"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="int"/>, or zero if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseInt32(this NameValueCollection collection, string name, out int result)
-		{
-			return int.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="int"/>,
-		/// returning zero if the item could not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or zero if none could be found.
-		/// </returns>
-		public static int GetInt32(this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetInt32(collection, name, 0);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="int"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static int GetInt32(this NameValueCollection collection, string name, int defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			int result;
-			if (!TryParseInt32(collection, name, out result))
-			{
-				return defaultReturn;
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to a
-		/// one-dimensional array of <see cref="int"/>, assuming that a value
-		/// defined more than once is represented as a comma-delimited string.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// An array of the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter.
-		/// </returns>
-		public static IEnumerable<int> GetInt32s(this NameValueCollection collection, string name)
-		{
-			if (string.IsNullOrEmpty(collection[name]))
-			{
-				return new int[0];
-			}
-
-			return ConvertDelimitedString.ToEnumerable<int>(collection[name], DefaultSeparator);
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseInt64, GetInt64 Overloads, and GetInt64s ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="long"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="long"/>, or zero if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseInt64(this NameValueCollection collection, string name, out long result)
-		{
-			return long.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="long"/>,
-		/// returning zero if the item could not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or zero if none could be found.
-		/// </returns>
-		public static long GetInt64(this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetInt64(collection, name, 0L);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="long"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static long GetInt64(this NameValueCollection collection, string name, long defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			long result;
-			if (!TryParseInt64(collection, name, out result))
-			{
-				return defaultReturn;
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to a
-		/// one-dimensional array of <see cref="long"/>, assuming that a value
-		/// defined more than once is represented as a comma-delimited string.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the values.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// An array of the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter.
-		/// </returns>
-		public static IEnumerable<long> GetInt64s(this NameValueCollection collection, string name)
-		{
-			if (string.IsNullOrEmpty(collection[name]))
-			{
-				return new long[0];
-			}
-
-			return ConvertDelimitedString.ToEnumerable<long>(collection[name], DefaultSeparator);
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseGuid, GetGuid Overloads, and GetGuids ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="Guid"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="Guid"/>, or <see cref="Guid.Empty"/>
-		/// if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseGuid(this NameValueCollection collection, string name, out Guid result)
-		{
-			return Guid.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="Guid"/>,
-		/// returning <see cref="Guid.Empty"/> if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or <see cref="Guid.Empty"/> if none could be found.
-		/// </returns>
-		public static Guid GetGuid(this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetGuid(collection, name, Guid.Empty);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="Guid"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static Guid GetGuid(this NameValueCollection collection, string name, Guid defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			Guid result;
-			if (!TryParseGuid(collection, name, out result))
-			{
-				return defaultReturn;
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to a
-		/// one-dimensional array of <see cref="Guid"/>, assuming that a value
-		/// defined more than once is represented as a comma-delimited string.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// An array of the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter.
-		/// </returns>
-		public static IEnumerable<Guid> GetGuids(this NameValueCollection collection, string name)
-		{
-			if (string.IsNullOrEmpty(collection[name]))
-			{
-				return new Guid[0];
-			}
-
-			return ConvertDelimitedString.ToEnumerable<Guid>(collection[name], DefaultSeparator);
-		}
-
-		#endregion
-
-		#region [ Public Static TryParseDate and GetDate Overloads ]
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="DateTime"/>.
-		/// A return value indicates whether the conversion succeeded or failed.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="DateTime"/>, or
-		/// <see cref="DateTime.MinValue"/> if the conversion failed.
-		/// </param>
-		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
-		/// </returns>
-		public static bool TryParseDate(this NameValueCollection collection, string name, out DateTime result)
-		{
-			return DateTime.TryParse(collection[name], out result);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="DateTime"/>,
-		/// returning <see cref="DateTime.MinValue"/> if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or <see cref="DateTime.MinValue"/> if none could be found.
-		/// </returns>
-		public static DateTime GetDate(this NameValueCollection collection, string name)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			return GetDate(collection, name, DateTime.MinValue);
-		}
-
-		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to <see cref="DateTime"/>,
-		/// returning a specified default value if the item could
-		/// not be found or if the conversion fails.
-		/// </summary>
-		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
-		/// </param>
-		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
-		/// </param>
-		/// <param name="defaultReturn">
-		/// A value to return if the item could not be found or if the conversion fails.
-		/// </param>
-		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
-		/// parameter if none could be found.
-		/// </returns>
-		public static DateTime GetDate(this NameValueCollection collection, string name, DateTime defaultReturn)
-		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-
-			DateTime result;
-			return TryParseDate(collection, name, out result) ? result : defaultReturn;
 		}
 
 		#endregion

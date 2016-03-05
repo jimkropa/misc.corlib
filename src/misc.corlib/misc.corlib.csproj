@@ -118,6 +118,7 @@
     <Compile Include="Security\Cryptography\Decryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateDecryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption-CreateEncryptor.cs" />
+    <Compile Include="Security\Cryptography\Encryption-CreateEncryptorWithChecksum.cs" />
     <Compile Include="Security\Cryptography\Encryption.cs" />
     <Compile Include="Security\Cryptography\Encryptor.cs" />
     <Compile Include="Security\Cryptography\EncryptorWithChecksum.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Security\Cryptography\StringHashing.cs" />
     <Compile Include="Security\Cryptography\SymmetricTransformer.cs" />
     <Compile Include="Security\Cryptography\SymmetricTransformerFactory.cs" />
+    <Compile Include="Security\Cryptography\KeyedHasher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\boilerplate.licenseheader">

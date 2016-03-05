@@ -158,7 +158,7 @@
 				// of a specific given type of SymmetricAlgorithm,
 				// based on the generic type parameter.
 				return LazyInitializer.EnsureInitialized(
-					ref this.algorithm, CreateAlgorithm);
+					ref this.algorithm, this.CreateAlgorithm);
 			}
 		}
 
@@ -214,18 +214,18 @@
 				//}
 		}
 
-		#region [ Private Methods to Create a SymmetricAlgorithm Instance based on its Generic Type Name ]
+		#region [ Private Method to Create a HashAlgorithm Instance based on its Generic Type Name ]
 
-		internal static T CreateAlgorithm()
+		protected virtual T CreateAlgorithm()
 		{
-			T algorithm = HashAlgorithm.Create(typeof(T).ToString()) as T;
-			if (algorithm == null)
+			T hashAlgorithm = HashAlgorithm.Create(typeof(T).ToString()) as T;
+			if (hashAlgorithm == null)
 			{
 				throw new InvalidOperationException(
 					string.Concat(typeof(T).FullName, " is not a hashing algorithm!"));
 			}
 
-			return algorithm;
+			return hashAlgorithm;
 		}
 
 		#endregion
