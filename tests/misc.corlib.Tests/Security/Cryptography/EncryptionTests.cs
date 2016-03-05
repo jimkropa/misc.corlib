@@ -14,13 +14,13 @@
 			private const int BlockSize = 64;
 
 			// Use NewGuid to generate a semi-random
-			// string value to use as a password.
-			private string password = Guid.NewGuid().ToString("N").ToLowerInvariant();
+			// string value to use as a test password.
+			private string testPassword = Guid.NewGuid().ToString("N").ToLowerInvariant();
 
 			[TestFixtureSetUp]
 			public void SetRandomPassword()
 			{
-				this.password = Guid.NewGuid().ToString("N").ToLowerInvariant();
+				this.testPassword = Guid.NewGuid().ToString("N").ToLowerInvariant();
 			}
 
 			[Test]
@@ -28,10 +28,10 @@
 			{
 				byte[] salt;
 				byte[] originalKey = Encryption.DeriveEncryptionKeyAndSaltFromPassword(
-					password, KeySize, BlockSize, out salt);
+					this.testPassword, KeySize, BlockSize, out salt);
 
 				byte[] recreatedKey = Encryption.DeriveEncryptionKeyFromPasswordAndSalt(
-					password, KeySize, salt);
+					this.testPassword, KeySize, salt);
 
 				Assert.AreEqual(originalKey, recreatedKey);
 			}
@@ -41,11 +41,11 @@
 			{
 				byte[] salt;
 				byte[] originalKey = Encryption.DeriveEncryptionKeyAndSaltFromPassword(
-					password, KeySize, BlockSize, out salt);
+					this.testPassword, KeySize, BlockSize, out salt);
 				
 				byte[] differentSalt;
 				byte[] keyFromDifferentSalt = Encryption.DeriveEncryptionKeyAndSaltFromPassword(
-					password, KeySize, BlockSize, out differentSalt);
+					this.testPassword, KeySize, BlockSize, out differentSalt);
 
 				Assert.AreNotEqual(salt, differentSalt);
 				Assert.AreNotEqual(originalKey, keyFromDifferentSalt);
@@ -56,10 +56,10 @@
 			{
 				byte[] salt;
 				byte[] originalKey = Encryption.DeriveEncryptionKeyAndSaltFromPassword(
-					password, KeySize, BlockSize, out salt);
+					this.testPassword, KeySize, BlockSize, out salt);
 
 				byte[] keyFromUpperCasePassword = Encryption.DeriveEncryptionKeyFromPasswordAndSalt(
-					password.ToUpperInvariant(), KeySize, salt);
+					this.testPassword.ToUpperInvariant(), KeySize, salt);
 
 				Assert.AreNotEqual(originalKey, keyFromUpperCasePassword);
 			}

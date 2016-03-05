@@ -352,8 +352,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// true if the named value was converted successfully, otherwise false.
 		/// </returns>
 		public static bool TryParseEnum<T>(
-			this NameValueCollection collection, string name, bool allowMultipleFlagsBits, out T result)
+			[NotNull] this NameValueCollection collection, string name, bool allowMultipleFlagsBits, out T result)
 		{
+			Contract.Requires<ArgumentNullException>(collection != null);
+
 			Type enumType = typeof(T);
 
 			if (!enumType.IsEnum)

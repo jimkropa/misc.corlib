@@ -4,10 +4,12 @@
 	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
 	using System.IO;
+	using System.Linq;
 	using System.Security.Cryptography;
 	using System.Threading;
 
 	using JetBrains.Annotations;
+	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
 	/// Common base class for generic <see cref="Encryptor{T}"/>
@@ -250,17 +252,45 @@
 			// The other place is in ConvertByteArray.ToText
 			// and Hasher.ComputeHash
 			byte[] transformedBytes;
-			using (MemoryStream backingStream = new MemoryStream())
-			{
-				using (CryptoStream cryptoStream = new CryptoStream(
-					backingStream, this.Transformer, CryptoStreamMode.Write))
-				{
-					cryptoStream.Write(originalBytes, 0, originalBytes.Length);
-					cryptoStream.FlushFinalBlock();
-					cryptoStream.Close();
-				}
 
-				transformedBytes = backingStream.ToArray();
+			// CA2202: Do not dispose objects multiple times
+			// https://msdn.microsoft.com/en-us/library/ms182334.aspx
+			MemoryStream backingStream = null;
+			try
+			{
+				backingStream = new MemoryStream();
+
+				// CA2202: Do not dispose objects multiple times
+				// https://msdn.microsoft.com/en-us/library/ms182334.aspx	
+				CryptoStream cryptoStream = null;
+				try
+				{
+					cryptoStream = new CryptoStream(
+						backingStream, this.Transformer, CryptoStreamMode.Write);
+
+					using (StreamWriter cryptoStreamWriter = new StreamWriter(cryptoStream))
+					{
+						cryptoStreamWriter.Write(originalBytes);
+					}
+
+					transformedBytes = backingStream.ToArray();
+				}
+				finally
+				{
+					if (cryptoStream != null)
+					{
+						// This wraps a call to the Dispose method.
+						// https://msdn.microsoft.com/en-us/library/system.security.cryptography.cryptostream.clear.aspx
+						cryptoStream.Clear();
+					}
+				}
+			}
+			finally
+			{
+				if (backingStream != null)
+				{
+					backingStream.Dispose();
+				}
 			}
 
 			return transformedBytes;
@@ -268,6 +298,10 @@
 
 		#region [ Private Methods to Create a SymmetricAlgorithm Instance based on its Generic Type Name ]
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		internal static T CreateAlgorithm()
 		{
 			T algorithm = SymmetricAlgorithm.Create(typeof(T).ToString()) as T;
@@ -293,6 +327,14 @@
 
 			if (!algorithm.ValidKeySize(encryptionKey.Count))
 			{
+				Console.WriteLine(
+					"The size of the given encryption key ({0}) does not match a valid key size ({2}) for the \"{1}\" algorithm.",
+					encryptionKey.Count,
+					algorithm.GetType().Name,
+					algorithm.LegalKeySizes.Select(lks => lks.MaxSize).ToDelimitedString());
+
+				return;
+
 				throw new TypeInitializationException(
 					"MiscCorLib.Security.Cryptography.SymmetricTransformer",
 					new ArgumentOutOfRangeException(
@@ -313,6 +355,14 @@
 
 			if (!algorithm.ValidKeySize(initializationVector.Count))
 			{
+				Console.WriteLine(
+					"The size of the given initialization vector ({0}) does not match a valid block size ({2}) for the \"{1}\" algorithm.",
+					initializationVector.Count,
+					algorithm.GetType().Name,
+					algorithm.LegalKeySizes.Select(lks => lks.MaxSize).ToDelimitedString());
+
+				return;
+
 				throw new TypeInitializationException(
 					"MiscCorLib.Security.Cryptography.SymmetricTransformer",
 					new ArgumentOutOfRangeException(
