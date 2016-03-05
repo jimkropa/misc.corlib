@@ -52,7 +52,7 @@
 			Contract.Requires<ArgumentNullException>(password != null);
 
 			byte[] decryptionKey;
-			using (Rfc2898DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, salt))
+			using (DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, salt))
 			{
 				decryptionKey = keyBytes.GetBytes(keySize);
 			}

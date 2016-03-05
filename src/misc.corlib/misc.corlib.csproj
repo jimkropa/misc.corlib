@@ -112,6 +112,7 @@
     <Compile Include="FormatString.cs" />
     <Compile Include="IHasValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Cryptography\AlgorithmFactory.cs" />
     <Compile Include="Security\Cryptography\ByteArrayEncryption.cs" />
     <Compile Include="Security\Cryptography\ByteArrayHashing.cs" />
     <Compile Include="Security\Cryptography\Decryptor.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Security\Cryptography\Encryption-CreateEncryptor.cs" />
     <Compile Include="Security\Cryptography\Encryption.cs" />
     <Compile Include="Security\Cryptography\Encryptor.cs" />
+    <Compile Include="Security\Cryptography\EncryptorWithChecksum.cs" />
     <Compile Include="Security\Cryptography\Hasher.cs" />
     <Compile Include="Security\Cryptography\StringEncryption.cs" />
     <Compile Include="Security\Cryptography\StringHashing.cs" />

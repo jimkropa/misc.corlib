@@ -9,6 +9,23 @@
 
 	public static class ByteArrayHashing
 	{
+
+		/// <summary>
+		/// Use this to generate random salts for ByteArrayHashing.
+		/// </summary>
+		/// <param name="size"></param>
+		/// <returns></returns>
+		internal static byte[] GenerateRandomBytes(int size)
+		{
+			byte[] bytes = new byte[size];
+			using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+			{
+				rng.GetBytes(bytes);
+			}
+
+			return bytes;
+		}
+
 		/// <summary>
 		/// When a string is passed to the overload of
 		/// <see cref="ComputeHash{T}(byte[],string)"/>

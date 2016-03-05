@@ -54,7 +54,7 @@
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 			: base(algorithm, encryptionKey, out initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -65,7 +65,7 @@
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 			: base(algorithm, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -89,11 +89,14 @@
 	{
 		#region [ Internal Constructor Overloads used by Encryption.CreateEncryptor ]
 
+		// Do not use optional parameters...
+		// ...save that for the factory method.
+
 		internal Encryptor(
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 			: base(algorithm, true, encryptionKey, null, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -107,7 +110,7 @@
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 			: base(algorithm, true, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -118,7 +121,7 @@
 		internal Encryptor(
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 			: base(true, encryptionKey, null, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -130,7 +133,7 @@
 		internal Encryptor(
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			bool allowNulls)
 			: base(true, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -141,14 +144,14 @@
 
 		public byte[] Encrypt(byte[] plaintextBytes)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintextBytes != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
 
 			return this.Transform(plaintextBytes);
 		}
 
 		public byte[] Encrypt(string plaintext)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 
 			return this.Encrypt(
 				plaintext, Encryption.DefaultTextEncoding);
@@ -158,7 +161,7 @@
 			string plaintext,
 			[NotNull] Encoding plaintextEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
 			return this.Transform(plaintextEncoding.GetBytes(plaintext));
@@ -168,7 +171,7 @@
 			string plaintext,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, cipherTextEncoding);
@@ -179,7 +182,7 @@
 			[NotNull] Encoding plaintextEncoding,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintext != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
 			return this.EncryptToString(
@@ -190,7 +193,7 @@
 			byte[] plaintextBytes,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || plaintextBytes != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
 
 			return this.Encrypt(plaintextBytes).ToEncodedString(cipherTextEncoding);
 		}

@@ -60,12 +60,31 @@
 		/// </remarks>
 		private readonly bool preserveAlgorithm;
 
-		public readonly bool AllowNulls;
+		/// <summary>
+		/// Indicates whether the cryptographic operation
+		/// allows null input
+		/// returns <c></c>
+		/// </summary>
+		public readonly bool AllowsNulls;
 
 		private readonly byte[] encryptionKey;
 		private readonly byte[] initializationVector;
 
+		/// <summary>
+		/// The <see cref="SymmetricAlgorithm"/>
+		/// used for encryption and decryption.
+		/// </summary>
+		/// <remarks>
+		/// This field cannot be readonly
+		/// because it is lazily initialized,
+		/// allowing a generic specification.
+		/// </remarks>
 		private T algorithm;
+
+		/// <summary>
+		/// <see cref="System.Security.Cryptography.ICryptoTransform"/>
+		/// defines the basic operations of cryptographic transformations.
+		/// </summary>
 		private ICryptoTransform transform;
 
 		/// <summary>
@@ -154,7 +173,7 @@
 			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
 			this.initializationVector = initializationVector;
-			this.AllowNulls = allowNulls;
+			this.AllowsNulls = allowNulls;
 		}
 
 		/// <summary>
@@ -224,11 +243,12 @@
 		/// <returns></returns>
 		protected byte[] Transform(byte[] originalBytes)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowNulls || originalBytes != null);
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || originalBytes != null);
 			if (originalBytes == null) return null;
 
 			// TODO: Here is where to implement looping over a buffer.
 			// The other place is in ConvertByteArray.ToText
+			// and Hasher.ComputeHash
 			byte[] transformedBytes;
 			using (MemoryStream backingStream = new MemoryStream())
 			{

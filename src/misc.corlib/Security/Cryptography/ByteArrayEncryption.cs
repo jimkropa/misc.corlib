@@ -35,7 +35,8 @@
 		public static byte[] Encrypt<T>(
 			[NotNull] this byte[] plaintextBytes,
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] salt)
+			[NotNull] byte[] salt,
+			bool allowNulls = Encryption.DefaultAllowNulls)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
@@ -46,7 +47,7 @@
 
 			// TODO: Stop hiding the generated IV.
 			byte[] initializationVector;
-			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey, out initializationVector))
+			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey, out initializationVector, allowNulls))
 			{
 				encryptedBytes = encryptor.Encrypt(plaintextBytes);
 			}
