@@ -164,7 +164,8 @@
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
-			return this.Transform(plaintextEncoding.GetBytes(plaintext));
+			return plaintext == null ? null
+				: this.Transform(plaintextEncoding.GetBytes(plaintext));
 		}
 
 		public string EncryptToString(
@@ -185,8 +186,8 @@
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
-			return this.EncryptToString(
-				plaintextEncoding.GetBytes(plaintext), ciphertextEncoding);
+			return plaintext == null ? null
+				: this.EncryptToString(plaintextEncoding.GetBytes(plaintext), ciphertextEncoding);
 		}
 
 		public string EncryptToString(

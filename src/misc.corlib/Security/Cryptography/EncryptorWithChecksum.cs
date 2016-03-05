@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
+	using System.Text;
 
 	using JetBrains.Annotations;
 
@@ -45,7 +46,7 @@
 		where TEncryptor: SymmetricAlgorithm
 		where THasher: KeyedHashAlgorithm
 	{
-		private Hasher<THasher> hasher;
+		private readonly Hasher<THasher> hasher;
 
 		internal EncryptorWithChecksum(
 			[NotNull] TEncryptor symmetricAlgorithm,
@@ -85,6 +86,88 @@
 			: base(encryptionKey, initializationVector, allowNulls)
 		{
 			this.hasher = new Hasher<THasher>(initializationVector, allowNulls);
+		}
+
+		public byte[] Encrypt(byte[] plaintextBytes, out byte[] checksum)
+		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
+
+			checksum = this.hasher.ComputeHash(plaintextBytes);
+
+			return this.Encrypt(plaintextBytes);
+		}
+
+		public byte[] Encrypt(string plaintext, out byte[] checksum)
+		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
+
+			return this.Encrypt(plaintext, Encryption.DefaultTextEncoding, out checksum);
+		}
+
+		public byte[] Encrypt(
+			string plaintext,
+			[NotNull] Encoding plaintextEncoding,
+			out byte[] checksum)
+		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
+			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+
+			// ReSharper disable once InvertIf
+			if (plaintext == null)
+			{
+				checksum = null;
+
+				return null;
+			}
+
+			return this.Encrypt(plaintextEncoding.GetBytes(plaintext), out checksum);
+		}
+
+		public string EncryptToString(
+			string plaintext,
+			out string checksum,
+			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
+		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
+
+			return this.EncryptToString(
+				plaintext, Encryption.DefaultTextEncoding, out checksum, cipherTextEncoding);
+		}
+
+		public string EncryptToString(
+			string plaintext,
+			[NotNull] Encoding plaintextEncoding,
+			out string checksum,
+			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
+		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
+			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+
+			// ReSharper disable once InvertIf
+			if (plaintext == null)
+			{
+				checksum = null;
+
+				return null;
+			}
+
+			return this.EncryptToString(
+				plaintextEncoding.GetBytes(plaintext), out checksum, ciphertextEncoding);
+		}
+
+		public string EncryptToString(
+			byte[] plaintextBytes,
+			out string checksum,
+			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
+		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
+
+			byte[] checksumBytes;
+			string encryptedString = this.Encrypt(plaintextBytes, out checksumBytes).ToEncodedString(cipherTextEncoding);
+
+			checksum = checksumBytes.ToEncodedString(cipherTextEncoding);
+
+			return encryptedString;
 		}
 	}
 }

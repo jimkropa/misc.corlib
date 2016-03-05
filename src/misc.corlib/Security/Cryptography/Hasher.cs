@@ -172,8 +172,11 @@
 
 
 
-		private byte[] ComputeHash(byte[] inputStream)
+		public byte[] ComputeHash(byte[] inputStream)
 		{
+			Contract.Requires<ArgumentNullException>(this.AllowsNulls || inputStream != null);
+			if (inputStream == null) return null;
+
 			// TODO: Here is where to implement looping over a buffer.
 			//byte[] transformedBytes;
 			//using (MemoryStream backingStream = new MemoryStream())
