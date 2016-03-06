@@ -1,5 +1,6 @@
 ﻿namespace MiscCorLib.Security.Cryptography
 {
+	using System;
 	using System.Security.Cryptography;
 	using System.Text;
 
@@ -15,7 +16,7 @@
 			public void CausesDecryptionToReturnOriginal()
 			{
 				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least.");
-				byte[] decryptedBytes, decryptedBytesFromWrongKey;
+				byte[] decryptedBytes;
 
 				using (SymmetricAlgorithm algorithm = new AesManaged())
 				{
@@ -45,7 +46,6 @@
 					}
 				}
 
-				//Assert.AreNotEqual(decryptedBytes, decryptedBytesFromWrongKey);
 				Assert.AreEqual(plaintextBytes, decryptedBytes);
 			}
 		}
@@ -57,7 +57,7 @@
 			public void CausesDecryptionToReturnNonsense()
 			{
 				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test!");
-				byte[] decryptedBytes, decryptedBytesFromWrongKey;
+				byte[] decryptedBytes, decryptedBytesFromWrongKey = null;
 
 				using (SymmetricAlgorithm algorithm = new AesManaged())
 				{
@@ -78,13 +78,23 @@
 						ciphertextBytes = encryptor.Encrypt(plaintextBytes);
 					}
 
-					//using (Decryptor decryptorWithWrongKey = new Decryptor(algorithm, wrongDecryptionKey, iv))
-					//{
-					//	Assert.AreEqual(wrongDecryptionKey, decryptorWithWrongKey.Algorithm.Key);
-					//	Assert.AreEqual(iv, decryptorWithWrongKey.Algorithm.IV);
+					using (Decryptor decryptorWithWrongKey = new Decryptor(algorithm, wrongDecryptionKey, iv))
+					{
+						Assert.AreEqual(wrongDecryptionKey, decryptorWithWrongKey.Algorithm.Key);
+						Assert.AreEqual(iv, decryptorWithWrongKey.Algorithm.IV);
 
-					//	decryptedBytesFromWrongKey = decryptorWithWrongKey.Decrypt(ciphertextBytes);
-					//}
+						try
+						{
+							decryptedBytesFromWrongKey = decryptorWithWrongKey.Decrypt(ciphertextBytes);
+						}
+						catch (CryptographicException e)
+						{
+							// "Padding is invalid and cannot be removed."
+							Assert.IsNull(decryptedBytesFromWrongKey);
+
+							Console.WriteLine(e.Message);
+						}
+					}
 
 					using (Decryptor decryptor = new Decryptor(algorithm, encryptionKey, iv))
 					{
@@ -95,7 +105,7 @@
 					}
 				}
 
-				//Assert.AreNotEqual(decryptedBytes, decryptedBytesFromWrongKey);
+				Assert.AreNotEqual(decryptedBytes, decryptedBytesFromWrongKey);
 				Assert.AreEqual(plaintextBytes, decryptedBytes);
 			}
 		}

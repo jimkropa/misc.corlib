@@ -235,6 +235,7 @@
 
 			if ((this.algorithm != null) && !this.preserveAlgorithm)
 			{
+				this.algorithm.Clear();
 				this.algorithm.Dispose();
 			}
 		}
@@ -268,14 +269,12 @@
 					int bufferSize = this.Algorithm.BlockSize;
 					if (originalBytes.Length <= bufferSize)
 					{
-						// If the plaintext message is short,
-						// use one method call to transform.
+						// If the message is short, use one method call to transform.
 						cryptoStream.Write(originalBytes, 0, originalBytes.Length);
 					}
 					else
 					{
-						// If the plaintext message is long,
-						// use an in-memory buffer...
+						// If the message is long, use an in-memory buffer...
 						using (MemoryStream originalBytesStream
 							//// ...and make sure it read-only:
 							= new MemoryStream(originalBytes, false))
@@ -293,7 +292,7 @@
 								// Read from originalBytesStream into the buffer...
 								bytesRead = originalBytesStream.Read(buffer, 0, bufferSize);
 
-								// ...then write from the buffer to the 
+								// ...then write from the buffer to the destination stream.
 								cryptoStream.Write(buffer, 0, bytesRead);
 							}
 							while (bytesRead > 0);
@@ -348,57 +347,54 @@
 		private static void ValidateKeySize(
 			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> encryptionKey)
 		{
-			////	Contract.Requires<ArgumentOutOfRangeException>(
-			////		algorithm.ValidKeySize(encryptionKey.Count),
-			////		"The size of the given encryption key does not match the valid key size for the algorithm.");
-
-			if (!algorithm.ValidKeySize(encryptionKey.Count))
+			// Array length is bytes, Key size measured in bits.
+			int encryptionKeySize = encryptionKey.Count * 8;
+			if (algorithm.ValidKeySize(encryptionKeySize))
 			{
-				Console.WriteLine(
-					"The size of the given encryption key ({0}) does not match a valid key size ({2}) for the \"{1}\" algorithm.",
-					encryptionKey.Count,
-					algorithm.GetType().Name,
-					algorithm.LegalKeySizes.Select(lks => lks.MaxSize).ToDelimitedString());
-
 				return;
-
-				throw new TypeInitializationException(
-					"MiscCorLib.Security.Cryptography.SymmetricTransformer",
-					new ArgumentOutOfRangeException(
-						"encryptionKey",
-						string.Format(
-							"The size of the given encryption key ({0}) does not match a valid key size for the \"{1}\" algorithm.",
-							encryptionKey.Count,
-							algorithm.GetType().Name)));
 			}
+
+			string message = string.Format(
+				"The size of the given encryption key ({0} bytes, {1} bits) does not match a valid key size ({3}) for the \"{2}\" algorithm.",
+				encryptionKey.Count,
+				encryptionKeySize,
+				algorithm.GetType().Name,
+				algorithm.LegalKeySizes.Select(
+					legalKeySize => string.Format(
+						"Max{0}Min{1}Skip{2}", legalKeySize.MaxSize, legalKeySize.MinSize, legalKeySize.SkipSize))
+					.ToDelimitedString(", "));
+
+			////	Contract.Requires<ArgumentOutOfRangeException>(
+			////		algorithm.ValidKeySize(encryptionKeySize), message);
+			throw new TypeInitializationException(
+				"MiscCorLib.Security.Cryptography.SymmetricTransformer",
+				new ArgumentOutOfRangeException("encryptionKey", message));
 		}
 
 		private static void ValidateBlockSize(
 			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> initializationVector)
 		{
-			////	Contract.Requires<ArgumentOutOfRangeException>(
-			////		algorithm.ValidKeySize(initializationVector.Count),
-			////		"The size of the given initialization vector does not match the valid block size for the algorithm.");
-
-			if (!algorithm.ValidKeySize(initializationVector.Count))
+			// Array length is bytes, IV size measured in bits.
+			int initializationVectorSize = initializationVector.Count * 8;
+			if (algorithm.ValidKeySize(initializationVectorSize))
 			{
-				Console.WriteLine(
-					"The size of the given initialization vector ({0}) does not match a valid block size ({2}) for the \"{1}\" algorithm.",
-					initializationVector.Count,
-					algorithm.GetType().Name,
-					algorithm.LegalBlockSizes.Select(lbs => lbs.MaxSize).ToDelimitedString());
-
 				return;
-
-				throw new TypeInitializationException(
-					"MiscCorLib.Security.Cryptography.SymmetricTransformer",
-					new ArgumentOutOfRangeException(
-						"initializationVector",
-						string.Format(
-							"The size of the given initialization vector ({0}) does not match a valid block size for the \"{1}\" algorithm.",
-							initializationVector.Count,
-							algorithm.GetType().Name)));
 			}
+
+			string message = string.Format(
+				"The size of the given initialization vector ({0}) does not match a valid block size ({2}) for the \"{1}\" algorithm.",
+				initializationVector.Count,
+				algorithm.GetType().Name,
+				algorithm.LegalBlockSizes.Select(
+					legalBlockSize => string.Format(
+						"Max{0}Min{1}Skip{2}", legalBlockSize.MaxSize, legalBlockSize.MinSize, legalBlockSize.SkipSize))
+					.ToDelimitedString(", "));
+
+			////	Contract.Requires<ArgumentOutOfRangeException>(
+			////		algorithm.ValidBlockSize(initializationVectorSize), message);
+			throw new TypeInitializationException(
+				"MiscCorLib.Security.Cryptography.SymmetricTransformer",
+				new ArgumentOutOfRangeException("initializationVector", message));
 		}
 
 		/// <summary>
