@@ -9,6 +9,7 @@
 	using System.Threading;
 
 	using JetBrains.Annotations;
+
 	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
@@ -248,74 +249,73 @@
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || originalBytes != null);
 			if (originalBytes == null) return null;
 
-
-			//// By encrypting a chunk at
-			//// a time, you can save memory
-			//// and accommodate large files.
-			//int count = 0;
-			//int offset = 0;
-
-			//// blockSizeBytes can be any arbitrary size.
-			//int blockSizeBytes = rjndl.BlockSize / 8;
-			//byte[] data = new byte[blockSizeBytes];
-			//int bytesRead = 0;
-
-			//using (FileStream inFs = new FileStream(inFile, FileMode.Open))
-			//{
-			//	do
-			//	{
-			//		count = inFs.Read(data, 0, blockSizeBytes);
-			//		offset += count;
-			//		outStreamEncrypted.Write(data, 0, count);
-			//		bytesRead += blockSizeBytes;
-			//	}
-			//	while (count > 0);
-			//	inFs.Close();
-			//}
-			//outStreamEncrypted.FlushFinalBlock();
-			//outStreamEncrypted.Close();
-
-			// TODO: Here is where to implement looping over a buffer.
-			// The other place is in ConvertByteArray.ToText
-			// and Hasher.ComputeHash
+			// Declare a local variable to be the output value.
 			byte[] transformedBytes;
 
+			// Do not place a "using" around this MemoryStream.
 			// CA2202: Do not dispose objects multiple times
 			// https://msdn.microsoft.com/en-us/library/ms182334.aspx
 			MemoryStream backingStream = null;
+
 			try
 			{
+				// This is the destination of Write operations.
 				backingStream = new MemoryStream();
 
 				using (CryptoStream cryptoStream = new CryptoStream(
 					backingStream, this.Transformer, CryptoStreamMode.Write))
 				{
-					//int count = 0;
-					//int offset = 0;
-					//int blockSizeBytes = this.Algorithm.BlockSize / 8;
-					//byte[] data = new byte[blockSizeBytes];
-					//int bytesRead = 0;
+					int bufferSize = this.Algorithm.BlockSize;
+					if (originalBytes.Length <= bufferSize)
+					{
+						// If the plaintext message is short,
+						// use one method call to transform.
+						cryptoStream.Write(originalBytes, 0, originalBytes.Length);
+					}
+					else
+					{
+						// If the plaintext message is long,
+						// use an in-memory buffer...
+						using (MemoryStream originalBytesStream
+							//// ...and make sure it read-only:
+							= new MemoryStream(originalBytes, false))
+						{
+							int bytesRead;
+							byte[] buffer = new byte[bufferSize];
 
-					//do
-					//{
-					//	count = originalBytes.Read(data, 0, blockSizeBytes);
-					//	offset += count;
-					//	encryptedStream.Write(data, 0, count);
-					//	bytesRead += blockSizeBytes;
-					//}
-					//while (count > 0);
+							// Set the position to the beginning of the stream.
+							originalBytesStream.Seek(0, SeekOrigin.Begin);
 
-					// TODO: Implement buffer!
-					cryptoStream.Write(originalBytes, 0, originalBytes.Length);
+							// Then read into a buffer until there is
+							// no more of originalBytesStream to read.
+							do
+							{
+								// Read from originalBytesStream into the buffer...
+								bytesRead = originalBytesStream.Read(buffer, 0, bufferSize);
+
+								// ...then write from the buffer to the 
+								cryptoStream.Write(buffer, 0, bytesRead);
+							}
+							while (bytesRead > 0);
+						}
+					}
+
+					// Truncate to avoid error about incorrect padding.
 					cryptoStream.FlushFinalBlock();
 
+					// Set return value.
 					transformedBytes = backingStream.ToArray();
 				}
 			}
 			finally
 			{
+				// CA2202: Do not dispose objects multiple times
+				// https://msdn.microsoft.com/en-us/library/ms182334.aspx
 				if (backingStream != null)
 				{
+					// Since a MemoryStream has no unmanaged resources
+					// (unlike other implementers of Stream) this step isn't
+					// strictly necessary...
 					backingStream.Dispose();
 				}
 			}

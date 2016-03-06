@@ -14,7 +14,7 @@
 			[Test]
 			public void CausesDecryptionToReturnOriginal()
 			{
-				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test!");
+				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least.");
 				byte[] decryptedBytes, decryptedBytesFromWrongKey;
 
 				using (SymmetricAlgorithm algorithm = new AesManaged())
