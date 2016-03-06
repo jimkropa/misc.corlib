@@ -248,6 +248,33 @@
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || originalBytes != null);
 			if (originalBytes == null) return null;
 
+
+			//// By encrypting a chunk at
+			//// a time, you can save memory
+			//// and accommodate large files.
+			//int count = 0;
+			//int offset = 0;
+
+			//// blockSizeBytes can be any arbitrary size.
+			//int blockSizeBytes = rjndl.BlockSize / 8;
+			//byte[] data = new byte[blockSizeBytes];
+			//int bytesRead = 0;
+
+			//using (FileStream inFs = new FileStream(inFile, FileMode.Open))
+			//{
+			//	do
+			//	{
+			//		count = inFs.Read(data, 0, blockSizeBytes);
+			//		offset += count;
+			//		outStreamEncrypted.Write(data, 0, count);
+			//		bytesRead += blockSizeBytes;
+			//	}
+			//	while (count > 0);
+			//	inFs.Close();
+			//}
+			//outStreamEncrypted.FlushFinalBlock();
+			//outStreamEncrypted.Close();
+
 			// TODO: Here is where to implement looping over a buffer.
 			// The other place is in ConvertByteArray.ToText
 			// and Hasher.ComputeHash
@@ -260,29 +287,29 @@
 			{
 				backingStream = new MemoryStream();
 
-				// CA2202: Do not dispose objects multiple times
-				// https://msdn.microsoft.com/en-us/library/ms182334.aspx	
-				CryptoStream cryptoStream = null;
-				try
+				using (CryptoStream cryptoStream = new CryptoStream(
+					backingStream, this.Transformer, CryptoStreamMode.Write))
 				{
-					cryptoStream = new CryptoStream(
-						backingStream, this.Transformer, CryptoStreamMode.Write);
+					//int count = 0;
+					//int offset = 0;
+					//int blockSizeBytes = this.Algorithm.BlockSize / 8;
+					//byte[] data = new byte[blockSizeBytes];
+					//int bytesRead = 0;
 
-					using (StreamWriter cryptoStreamWriter = new StreamWriter(cryptoStream))
-					{
-						cryptoStreamWriter.Write(originalBytes);
-					}
+					//do
+					//{
+					//	count = originalBytes.Read(data, 0, blockSizeBytes);
+					//	offset += count;
+					//	encryptedStream.Write(data, 0, count);
+					//	bytesRead += blockSizeBytes;
+					//}
+					//while (count > 0);
+
+					// TODO: Implement buffer!
+					cryptoStream.Write(originalBytes, 0, originalBytes.Length);
+					cryptoStream.FlushFinalBlock();
 
 					transformedBytes = backingStream.ToArray();
-				}
-				finally
-				{
-					if (cryptoStream != null)
-					{
-						// This wraps a call to the Dispose method.
-						// https://msdn.microsoft.com/en-us/library/system.security.cryptography.cryptostream.clear.aspx
-						cryptoStream.Clear();
-					}
 				}
 			}
 			finally
@@ -359,7 +386,7 @@
 					"The size of the given initialization vector ({0}) does not match a valid block size ({2}) for the \"{1}\" algorithm.",
 					initializationVector.Count,
 					algorithm.GetType().Name,
-					algorithm.LegalKeySizes.Select(lks => lks.MaxSize).ToDelimitedString());
+					algorithm.LegalBlockSizes.Select(lbs => lbs.MaxSize).ToDelimitedString());
 
 				return;
 

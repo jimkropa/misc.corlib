@@ -41,7 +41,7 @@
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
 			bool allowNulls = Encryption.DefaultAllowNulls)
-			: base(algorithm, true, encryptionKey, initializationVector, allowNulls)
+			: base(algorithm, false, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -52,7 +52,7 @@
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
 			bool allowNulls = Encryption.DefaultAllowNulls)
-			: base(true, encryptionKey, initializationVector, allowNulls)
+			: base(false, encryptionKey, initializationVector, allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(initializationVector != null);
