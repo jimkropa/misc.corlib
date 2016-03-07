@@ -32,6 +32,8 @@
 	public abstract class SymmetricTransformer<T> : IDisposable
 		where T : SymmetricAlgorithm
 	{
+		private const byte BitsPerByte = 8;
+
 		/// <summary>
 		/// Private backing field for <see cref="IsEncryptor"/>
 		/// and <see cref="IsDecryptor"/> properties.
@@ -63,12 +65,7 @@
 		/// </remarks>
 		private readonly bool preserveAlgorithm;
 
-		/// <summary>
-		/// Indicates whether the cryptographic operation
-		/// allows null input
-		/// returns <c></c>
-		/// </summary>
-		public readonly bool AllowsNulls;
+		private readonly EncryptionOptions options;
 
 		private readonly byte[] encryptionKey;
 		private readonly byte[] initializationVector;
@@ -105,7 +102,7 @@
 		/// <param name="isEncryptor"></param>
 		/// <param name="encryptionKey"></param>
 		/// <param name="initializationVector"></param>
-		/// <param name="allowNulls"></param>
+		/// <param name="options"></param>
 		/// <remarks>
 		/// <para>
 		/// This is <em>not a pure method</em>, so beware of this side effect:
@@ -129,8 +126,8 @@
 			bool isEncryptor,
 			[NotNull] byte[] encryptionKey,
 			byte[] initializationVector,
-			bool allowNulls)
-			: this(isEncryptor, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: this(isEncryptor, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -164,19 +161,20 @@
 		/// <param name="isEncryptor"></param>
 		/// <param name="encryptionKey"></param>
 		/// <param name="initializationVector"></param>
-		/// <param name="allowNulls"></param>
+		/// <param name="options"></param>
 		protected SymmetricTransformer(
 			bool isEncryptor,
 			[NotNull] byte[] encryptionKey,
 			byte[] initializationVector,
-			bool allowNulls)
+			EncryptionOptions options)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
 			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
 			this.initializationVector = initializationVector;
-			this.AllowsNulls = allowNulls;
+
+			this.options = options;
 		}
 
 		/// <summary>
@@ -226,6 +224,26 @@
 		/// </summary>
 		public bool IsDecryptor { get { return !this.IsEncryptor; } }
 
+		/// <summary>
+		/// Indicates whether the cryptographic operation
+		/// allows null input
+		/// returns <c></c>
+		/// </summary>
+		public bool AllowsNulls
+		{
+			get { return (this.options & EncryptionOptions.AllowNullInput) == EncryptionOptions.AllowNullInput; }
+		}
+
+		public bool ThrowsCryptographicExceptions
+		{
+			get { return (this.options & EncryptionOptions.SuppressCryptographicExceptions) != EncryptionOptions.SuppressCryptographicExceptions; }
+		}
+
+		public bool ThrowsDecryptionChecksumExceptions
+		{
+			get { return (this.options & EncryptionOptions.SuppressDecryptionChecksumExceptions) != EncryptionOptions.SuppressDecryptionChecksumExceptions; }
+		}
+
 		public void Dispose()
 		{
 			if (this.transform != null)
@@ -266,10 +284,14 @@
 				using (CryptoStream cryptoStream = new CryptoStream(
 					backingStream, this.Transformer, CryptoStreamMode.Write))
 				{
+					// Use the block size in bits as the arbitrary size of the buffer,
+					// not for any particular reason except to make the estimate
+					// of an appropriate size relative to the algorithm.
 					int bufferSize = this.Algorithm.BlockSize;
 					if (originalBytes.Length <= bufferSize)
 					{
-						// If the message is short, use one method call to transform.
+						// If the message is shorter than the buffer,
+						// use one simple method call to transform.
 						cryptoStream.Write(originalBytes, 0, originalBytes.Length);
 					}
 					else
@@ -348,7 +370,7 @@
 			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> encryptionKey)
 		{
 			// Array length is bytes, Key size measured in bits.
-			int encryptionKeySize = encryptionKey.Count * 8;
+			int encryptionKeySize = encryptionKey.Count * BitsPerByte; // (BitsPerByte == 8)
 			if (algorithm.ValidKeySize(encryptionKeySize))
 			{
 				return;
@@ -375,7 +397,7 @@
 			SymmetricAlgorithm algorithm, IReadOnlyCollection<byte> initializationVector)
 		{
 			// Array length is bytes, IV size measured in bits.
-			int initializationVectorSize = initializationVector.Count * 8;
+			int initializationVectorSize = initializationVector.Count * BitsPerByte; // (BitsPerByte == 8)
 			if (algorithm.ValidKeySize(initializationVectorSize))
 			{
 				return;

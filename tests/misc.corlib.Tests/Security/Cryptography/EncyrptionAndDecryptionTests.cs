@@ -10,10 +10,10 @@
 	public sealed class EncyrptionAndDecryptionTests
 	{
 		[TestFixture]
-		public sealed class UsingSameEncryptionKey
+		public sealed class SameEncryptionKey
 		{
 			[Test]
-			public void CausesDecryptionToReturnOriginal()
+			public void DecryptsToOriginalPlainText()
 			{
 				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least.");
 				byte[] decryptedBytes;

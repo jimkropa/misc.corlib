@@ -36,7 +36,7 @@
 			[NotNull] this byte[] plaintextBytes,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] salt,
-			bool allowNulls = Encryption.DefaultAllowNulls)
+			EncryptionOptions options = Encryption.DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
@@ -47,7 +47,7 @@
 
 			// TODO: Stop hiding the generated IV.
 			byte[] initializationVector;
-			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey, out initializationVector, allowNulls))
+			using (Encryptor<T> encryptor = new Encryptor<T>(encryptionKey, out initializationVector, options))
 			{
 				encryptedBytes = encryptor.Encrypt(plaintextBytes);
 			}
@@ -85,15 +85,18 @@
 			return Encrypt<T>(plaintextBytes, keyEncoding.GetBytes(key), ivEncoding.GetBytes(iv));
 		}
 
-		public static byte[] Decrypt<T>([NotNull] this byte[] encryptedBytes, [NotNull] byte[] key, [NotNull] byte[] iv)
+		public static byte[] Decrypt<T>(
+			this byte[] encryptedBytes,
+			[NotNull] byte[] key,
+			[NotNull] byte[] iv,
+			EncryptionOptions options = Encryption.DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(encryptedBytes != null);
 			Contract.Requires<ArgumentNullException>(key != null);
 			Contract.Requires<ArgumentNullException>(iv != null);
 
 			byte[] decryptedBytes;
-			using (Decryptor<T> decryptor = new Decryptor<T>(key, iv))
+			using (Decryptor<T> decryptor = new Decryptor<T>(key, iv, options))
 			{
 				decryptedBytes = decryptor.Decrypt(encryptedBytes);
 			}

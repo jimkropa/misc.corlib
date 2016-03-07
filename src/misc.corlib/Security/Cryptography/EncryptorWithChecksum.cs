@@ -16,8 +16,8 @@
 			[NotNull] KeyedHashAlgorithm checksumHasher,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls)
-			: base(symmetricAlgorithm, checksumHasher, encryptionKey, out initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(symmetricAlgorithm, checksumHasher, encryptionKey, out initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(symmetricAlgorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
@@ -29,8 +29,8 @@
 			[NotNull] KeyedHashAlgorithm checksumHasher,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls)
-			: base(symmetricAlgorithm, checksumHasher, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(symmetricAlgorithm, checksumHasher, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(symmetricAlgorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
@@ -58,11 +58,11 @@
 			[NotNull] THasher checksumHasher,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls)
-			: base(symmetricAlgorithm, encryptionKey, out initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(symmetricAlgorithm, encryptionKey, out initializationVector, options)
 		{
 			this.hasher = new KeyedHasher<THasher>(
-				checksumHasher, encryptionKey, initializationVector, allowNulls);
+				checksumHasher, encryptionKey, initializationVector, this.AllowsNulls);
 		}
 
 		internal EncryptorWithChecksum(
@@ -70,31 +70,31 @@
 			[NotNull] THasher checksumHasher,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls)
-			: base(algorithm, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(algorithm, encryptionKey, initializationVector, options)
 		{
 			this.hasher = new KeyedHasher<THasher>(
-				checksumHasher, encryptionKey, initializationVector, allowNulls);
+				checksumHasher, encryptionKey, initializationVector, this.AllowsNulls);
 		}
 
 		internal EncryptorWithChecksum(
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls)
-			: base(encryptionKey, out initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(encryptionKey, out initializationVector, options)
 		{
 			this.hasher = new KeyedHasher<THasher>(
-				encryptionKey, initializationVector, allowNulls);
+				encryptionKey, initializationVector, this.AllowsNulls);
 		}
 
 		internal EncryptorWithChecksum(
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls)
-			: base(encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(encryptionKey, initializationVector, options)
 		{
 			this.hasher = new KeyedHasher<THasher>(
-				encryptionKey, initializationVector, allowNulls);
+				encryptionKey, initializationVector, this.AllowsNulls);
 		}
 
 		public byte[] Encrypt(byte[] plaintextBytes, out byte[] checksum)

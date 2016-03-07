@@ -24,8 +24,9 @@
 		public Decryptor(
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector)
-			: base(algorithm, encryptionKey, initializationVector)
+			[NotNull] byte[] initializationVector,
+			EncryptionOptions options)
+			: base(algorithm, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -40,8 +41,8 @@
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
-			: base(algorithm, false, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(algorithm, false, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -51,18 +52,16 @@
 		public Decryptor(
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls = Encryption.DefaultAllowNulls)
-			: base(false, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(false, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
 
 		public byte[] Decrypt(
-			[NotNull] byte[] ciphertextBytes)
+			byte[] ciphertextBytes)
 		{
-			Contract.Requires<ArgumentNullException>(ciphertextBytes != null);
-
 			return this.Transform(ciphertextBytes);
 		}
 	}

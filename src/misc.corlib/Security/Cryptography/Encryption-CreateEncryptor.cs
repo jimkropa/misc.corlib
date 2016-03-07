@@ -15,19 +15,19 @@
 			[NotNull] this SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
-			return new Encryptor(algorithm, encryptionKey, out randomSalt, allowNulls);
+			return new Encryptor(algorithm, encryptionKey, out randomSalt, options);
 		}
 
 		public static Encryptor CreateEncryptor(
 			[NotNull] this SymmetricAlgorithm algorithm,
 			[NotNull] string password,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(password != null);
@@ -38,7 +38,7 @@
 			return algorithm.CreateEncryptorWithGivenSalt(
 				DeriveEncryptionKeyAndSaltFromPassword(password, algorithm.KeySize, algorithm.BlockSize, out randomSalt),
 				randomSalt,
-				allowNulls);
+				options);
 		}
 
 		public static Encryptor CreateEncryptor(
@@ -46,13 +46,13 @@
 			[NotNull] string password,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(password != null);
 
 			byte[] randomSaltBytes;
-			Encryptor encryptor = algorithm.CreateEncryptor(password, out randomSaltBytes, allowNulls);
+			Encryptor encryptor = algorithm.CreateEncryptor(password, out randomSaltBytes, options);
 
 			randomSalt = randomSaltBytes.ToEncodedString(saltEncoding);
 
@@ -67,20 +67,20 @@
 			[NotNull] this SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return new Encryptor(algorithm, encryptionKey, salt, allowNulls);
+			return new Encryptor(algorithm, encryptionKey, salt, options);
 		}
 
 		public static Encryptor CreateEncryptorWithGivenSalt(
 			[NotNull] this SymmetricAlgorithm algorithm,
 			[NotNull] string password,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(password != null);
@@ -89,7 +89,7 @@
 			return algorithm.CreateEncryptorWithGivenSalt(
 				DeriveEncryptionKeyFromPasswordAndSalt(password, algorithm.KeySize, salt),
 				salt,
-				allowNulls);
+				options);
 		}
 
 		public static Encryptor CreateEncryptorWithGivenSalt(
@@ -97,13 +97,13 @@
 			[NotNull] string password,
 			[NotNull] string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(password != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return algorithm.CreateEncryptorWithGivenSalt(password, salt.ToByteArray(saltEncoding), allowNulls);
+			return algorithm.CreateEncryptorWithGivenSalt(password, salt.ToByteArray(saltEncoding), options);
 		}
 
 		#endregion
@@ -113,18 +113,18 @@
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] byte[] encryptionKey,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
-			return new Encryptor<T>(encryptionKey, out randomSalt, allowNulls);
+			return new Encryptor<T>(encryptionKey, out randomSalt, options);
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] string password,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
@@ -139,20 +139,20 @@
 			return new Encryptor<T>(
 				DeriveEncryptionKeyAndSaltFromPassword(password, keySize, blockSize, out randomSalt),
 				randomSalt,
-				allowNulls);
+				options);
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
 			[NotNull] string password,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
 
 			byte[] randomSaltBytes;
-			Encryptor<T> encryptor = CreateEncryptor<T>(password, out randomSaltBytes, allowNulls);
+			Encryptor<T> encryptor = CreateEncryptor<T>(password, out randomSaltBytes, options);
 
 			randomSalt = randomSaltBytes.ToEncodedString(saltEncoding);
 
@@ -166,19 +166,19 @@
 		public static Encryptor<T> CreateEncryptorWithGivenSalt<T>(
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return new Encryptor<T>(encryptionKey, salt, allowNulls);
+			return new Encryptor<T>(encryptionKey, salt, options);
 		}
 
 		public static Encryptor<T> CreateEncryptorWithGivenSalt<T>(
 			[NotNull] string password,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
@@ -193,20 +193,22 @@
 			return new Encryptor<T>(
 				DeriveEncryptionKeyFromPasswordAndSalt(password, keySize, salt),
 				salt,
-				allowNulls);
+				options);
 		}
 
 		public static Encryptor<T> CreateEncryptorWithGivenSalt<T>(
 			[NotNull] string password,
 			[NotNull] string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return CreateEncryptorWithGivenSalt<T>(password, salt.ToByteArray(allowNulls, saltEncoding));
+			return CreateEncryptorWithGivenSalt<T>(password, salt.ToByteArray(
+				(options & EncryptionOptions.AllowNullInput) == EncryptionOptions.AllowNullInput,
+				saltEncoding));
 		}
 
 		#endregion

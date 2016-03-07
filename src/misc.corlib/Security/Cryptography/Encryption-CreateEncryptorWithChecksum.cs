@@ -18,13 +18,13 @@
 			[NotNull] KeyedHashAlgorithm checksumHasher,
 			[NotNull] byte[] encryptionKey,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
-			return new EncryptorWithChecksum(algorithm, checksumHasher, encryptionKey, out randomSalt, allowNulls);
+			return new EncryptorWithChecksum(algorithm, checksumHasher, encryptionKey, out randomSalt, options);
 		}
 
 		public static EncryptorWithChecksum CreateEncryptor(
@@ -32,7 +32,7 @@
 			[NotNull] KeyedHashAlgorithm checksumHasher,
 			[NotNull] string password,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
@@ -45,7 +45,7 @@
 				checksumHasher,
 				DeriveEncryptionKeyAndSaltFromPassword(password, algorithm.KeySize, algorithm.BlockSize, out randomSalt),
 				randomSalt,
-				allowNulls);
+				options);
 		}
 
 		public static EncryptorWithChecksum CreateEncryptor(
@@ -54,7 +54,7 @@
 			[NotNull] string password,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
@@ -62,7 +62,7 @@
 
 			byte[] randomSaltBytes;
 			EncryptorWithChecksum encryptor = algorithm.CreateEncryptor(
-				checksumHasher, password, out randomSaltBytes, allowNulls);
+				checksumHasher, password, out randomSaltBytes, options);
 
 			randomSalt = randomSaltBytes.ToEncodedString(saltEncoding);
 
@@ -78,14 +78,14 @@
 			[NotNull] KeyedHashAlgorithm checksumHasher,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return new EncryptorWithChecksum(algorithm, checksumHasher, encryptionKey, salt, allowNulls);
+			return new EncryptorWithChecksum(algorithm, checksumHasher, encryptionKey, salt, options);
 		}
 
 		public static EncryptorWithChecksum CreateEncryptorWithGivenSalt(
@@ -93,7 +93,7 @@
 			[NotNull] KeyedHashAlgorithm checksumHasher,
 			[NotNull] string password,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
@@ -104,7 +104,7 @@
 				checksumHasher,
 				DeriveEncryptionKeyFromPasswordAndSalt(password, algorithm.KeySize, salt),
 				salt,
-				allowNulls);
+				options);
 		}
 
 		public static EncryptorWithChecksum CreateEncryptorWithGivenSalt(
@@ -113,7 +113,7 @@
 			[NotNull] string password,
 			[NotNull] string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(checksumHasher != null);
@@ -121,7 +121,7 @@
 			Contract.Requires<ArgumentNullException>(salt != null);
 
 			return algorithm.CreateEncryptorWithGivenSalt(
-				checksumHasher, password, salt.ToByteArray(saltEncoding), allowNulls);
+				checksumHasher, password, salt.ToByteArray(saltEncoding), options);
 		}
 
 		#endregion
@@ -131,19 +131,19 @@
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptor<TEncryptor, THasher>(
 			[NotNull] byte[] encryptionKey,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
-			return new EncryptorWithChecksum<TEncryptor, THasher>(encryptionKey, out randomSalt, allowNulls);
+			return new EncryptorWithChecksum<TEncryptor, THasher>(encryptionKey, out randomSalt, options);
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptor<TEncryptor, THasher>(
 			[NotNull] string password,
 			out byte[] randomSalt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
@@ -159,14 +159,14 @@
 			return new EncryptorWithChecksum<TEncryptor, THasher>(
 				DeriveEncryptionKeyAndSaltFromPassword(password, keySize, blockSize, out randomSalt),
 				randomSalt,
-				allowNulls);
+				options);
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptor<TEncryptor, THasher>(
 			[NotNull] string password,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
@@ -174,7 +174,7 @@
 
 			byte[] randomSaltBytes;
 			EncryptorWithChecksum<TEncryptor, THasher> encryptor = CreateEncryptor<TEncryptor, THasher>(
-				password, out randomSaltBytes, allowNulls);
+				password, out randomSaltBytes, options);
 
 			randomSalt = randomSaltBytes.ToEncodedString(saltEncoding);
 
@@ -188,20 +188,20 @@
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptorWithGivenSalt<TEncryptor, THasher>(
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return new EncryptorWithChecksum<TEncryptor, THasher>(encryptionKey, salt, allowNulls);
+			return new EncryptorWithChecksum<TEncryptor, THasher>(encryptionKey, salt, options);
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptorWithGivenSalt<TEncryptor, THasher>(
 			[NotNull] string password,
 			[NotNull] byte[] salt,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
@@ -217,21 +217,23 @@
 			return new EncryptorWithChecksum<TEncryptor, THasher>(
 				DeriveEncryptionKeyFromPasswordAndSalt(password, keySize, salt),
 				salt,
-				allowNulls);
+				options);
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptorWithGivenSalt<TEncryptor, THasher>(
 			[NotNull] string password,
 			[NotNull] string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
-			bool allowNulls = DefaultAllowNulls)
+			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
 			Contract.Requires<ArgumentNullException>(salt != null);
 
-			return CreateEncryptorWithGivenSalt<TEncryptor, THasher>(password, salt.ToByteArray(allowNulls, saltEncoding));
+			return CreateEncryptorWithGivenSalt<TEncryptor, THasher>(password, salt.ToByteArray(
+				(options & EncryptionOptions.AllowNullInput) == EncryptionOptions.AllowNullInput,
+				saltEncoding));
 		}
 
 		#endregion

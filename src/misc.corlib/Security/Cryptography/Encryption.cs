@@ -19,8 +19,9 @@
 	/// </remarks>
 	public static partial class Encryption
 	{
-		public const bool DefaultAllowNulls = true;
-		public const int DefaultSaltSize = 8;
+		public const EncryptionOptions DefaultOptions = EncryptionOptions.AllowNullInput;
+			////	| EncryptionOptions.SuppressCryptographicExceptions
+			////	| EncryptionOptions.SuppressDecryptionChecksumExceptions;
 
 		public static readonly Encoding DefaultTextEncoding = Encoding.UTF8;
 

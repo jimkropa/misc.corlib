@@ -47,15 +47,15 @@
 		/// <paramref name="encryptionKey"/>, to decrypt
 		/// ciphertext created by this <see cref="Encryptor"/>.
 		/// </param>
-		/// <param name="allowNulls">
+		/// <param name="options">
 		/// 
 		/// </param>
 		internal Encryptor(
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls)
-			: base(algorithm, encryptionKey, out initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(algorithm, encryptionKey, out initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -65,8 +65,8 @@
 			[NotNull] SymmetricAlgorithm algorithm,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls)
-			: base(algorithm, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(algorithm, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -96,8 +96,8 @@
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls)
-			: base(algorithm, true, encryptionKey, null, allowNulls)
+			EncryptionOptions options)
+			: base(algorithm, true, encryptionKey, null, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -110,8 +110,8 @@
 			[NotNull] T algorithm,
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls)
-			: base(algorithm, true, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(algorithm, true, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
@@ -121,8 +121,8 @@
 		internal Encryptor(
 			[NotNull] byte[] encryptionKey,
 			out byte[] initializationVector,
-			bool allowNulls)
-			: base(true, encryptionKey, null, allowNulls)
+			EncryptionOptions options)
+			: base(true, encryptionKey, null, options)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 
@@ -133,8 +133,8 @@
 		internal Encryptor(
 			[NotNull] byte[] encryptionKey,
 			[NotNull] byte[] initializationVector,
-			bool allowNulls)
-			: base(true, encryptionKey, initializationVector, allowNulls)
+			EncryptionOptions options)
+			: base(true, encryptionKey, initializationVector, options)
 		{
 			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 			Contract.Requires<ArgumentNullException>(initializationVector != null);
