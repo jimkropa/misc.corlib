@@ -90,9 +90,10 @@ of the [abstract factory within the SymmetricAlgorithm
 class](https://msdn.microsoft.com/en-us/library/k74a682y.aspx)
 in&nbsp;<tt>mscorlib.dll</tt>
 
-> A pro tip, by the way: If you'd like to use dependency injection to specify
+> A pro tip, by the way: If you'd like to use dependency injection
+> to specify which algorithms to use for encryption or hashing, the
 > [AlgorithmFactory](https://github.com/jimkropa/misc.corlib/blob/master/src/misc.corlib/Security/Cryptography/AlgorithmFactory.cs)
-> provides the injection point.
+> class provides the injection point.
 
 Since the types in this library target specific parts of the
 .NET&nbsp;Framework, their namespaces mimic the&nbsp;same&nbsp;structure.
@@ -104,4 +105,6 @@ as little as you like, and submit&nbsp;pull&nbsp;requests.
 
 ## Documentation
 
-Is in the form of a compiled help file, and within the code itself.
+Is in the form of a [compiled help file](https://github.com/jimkropa/misc.corlib/blob/master/docs/Help/MiscCorLib.chm),
+and inline within the code itself. It will be included in Visual&nbsp;Studio intellisense if the XML documentation
+comment file <tt>misc.corlib.XML</tt> is included adjacent to the reference.
