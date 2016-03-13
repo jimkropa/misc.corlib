@@ -128,13 +128,8 @@ namespace MiscCorLib
 			value = value.Trim();
 
 			// If the value is not empty, we're done.
-			if (value.Length > 0)
-			{
-				return value;
-			}
-
 			// Otherwise, return null for an empty value.
-			return null;
+			return value.Length > 0 ? value : null;
 		}
 
 		/// <summary>
@@ -180,27 +175,6 @@ namespace MiscCorLib
 		/// Changes a string of text into HTML markup,
 		/// replacing double carriage returns with &lt;p&gt; tags
 		/// and single carriage returns with &lt;br/&gt; tags,
-		/// and enclosing the whole string within a &lt;p&gt; tag.
-		/// </summary>
-		/// <param name="value">
-		/// A string to convert to HTML markup.
-		/// </param>
-		/// <returns>
-		/// A string containing the HTML marked-up version
-		/// of the <paramref name="value"/> parameter,
-		/// enclosed within an outer &lt;p&gt; paragraph element.
-		/// </returns>
-		public static string ToHtmlParagraph(this string value)
-		{
-			// Call the main overload of this method,
-			// passing in a value for the optional parameter.
-			return ToHtmlParagraph(value, true);
-		}
-
-		/// <summary>
-		/// Changes a string of text into HTML markup,
-		/// replacing double carriage returns with &lt;p&gt; tags
-		/// and single carriage returns with &lt;br/&gt; tags,
 		/// and optionally enclosing the whole string within a &lt;p&gt; tag.
 		/// </summary>
 		/// <param name="value">
@@ -215,7 +189,7 @@ namespace MiscCorLib
 		/// A string containing the HTML marked-up version
 		/// of the <paramref name="value"/> parameter.
 		/// </returns>
-		public static string ToHtmlParagraph(this string value, bool includeOuterTag)
+		public static string ToHtmlParagraph(this string value, bool includeOuterTag = true)
 		{
 			// If the value is null, we're done.
 			if (string.IsNullOrEmpty(value))

@@ -37,7 +37,7 @@
 						ciphertextBytes = encryptor.Encrypt(plaintextBytes);
 					}
 
-					using (Decryptor decryptor = new Decryptor(algorithm, encryptionKey, iv))
+					using (Decryptor decryptor = new Decryptor(algorithm, encryptionKey, iv, Encryption.DefaultOptions))
 					{
 						Assert.AreEqual(encryptionKey, decryptor.Algorithm.Key);
 						Assert.AreEqual(iv, decryptor.Algorithm.IV);
@@ -78,7 +78,7 @@
 						ciphertextBytes = encryptor.Encrypt(plaintextBytes);
 					}
 
-					using (Decryptor decryptorWithWrongKey = new Decryptor(algorithm, wrongDecryptionKey, iv))
+					using (Decryptor decryptorWithWrongKey = new Decryptor(algorithm, wrongDecryptionKey, iv, Encryption.DefaultOptions))
 					{
 						Assert.AreEqual(wrongDecryptionKey, decryptorWithWrongKey.Algorithm.Key);
 						Assert.AreEqual(iv, decryptorWithWrongKey.Algorithm.IV);
@@ -96,7 +96,7 @@
 						}
 					}
 
-					using (Decryptor decryptor = new Decryptor(algorithm, encryptionKey, iv))
+					using (Decryptor decryptor = new Decryptor(algorithm, encryptionKey, iv, Encryption.DefaultOptions))
 					{
 						Assert.AreEqual(encryptionKey, decryptor.Algorithm.Key);
 						Assert.AreEqual(iv, decryptor.Algorithm.IV);

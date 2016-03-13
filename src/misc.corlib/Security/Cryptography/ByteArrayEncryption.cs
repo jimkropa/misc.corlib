@@ -11,7 +11,7 @@
 	{
 		/// <summary>
 		/// When a string is passed to the overload of
-		/// <see cref="Encrypt"/>
+		/// Encrypt
 		/// to be used as the <see cref="SymmetricAlgorithm.Key"/>
 		/// for a <see cref="SymmetricAlgorithm"/>, unless
 		/// another <see cref="Encoding"/> is provided,
@@ -23,7 +23,7 @@
 		// ReSharper disable once InconsistentNaming
 		/// <summary>
 		/// When a string is passed to the overload of
-		/// <see cref="ComputeHash{T}(byte[],string,string)"/>
+		/// ComputeHash
 		/// to be used as the <see cref="SymmetricAlgorithm.Key"/>
 		/// for a <see cref="SymmetricAlgorithm"/>, unless
 		/// another <see cref="Encoding"/> is provided,

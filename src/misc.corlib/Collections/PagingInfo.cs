@@ -28,15 +28,12 @@
 	/// </remarks>
 	[CLSCompliant(true), Serializable, DataContract]
 	[SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Relay of read-only property from internal state.")]
-	public struct PagingInfo : IEquatable<PagingInfo>
+	public struct PagingInfo : IEquatable<PagingInfo>, IHasValue
 	{
 		#region [ Public Constants for Default and Empty Values ]
 
 		/// <summary>
-		/// A value to use when translating between collections of strings
-		/// and generic collections of <see cref="ValueType"/>,
-		/// indicating to preserve duplicate values
-		/// in the resulting collection by default.
+		///
 		/// </summary>
 		public const bool DefaultCalculateAllPagesAndItemNumbers = false;
 

@@ -33,7 +33,8 @@
 
 					byte[] encryptionKey = TestObjectFactory.CreateEncryptionKey();
 					byte[] initializationVector;
-					using (Encryptor encryptor = new Encryptor(algorithm, encryptionKey, out initializationVector, true))
+					using (Encryptor encryptor = new Encryptor(
+						algorithm, encryptionKey, out initializationVector, EncryptionOptions.AllowNullInput))
 					{
 						Console.WriteLine();
 						Console.Write("encryptionKey: ");

@@ -35,7 +35,7 @@
 		{
 			using (SymmetricAlgorithm algorithm = CreateAlgorithm())
 			{
-				return new Encryptor(algorithm, encryptionKey, out initializationVector, Encryption.DefaultAllowNulls);
+				return new Encryptor(algorithm, encryptionKey, out initializationVector, Encryption.DefaultOptions);
 			}
 		}
 	}

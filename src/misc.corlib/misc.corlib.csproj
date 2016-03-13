@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MiscCorLib</RootNamespace>
     <AssemblyName>misc.corlib</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
@@ -127,7 +127,6 @@
     <Compile Include="Security\Cryptography\StringEncryption.cs" />
     <Compile Include="Security\Cryptography\StringHashing.cs" />
     <Compile Include="Security\Cryptography\SymmetricTransformer.cs" />
-    <Compile Include="Security\Cryptography\SymmetricTransformerFactory.cs" />
     <Compile Include="Security\Cryptography\KeyedHasher.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,8 +3,6 @@ namespace MiscCorLib
 	using System;
 	using System.Collections.Generic;
 
-	using MiscCorLib.Collections.Generic;
-
 	/// <summary>
 	/// A set of static method for converting an
 	/// enumeration type into other constructs.

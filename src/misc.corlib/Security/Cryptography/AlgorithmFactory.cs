@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MiscCorLib.Security.Cryptography
+﻿namespace MiscCorLib.Security.Cryptography
 {
+	// TODO: Enable IOC of injection of SymmetricAlgorithm, HashAlgorithm, and RandomNumberGenerator by non-static Factory classes.
 	public sealed class AlgorithmFactory
 	{
 		// For IOC over DI:
