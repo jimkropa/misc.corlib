@@ -10,6 +10,8 @@
 	[TestFixture]
 	public sealed class ConvertByteArrayTests
 	{
+		internal static readonly byte[] KnownConstantByteArray = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
+
 		[TestFixture]
 		public sealed class ToBase64String : ConvertByteArrayTestsBase
 		{
@@ -23,7 +25,10 @@
 				get { return ConvertByteArray.ToBase64String; }
 			}
 
-
+			protected override string KnownConstantString
+			{
+				get { return ConvertEncodedStringTests.KnownConstantBase64String; }
+			}
 		}
 
 		[TestFixture]
@@ -38,32 +43,61 @@
 			{
 				get { return ConvertByteArray.ToHexadecimalString; }
 			}
+
+			protected override string KnownConstantString
+			{
+				get { return ConvertEncodedStringTests.KnownConstantHexadecimalString; }
+			}
 		}
 
+		/// <summary>
+		/// This base class contains the implementations
+		/// of common tests and assertions. Implementers
+		/// override the delegate methods under test.
+		/// </summary>
 		public abstract class ConvertByteArrayTestsBase
 		{
 			protected abstract ConvertByteArray.ConvertNonNullArray NonNullConverter { get; }
 			protected abstract ConvertByteArray.ConvertArray Converter { get; }
+			protected abstract string KnownConstantString { get; }
 
 			[Test]
 			public void Disallows_Null_Array_By_Default()
 			{
 				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
-					() => ConvertByteArray.ToBase64String(null));
+					() => this.NonNullConverter(null));
 			}
 
 			[Test]
 			public void Optionally_Returns_Null_From_Null_Array()
 			{
-				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
-					() => ConvertByteArray.ToBase64String(null, false));
+					() => this.Converter(null, false));
 
-				Assert.IsNull(ConvertByteArray.ToBase64String(null, true));
+				Assert.IsNull(this.Converter(null, true));
+			}
+
+			[Test]
+			public void Converts_Known_Input_To_Known_String()
+			{
+				Assert.AreEqual(this.KnownConstantString, this.NonNullConverter(KnownConstantByteArray));
+				Assert.AreEqual(this.KnownConstantString, this.Converter(KnownConstantByteArray, true));
+				Assert.AreEqual(this.KnownConstantString, this.Converter(KnownConstantByteArray, false));
+
+				Assert.IsTrue(string.Equals(
+					this.KnownConstantString,
+					this.NonNullConverter(KnownConstantByteArray),
+					StringComparison.Ordinal));
+				Assert.IsTrue(string.Equals(
+					this.KnownConstantString,
+					this.Converter(KnownConstantByteArray, true),
+					StringComparison.Ordinal));
+				Assert.IsTrue(string.Equals(
+					this.KnownConstantString,
+					this.Converter(KnownConstantByteArray, false),
+					StringComparison.Ordinal));
 			}
 		}
-
-		//internal static Disallows_Null_Array_By_Default()
 	}
 }

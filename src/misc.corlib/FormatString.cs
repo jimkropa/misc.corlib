@@ -97,13 +97,8 @@ namespace MiscCorLib
 		public static string ToEmptyIfNull(this string value)
 		{
 			// If the value is null, we're done.
-			if (string.IsNullOrEmpty(value))
-			{
-				return string.Empty;
-			}
-
 			// Otherwise, return the original value.
-			return value.Trim();
+			return string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
 		}
 
 		/// <summary>
@@ -119,17 +114,8 @@ namespace MiscCorLib
 		public static string ToNullIfEmpty(this string value)
 		{
 			// If the value is null, we're done.
-			if (string.IsNullOrEmpty(value))
-			{
-				return null;
-			}
-
-			// Try again after trimming the value.
-			value = value.Trim();
-
-			// If the value is not empty, we're done.
-			// Otherwise, return null for an empty value.
-			return value.Length > 0 ? value : null;
+			// Otherwise, return the original value.
+			return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 		}
 
 		/// <summary>
@@ -144,7 +130,7 @@ namespace MiscCorLib
 		public static string ToSingleLine(this string value)
 		{
 			// If the value is null, we're done.
-			if (string.IsNullOrEmpty(value))
+			if (string.IsNullOrWhiteSpace(value))
 			{
 				return string.Empty;
 			}
@@ -152,16 +138,16 @@ namespace MiscCorLib
 			// Create and initialize a value to return.
 			string singleLine = value.Trim();
 
-			// If the value is insignificant, we're done.
-			if (!(singleLine.Length > 0))
-			{
-				return string.Empty;
-			}
-
 			// Remove any tabs, line breaks, and extra characters.
 			singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Tab }, StringSplitOptions.RemoveEmptyEntries));
 			singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Environment.NewLine, CrLf, Cr, Lf }, StringSplitOptions.RemoveEmptyEntries));
 			singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Spaces6, Spaces5, Spaces4, Spaces3, Spaces2 }, StringSplitOptions.RemoveEmptyEntries));
+
+			// Compact any remaining internal spaces.
+			while (singleLine.IndexOf(Spaces2, StringComparison.Ordinal) >= 0)
+			{
+				singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Spaces2 }, StringSplitOptions.RemoveEmptyEntries));
+			}
 
 			// Finally, return the formatted string.
 			return singleLine.Trim();
@@ -192,19 +178,13 @@ namespace MiscCorLib
 		public static string ToHtmlParagraph(this string value, bool includeOuterTag = true)
 		{
 			// If the value is null, we're done.
-			if (string.IsNullOrEmpty(value))
+			if (string.IsNullOrWhiteSpace(value))
 			{
 				return string.Empty;
 			}
 
 			// Create and initialize a value to return.
 			string html = value.Trim();
-
-			// If the value is insignificant, we're done.
-			if (!(html.Length > 0))
-			{
-				return string.Empty;
-			}
 
 			// Replace line breaks with Html tags.
 			html = string.Join(@"</p><p>", html.Split(new[] { DoubleCrlf, DoubleCr, DoubleLf }, StringSplitOptions.RemoveEmptyEntries));
@@ -243,10 +223,9 @@ namespace MiscCorLib
 		/// </returns>
 		public static string ToAlphanumeric(this string value)
 		{
+			// Replace invalid characters with empty strings.
 			return string.IsNullOrWhiteSpace(value) ? string.Empty
 				: Regex.Replace(value, @"[^\w]", string.Empty).Replace("_", string.Empty);
-
-			// Replace invalid characters with empty strings.
 		}
 	}
 }

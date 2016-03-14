@@ -20,7 +20,7 @@
 		/// </summary>
 		/// <param name="encodedString"></param>
 		/// <returns></returns>
-		public delegate string ConvertNonNullString([NotNull] string encodedString);
+		public delegate byte[] ConvertNonNullString([NotNull] string encodedString);
 
 		/// <summary>
 		/// 
@@ -28,7 +28,7 @@
 		/// <param name="encodedString"></param>
 		/// <param name="allowNulls"></param>
 		/// <returns></returns>
-		public delegate string ConvertString(string encodedString, bool allowNulls);
+		public delegate byte[] ConvertString(string encodedString, bool allowNulls);
 
 		#endregion
 
