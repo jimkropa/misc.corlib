@@ -26,7 +26,7 @@
     <SandcastlePath>C:\Program Files (x86)\Sandcastle\</SandcastlePath>
     <WorkingPath>Working\</WorkingPath>
     <BuildLogFile />
-    <HelpFileFormat>HtmlHelp1, MSHelpViewer, Website</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
     <FrameworkVersion>.NET Framework 4.6</FrameworkVersion>
     <HelpTitle>misc.corlib Documentation</HelpTitle>
     <FeedbackEMailAddress>github%40kropa.net</FeedbackEMailAddress>
@@ -35,8 +35,8 @@
     <SyntaxFilters>C#</SyntaxFilters>
     <IncludeFavorites>True</IncludeFavorites>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\src\misc.corlib\bin\Release\misc.corlib.dll" />
-<DocumentationSource sourceFile="..\src\misc.corlib\bin\Release\misc.corlib.XML" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\src\misc.corlib\bin\Debug\misc.corlib.dll" />
+<DocumentationSource sourceFile="..\src\misc.corlib\bin\Debug\misc.corlib.XML" /></DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" />
 <NamespaceSummaryItem name="MiscCorLib" isDocumented="True">&lt;p&gt;This is a &lt;b&gt;TEST!&lt;/b&gt;&lt;/p&gt;</NamespaceSummaryItem></NamespaceSummaries>
