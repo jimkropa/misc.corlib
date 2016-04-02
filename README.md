@@ -18,6 +18,8 @@ The complete draft of the readme follows these summary lists of completed and in
 - Tests, documentation, and implementation of NameValueCollectionExtensions
 - Tests, documentation, and implementation of Enum utilities
 - Refactor parts of Cryptography to use bitwise functions from Enum utilities
+- Create builds for .NET&nbsp;2.0, 4.0, 5.0, and Mono
+- Deploy as [public NuGet&nbsp;package](https://www.nuget.org/)
 
 
 
@@ -31,7 +33,7 @@ is a small assortment of adapters and extensions from <tt>mscorlib.dll</tt>
 > *&#8209;&#8209;KRopa.*
 
 It is intended for eventual free distribution as a public NuGet&nbsp;package,
-but remains a pre&#8209;release work in progress for&nbsp;now.
+but remains a **pre&#8209;release work&nbsp;in&nbsp;progress** for&nbsp;now.
 
 
 ## Features

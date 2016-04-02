@@ -1,11 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
   <Class Name="MiscCorLib.ConvertByteArray">
-    <Position X="0.5" Y="0.5" Width="5.75" />
+    <Position X="0.5" Y="0.5" Width="7.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="MiscCorLib.ConvertByteArray.ConvertNonNullArray">
+        <TypeIdentifier>
+          <NewMemberFileName>ConvertByteArray.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MiscCorLib.ConvertByteArray.ConvertArray">
+        <TypeIdentifier>
+          <NewMemberFileName>ConvertByteArray.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAEEAAAAAAAAABAAAABAAAAEAAAA=</HashCode>
+      <HashCode>AAAAQACAAAAAAAAAAEEAAAAAAAAABACAABAAAAEAAAA=</HashCode>
       <FileName>ConvertByteArray.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Enum Name="MiscCorLib.ByteArrayStringEncoding">
+    <Position X="1" Y="7" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ByteArrayStringEncoding.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
