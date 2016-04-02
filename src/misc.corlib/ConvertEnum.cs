@@ -23,6 +23,9 @@ namespace MiscCorLib
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
+
+	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
 	/// A set of static method for converting an
@@ -680,9 +683,10 @@ namespace MiscCorLib
 		/// Otherwise, returns an empty array.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// <c>true</c> if the <paramref name="enumValue"/>
 		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum"/>.
+		/// Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this string enumValue, out TEnum[] enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -695,21 +699,19 @@ namespace MiscCorLib
 				return false;
 			}
 
-			string[] enumValues = enumValue.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+			string[] enumValues = enumValue.Split(
+				ConvertDelimitedString.DefaultStringSplitter,
+				StringSplitOptions.RemoveEmptyEntries);
+
 			for (int i = 0; i < enumValues.Length; i++)
 			{
 				enumValues[i] = enumValues[i].Trim();
 			}
 
 			Type enumType = typeof(TEnum);
-			List<TEnum> enumsOut = new List<TEnum>();
-			foreach (string item in enumValues)
-			{
-				if (Enum.IsDefined(enumType, item))
-				{
-					enumsOut.Add((TEnum)Enum.Parse(enumType, item));
-				}
-			}
+			List<TEnum> enumsOut = (
+				from item in enumValues where Enum.IsDefined(enumType, item)
+				select (TEnum) Enum.Parse(enumType, item)).ToList();
 
 			enumOut = enumsOut.ToArray();
 
@@ -767,24 +769,26 @@ namespace MiscCorLib
 			object convertedEnumValue = enumValue;
 			Type underlyingType = Enum.GetUnderlyingType(typeof(TUnderlyingType));
 
-			if (underlyingType != typeof(TUnderlyingType))
+			if (underlyingType == typeof (TUnderlyingType))
 			{
-				if (underlyingType == typeof(byte))
-				{
-					convertedEnumValue = Convert.ToByte(enumValue);
-				}
-				else if (underlyingType == typeof(short))
-				{
-					convertedEnumValue = Convert.ToInt16(enumValue);
-				}
-				else if (underlyingType == typeof(int))
-				{
-					convertedEnumValue = Convert.ToInt32(enumValue);
-				}
-				else if (underlyingType == typeof(long))
-				{
-					convertedEnumValue = Convert.ToInt64(enumValue);
-				}
+				return (TUnderlyingType)convertedEnumValue;
+			}
+
+			if (underlyingType == typeof(byte))
+			{
+				convertedEnumValue = Convert.ToByte(enumValue);
+			}
+			else if (underlyingType == typeof(short))
+			{
+				convertedEnumValue = Convert.ToInt16(enumValue);
+			}
+			else if (underlyingType == typeof(int))
+			{
+				convertedEnumValue = Convert.ToInt32(enumValue);
+			}
+			else if (underlyingType == typeof(long))
+			{
+				convertedEnumValue = Convert.ToInt64(enumValue);
 			}
 
 			return (TUnderlyingType)convertedEnumValue;
@@ -812,9 +816,10 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// <c>true</c> if the <paramref name="enumValue"/>
 		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum"/>.
+		/// Otherwise, <c>false</c>.
 		/// </returns>
 		private static bool TryParseInternal<TEnum, TValue>(TValue enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -861,9 +866,10 @@ namespace MiscCorLib
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
-			/// True if the <paramref name="enumValue"/>
+			/// <c>true</c> if the <paramref name="enumValue"/>
 			/// was parsed into at least one value of the
-			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// <typeparamref name="TEnum"/>.
+			/// Otherwise, <c>false</c>.
 			/// </returns>
 			private static bool TryParseInternal<TEnum, TValue>(TValue enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable

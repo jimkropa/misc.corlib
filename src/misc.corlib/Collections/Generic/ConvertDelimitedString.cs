@@ -828,21 +828,41 @@ namespace MiscCorLib.Collections.Generic
 		private static IEnumerable<string> SplitDelimitedString(
 			this string delimitedString, string separator = null)
 		{
+			// Always returns a value...
 			if (string.IsNullOrWhiteSpace(delimitedString))
 			{
+				// ...empty if there is null input.
 				return new string[0];
 			}
 
+			// To avoid repeated allocations, it is most efficient to
+			// invoke this method with a null "separator" parameter.
 			if (string.IsNullOrWhiteSpace(separator))
 			{
+				// With no value sent for the "separator" parameter,
+				// use the default static allocation.
 				return delimitedString.Split(
 					DefaultStringSplitter,
 					StringSplitOptions.RemoveEmptyEntries);
 			}
 
-			return separator.Length == 1
-				? delimitedString.Split(new[] { separator[0] }, StringSplitOptions.RemoveEmptyEntries)
-				: delimitedString.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+			// Try to avoid allocating the delimiter each time.
+			if (separator.Length == 1)
+			{
+				// If a string consisting of a single comma is sent as the "separator"
+				// parameter, then use the static allocation, DefaultStringSplitter.
+				return delimitedString.Split(
+					separator[0].Equals(DefaultStringSplitter[0])
+						? DefaultStringSplitter // If able, use the static allocation.
+						: new[] { separator[0] }, // Otherwise, allocate a new char array.
+					StringSplitOptions.RemoveEmptyEntries);
+			}
+
+			// Since the delimiter must be allocated each time,
+			// this is not the most efficient usage of this method.
+			return delimitedString.Split(
+				new[] { separator },
+				StringSplitOptions.RemoveEmptyEntries);
 		}
 	}
 }

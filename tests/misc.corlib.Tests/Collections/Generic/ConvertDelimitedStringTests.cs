@@ -112,12 +112,18 @@ namespace MiscCorLib.Collections.Generic
 			[Test]
 			public void Returns_Empty_From_Null_Input()
 			{
-				IEnumerable<string> nullArray = null;
+				const string nullString = null;
 
 				// ReSharper disable once ExpressionIsAlwaysNull
-				int[] result = nullArray.ToArray<int>();
+				int[] result1 = nullString.ToArray<int>();
+				int[] result2 = nullString.ToArray<int>(int.TryParse);
+				int[] result3 = nullString.ToArray<int>(":");
+				int[] result4 = nullString.ToArray<int>(":", int.TryParse);
 
-				Assert.AreEqual(0, result.Length);
+				Assert.AreEqual(0, result1.Length);
+				Assert.AreEqual(0, result2.Length);
+				Assert.AreEqual(0, result3.Length);
+				Assert.AreEqual(0, result4.Length);
 			}
 
 			[Test]
@@ -218,12 +224,18 @@ namespace MiscCorLib.Collections.Generic
 			[Test]
 			public void Returns_Empty_From_Null_Input()
 			{
-				IEnumerable<string> nullArray = null;
+				const string nullString = null;
 
 				// ReSharper disable once ExpressionIsAlwaysNull
-				IReadOnlyList<int> result = nullArray.ToEnumerable<int>();
+				IReadOnlyList<int> result1 = nullString.ToEnumerable<int>();
+				IReadOnlyList<int> result2 = nullString.ToEnumerable<int>(int.TryParse);
+				IReadOnlyList<int> result3 = nullString.ToEnumerable<int>(":");
+				IReadOnlyList<int> result4 = nullString.ToEnumerable<int>(":", int.TryParse);
 
-				Assert.AreEqual(0, result.Count);
+				Assert.AreEqual(0, result1.Count);
+				Assert.AreEqual(0, result2.Count);
+				Assert.AreEqual(0, result3.Count);
+				Assert.AreEqual(0, result4.Count);
 			}
 
 			[Test]
@@ -324,12 +336,18 @@ namespace MiscCorLib.Collections.Generic
 			[Test]
 			public void Returns_Empty_From_Null_Input()
 			{
-				IEnumerable<string> nullArray = null;
+				const string nullString = null;
 
 				// ReSharper disable once ExpressionIsAlwaysNull
-				IList<int> result = nullArray.ToList<int>();
+				IList<int> result1 = nullString.ToList<int>();
+				IList<int> result2 = nullString.ToList<int>(int.TryParse);
+				IList<int> result3 = nullString.ToList<int>(":");
+				IList<int> result4 = nullString.ToList<int>(":", int.TryParse);
 
-				Assert.AreEqual(0, result.Count);
+				Assert.AreEqual(0, result1.Count);
+				Assert.AreEqual(0, result2.Count);
+				Assert.AreEqual(0, result3.Count);
+				Assert.AreEqual(0, result4.Count);
 			}
 
 			[Test]

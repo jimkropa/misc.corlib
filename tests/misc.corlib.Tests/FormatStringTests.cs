@@ -90,25 +90,29 @@ namespace MiscCorLib
 		}
 
 		[TestFixture]
-		public sealed class ToSingleLine
+		public sealed class ToCompactWhiteSpace
 		{
 			[Test]
-			public void Returns_Empty_From_Null()
+			public void Returns_EmptyOrNull_From_Null()
 			{
-				Assert.IsEmpty(FormatString.ToSingleLine(null));
+				Assert.IsEmpty(FormatString.ToCompactWhiteSpace(null));
+				Assert.IsNull(FormatString.ToCompactWhiteSpace(null, true));
 			}
 
 			[Test]
-			public void Returns_Empty_From_Empty()
+			public void Returns_EmptyOrNull_From_Empty()
 			{
-				Assert.IsEmpty(string.Empty.ToSingleLine());
+				Assert.IsEmpty(string.Empty.ToCompactWhiteSpace());
+				Assert.IsNull(string.Empty.ToCompactWhiteSpace(true));
 			}
 
 			[Test]
-			public void Returns_Empty_From_WhiteSpace()
+			public void Returns_EmptyOrNull_From_WhiteSpace()
 			{
 				Assert.IsEmpty(@" 
-  ".ToSingleLine());
+  ".ToCompactWhiteSpace());
+				Assert.IsNull(@" 
+  ".ToCompactWhiteSpace(true));
 			}
 
 			[Test]
@@ -117,10 +121,71 @@ namespace MiscCorLib
 				Assert.AreEqual("hello, world", @"    
  hello,     
  world   
-  ".ToSingleLine());
+  ".ToCompactWhiteSpace());
 
 				Assert.AreEqual("hello, world",
-					@"  hello,                                                                              world    ".ToSingleLine());
+					@"  hello,                                                                              world    ".ToCompactWhiteSpace());
+			}
+		}
+
+		[TestFixture]
+		public sealed class ToHtmlParagraph
+		{
+			[Test]
+			public void Returns_EmptyOrNull_From_Null()
+			{
+				Assert.IsEmpty(FormatString.ToHtmlParagraph(null));
+				Assert.IsEmpty(FormatString.ToHtmlParagraph(null, false));
+				Assert.IsNull(FormatString.ToHtmlParagraph(null, true, true));
+				Assert.IsNull(FormatString.ToHtmlParagraph(null, false, true));
+			}
+
+			[Test]
+			public void Returns_EmptyOrNull_From_Empty()
+			{
+				Assert.IsEmpty(string.Empty.ToHtmlParagraph());
+				Assert.IsEmpty(string.Empty.ToHtmlParagraph(false));
+				Assert.IsNull(string.Empty.ToHtmlParagraph(true, true));
+				Assert.IsNull(string.Empty.ToHtmlParagraph(false, true));
+			}
+
+			[Test]
+			public void Returns_EmptyOrNull_From_WhiteSpace()
+			{
+				Assert.IsEmpty(@" 
+  ".ToHtmlParagraph());
+				Assert.IsEmpty(@" 
+  ".ToHtmlParagraph(false));
+				Assert.IsNull(@" 
+  ".ToHtmlParagraph(true, true));
+				Assert.IsNull(@" 
+  ".ToHtmlParagraph(false, true));
+			}
+
+			[Test]
+			public void Returns_Html_From_MultiLine_String()
+			{
+				Assert.AreEqual(@"<p>
+hello,
+<br />
+world
+</p>
+<p>
+I'm a little teapot, short and stout.
+</p>
+<p>
+Here is my handle. Here is my spout.
+</p>", @"    
+ hello,     
+ world   
+
+
+
+
+I'm a little teapot, short and   stout.
+
+Here is my handle.     Here is my spout.
+  ".ToHtmlParagraph());
 			}
 		}
 	}

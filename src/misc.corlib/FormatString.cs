@@ -35,18 +35,28 @@ namespace MiscCorLib
 		/// <summary>
 		/// An escape sequence representing a carriage return.
 		/// </summary>
-		private const string Cr = "\r";
+		public const string Cr = "\r";
+
+		/// <summary>
+		/// An escape sequence representing a line break.
+		/// </summary>
+		public const string Lf = "\n";
 
 		/// <summary>
 		/// An escape sequence representing a
 		/// carriage return followed by a line break.
 		/// </summary>
-		private const string CrLf = "\r\n";
+		public const string CrLf = "\r\n";
 
 		/// <summary>
 		/// An escape sequence representing two carriage returns.
 		/// </summary>
-		private const string DoubleCr = "\r\r";
+		public const string DoubleCr = "\r\r";
+
+		/// <summary>
+		/// An escape sequence representing two line breaks.
+		/// </summary>
+		public const string DoubleLf = "\n\n";
 
 		/// <summary>
 		/// An escape sequence representing a
@@ -54,56 +64,78 @@ namespace MiscCorLib
 		/// followed by another carriage return
 		/// and another line break.
 		/// </summary>
-		private const string DoubleCrlf = "\r\n\r\n";
+		public const string DoubleCrLf = "\r\n\r\n";
 
 		/// <summary>
-		/// An escape sequence representing two line breaks.
+		/// A concatenation of two <see cref="Environment.NewLine"/> strings.
 		/// </summary>
-		private const string DoubleLf = "\n\n";
-
-		/// <summary>
-		/// An escape sequence representing a line break.
-		/// </summary>
-		private const string Lf = "\n";
-
-		/// <summary>
-		/// A string with a single space.
-		/// </summary>
-		private const string SingleSpace = " ";
+		public static readonly string DoubleNewLine = Environment.NewLine + Environment.NewLine;
 
 		/// <summary>
 		/// An string with two spaces.
 		/// </summary>
-		private const string Spaces2 = "  ";
+		public const string DoubleSpace = "  ";
 
 		/// <summary>
-		/// An string with three spaces.
+		/// A string with a single space.
 		/// </summary>
-		private const string Spaces3 = "   ";
-
-		/// <summary>
-		/// An string with four spaces.
-		/// </summary>
-		private const string Spaces4 = "    ";
-
-		/// <summary>
-		/// An string with five spaces.
-		/// </summary>
-		private const string Spaces5 = "     ";
-
-		/// <summary>
-		/// An string with six spaces.
-		/// </summary>
-		private const string Spaces6 = "      ";
+		public const string SingleSpace = " ";
 
 		/// <summary>
 		/// An escape sequence representing a tab character.
 		/// </summary>
-		private const string Tab = "\t";
+		public const string Tab = "\t";
+
+		/// <summary>
+		/// Static allocation of an array for splitting a string using the
+		/// <see cref="string.Split(string[],StringSplitOptions)"/> method,
+		/// to avoid the expensive allocation each time it is used by the
+		/// <see cref="ToCompactWhiteSpace"/> method.
+		/// </summary>
+		public static readonly string[] TabSplitter = { Tab };
+
+		/// <summary>
+		/// Static allocation of an array for splitting a string using the
+		/// <see cref="string.Split(string[],StringSplitOptions)"/> method,
+		/// to avoid the expensive allocation each time it is used by the
+		/// <see cref="ToCompactWhiteSpace"/> method.
+		/// </summary>
+		public static readonly string[] NewLineSplitter = { Environment.NewLine, CrLf, Cr, Lf };
+
+		/// <summary>
+		/// Static allocation of an array for splitting a string using the
+		/// <see cref="string.Split(string[],StringSplitOptions)"/> method,
+		/// to avoid the expensive allocation each time it is used by the
+		/// <see cref="ToCompactWhiteSpace"/> method.
+		/// </summary>
+		public static readonly string[] DoubleSpaceSplitter = { DoubleSpace };
+
+		private static readonly string[] ExcessNewLineSplitter = { DoubleNewLine + Environment.NewLine, DoubleCrLf + CrLf, DoubleCr + Cr, DoubleLf + Lf, DoubleNewLine, DoubleCrLf, DoubleCr, DoubleLf };
+		private static readonly string[] ExcessSpacesSplitter = { "     ", "    ", "   ", DoubleSpace };
+
+		private const string HtmlParagraphStart = @"<p>";
+		private const string HtmlParagraphEnd = @"</p>";
+		private const string HtmlParagraphDelimiter = @"</p><p>";
+		private const string HtmlLineDelimiter = @"<br />";
+
+		private static readonly string[] HtmlParagraphSplitter = { @" </p><p> ", @" </p><p>", @"</p><p> ", HtmlParagraphDelimiter };
+		private static readonly string[] HtmlLineSplitter = { @" <br /> ", @" <br />", @"<br /> ", HtmlLineDelimiter };
+
+		private static readonly string HtmlParagraphBreak = string.Concat(
+			Environment.NewLine,
+			HtmlParagraphEnd,
+			Environment.NewLine,
+			HtmlParagraphStart,
+			Environment.NewLine);
+
+		private static readonly string HtmlLineBreak = string.Concat(
+			Environment.NewLine,
+			HtmlLineDelimiter,
+			Environment.NewLine);
 
 		#endregion
 
-		#region [ Public Static ToEmptyIfNull and ToSingleLine Extension Methods ]
+		#region [ Public Static ToEmptyIfNull and ToNullIfEmpty Extension Methods ]
 
 		/// <summary>
 		/// Returns an empty string if the string value is null.
@@ -139,39 +171,48 @@ namespace MiscCorLib
 			return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 		}
 
+		#endregion
+
+		#region [ Public Static ToCompactWhiteSpace Extension Method ]
+
 		/// <summary>
-		/// Removes all carriage returns and line breaks from a string of text.
+		/// Removes all tabs, carriage returns, line breaks from a string of text.
 		/// </summary>
 		/// <param name="value">
 		/// A multiple-line string.
 		/// </param>
+		/// <param name="returnNullIfEmptyOrNull">
+		/// 
+		/// </param>
 		/// <returns>
-		/// A single-line string from the <paramref name="value"/> parameter.
+		/// A string based on the <paramref name="value"/> parameter
+		/// with all of the white space compacted to single spaces.
 		/// </returns>
-		public static string ToSingleLine(this string value)
+		public static string ToCompactWhiteSpace(
+			this string value, bool returnNullIfEmptyOrNull = false)
 		{
 			// If the value is null, we're done.
 			if (string.IsNullOrWhiteSpace(value))
 			{
-				return string.Empty;
+				return returnNullIfEmptyOrNull ? null : string.Empty;
 			}
 
 			// Create and initialize a value to return.
 			string singleLine = value.Trim();
 
 			// Remove any tabs, line breaks, and extra characters.
-			singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Tab }, StringSplitOptions.RemoveEmptyEntries));
-			singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Environment.NewLine, CrLf, Cr, Lf }, StringSplitOptions.RemoveEmptyEntries));
-			singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Spaces6, Spaces5, Spaces4, Spaces3, Spaces2 }, StringSplitOptions.RemoveEmptyEntries));
+			singleLine = string.Join(SingleSpace, singleLine.Split(TabSplitter, StringSplitOptions.RemoveEmptyEntries));
+			singleLine = string.Join(SingleSpace, singleLine.Split(NewLineSplitter, StringSplitOptions.RemoveEmptyEntries));
+			singleLine = string.Join(SingleSpace, singleLine.Split(ExcessSpacesSplitter, StringSplitOptions.RemoveEmptyEntries));
 
 			// Compact any remaining internal spaces.
-			while (singleLine.IndexOf(Spaces2, StringComparison.Ordinal) >= 0)
+			while (singleLine.IndexOf(DoubleSpace, StringComparison.Ordinal) >= 0)
 			{
-				singleLine = string.Join(SingleSpace, singleLine.Split(new[] { Spaces2 }, StringSplitOptions.RemoveEmptyEntries));
+				singleLine = string.Join(SingleSpace, singleLine.Split(DoubleSpaceSplitter, StringSplitOptions.RemoveEmptyEntries));
 			}
 
 			// Finally, return the formatted string.
-			return singleLine.Trim();
+			return returnNullIfEmptyOrNull ? singleLine.Trim().ToNullIfEmpty() : singleLine.Trim();
 		}
 
 		#endregion
@@ -187,47 +228,48 @@ namespace MiscCorLib
 		/// <param name="value">
 		/// A string to convert to HTML markup.
 		/// </param>
-		/// <param name="includeOuterTag">
+		/// <param name="includeContainerElement">
 		/// Whether to enclose the HTML markup within an outer &lt;p&gt; paragraph element.
 		/// If setting the InnerHtml property of a server-side &lt;p&gt; element,
 		/// for instance, send "false" to this parameter.
+		/// </param>
+		/// <param name="returnNullIfEmptyOrNull">
+		/// 
 		/// </param>
 		/// <returns>
 		/// A string containing the HTML marked-up version
 		/// of the <paramref name="value"/> parameter.
 		/// </returns>
-		public static string ToHtmlParagraph(this string value, bool includeOuterTag = true)
+		public static string ToHtmlParagraph(
+			this string value, bool includeContainerElement = true, bool returnNullIfEmptyOrNull = false)
 		{
 			// If the value is null, we're done.
 			if (string.IsNullOrWhiteSpace(value))
 			{
-				return string.Empty;
+				return returnNullIfEmptyOrNull ? null : string.Empty;
 			}
 
 			// Create and initialize a value to return.
 			string html = value.Trim();
 
 			// Replace line breaks with Html tags.
-			html = string.Join(@"</p><p>", html.Split(new[] { DoubleCrlf, DoubleCr, DoubleLf }, StringSplitOptions.RemoveEmptyEntries));
-			html = string.Join(@"<br />", html.Split(new[] { Environment.NewLine, CrLf, Cr, Lf }, StringSplitOptions.RemoveEmptyEntries));
-
-			// Create values for inserting breaks between Html tags.
-			string paragraphBreak = string.Concat(Environment.NewLine, @"</p>", Environment.NewLine, @"<p>", Environment.NewLine);
-			string lineBreak = string.Concat(Environment.NewLine, @"<br />", Environment.NewLine);
+			html = string.Join(HtmlParagraphDelimiter, html.Split(ExcessNewLineSplitter, StringSplitOptions.RemoveEmptyEntries));
+			html = string.Join(HtmlLineBreak, html.Split(NewLineSplitter, StringSplitOptions.RemoveEmptyEntries));
+			html = html.ToCompactWhiteSpace();
 
 			// Insert line breaks between Html tags.
-			html = string.Join(paragraphBreak, html.Split(new[] { @"</p><p>" }, StringSplitOptions.RemoveEmptyEntries));
-			html = string.Join(lineBreak, html.Split(new[] { @"<br />" }, StringSplitOptions.RemoveEmptyEntries));
+			html = string.Join(HtmlParagraphBreak, html.Split(HtmlParagraphSplitter, StringSplitOptions.RemoveEmptyEntries));
+			html = string.Join(HtmlLineBreak, html.Split(HtmlLineSplitter, StringSplitOptions.RemoveEmptyEntries));
 
 			// Check whether an additional <p> tag
 			// should be included surrounding the string.
-			if (includeOuterTag)
+			if (includeContainerElement && html.Length > 0)
 			{
-				html = string.Concat(@"<p>", Environment.NewLine, html.Trim(), Environment.NewLine, @"</p>");
+				html = string.Concat(HtmlParagraphStart, Environment.NewLine, html, Environment.NewLine, HtmlParagraphEnd);
 			}
 
 			// Finally, return the markup string.
-			return html;
+			return returnNullIfEmptyOrNull ? html.Trim().ToNullIfEmpty() : html.Trim();
 		}
 
 		#endregion
@@ -239,13 +281,16 @@ namespace MiscCorLib
 		/// <param name="value">
 		/// A <see cref="string"/> that needs to be cleaned up.
 		/// </param>
+		/// <param name="returnNullIfEmptyOrNull">
+		/// 
+		/// </param>
 		/// <returns>
 		/// A string which contains only alphanumeric characters.
 		/// </returns>
-		public static string ToAlphanumeric(this string value)
+		public static string ToAlphanumeric(this string value, bool returnNullIfEmptyOrNull = false)
 		{
 			// Replace invalid characters with empty strings.
-			return string.IsNullOrWhiteSpace(value) ? string.Empty
+			return string.IsNullOrWhiteSpace(value) ? returnNullIfEmptyOrNull ? null : string.Empty
 				: Regex.Replace(value, @"[^\w]", string.Empty).Replace("_", string.Empty);
 		}
 	}
