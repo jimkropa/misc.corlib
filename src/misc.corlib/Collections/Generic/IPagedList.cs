@@ -36,7 +36,6 @@ namespace MiscCorLib.Collections.Generic
 	/// <typeparam name="T">
 	/// The type of elements in the paged read-only list.
 	/// </typeparam>
-	[CLSCompliant(true)]
 	public interface IPagedList<out T> : IReadOnlyList<T>, IPagedCollection
 	{
 	}

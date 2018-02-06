@@ -33,7 +33,7 @@ namespace MiscCorLib.Security.Cryptography
 		[TestFixture]
 		public sealed class SameEncryptionKey
 		{
-			[Test]
+			[Fact]
 			public void DecryptsToOriginalPlainText()
 			{
 				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least. This is a test! It needs to be 128 characters long at least.");
@@ -74,7 +74,7 @@ namespace MiscCorLib.Security.Cryptography
 		[TestFixture]
 		public sealed class UsingDifferentEncryptionKey 
 		{
-			[Test]
+			[Fact]
 			public void CausesDecryptionToReturnNonsense()
 			{
 				byte[] plaintextBytes = Encoding.UTF8.GetBytes("This is a test!");

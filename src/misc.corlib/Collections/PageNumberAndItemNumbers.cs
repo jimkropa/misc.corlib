@@ -31,7 +31,7 @@ namespace MiscCorLib.Collections
 	/// number of a page within a "paged" collection of items,
 	/// and the first and last ordinal numbers of items on the page.
 	/// </summary>
-	[CLSCompliant(true), Serializable, DataContract]
+	[Serializable, DataContract]
 	public struct PageNumberAndItemNumbers
 		: IEquatable<PageNumberAndItemNumbers>, IComparable<PageNumberAndItemNumbers>
 	{

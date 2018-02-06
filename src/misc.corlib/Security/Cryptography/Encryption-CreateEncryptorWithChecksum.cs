@@ -25,8 +25,6 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 
-	using JetBrains.Annotations;
-
 	// Refer to Encryption.cs for documentation comments of partial class.
 	public static partial class Encryption
 	{
@@ -35,9 +33,9 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of CreateEncryptor Extension Method for SymmetricAlgorithm ]
 
 		public static EncryptorWithChecksum CreateEncryptor(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] byte[] encryptionKey,
+			this SymmetricAlgorithm algorithm,
+			KeyedHashAlgorithm checksumHasher,
+			byte[] encryptionKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
@@ -49,9 +47,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum CreateEncryptor(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] string password,
+			this SymmetricAlgorithm algorithm,
+			KeyedHashAlgorithm checksumHasher,
+			string password,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
@@ -70,9 +68,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum CreateEncryptor(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] string password,
+			this SymmetricAlgorithm algorithm,
+			KeyedHashAlgorithm checksumHasher,
+			string password,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
@@ -95,10 +93,10 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of CreateEncryptor Extension Method using a given Salt ]
 
 		public static EncryptorWithChecksum CreateEncryptorWithGivenSalt(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] salt,
+			this SymmetricAlgorithm algorithm,
+			KeyedHashAlgorithm checksumHasher,
+			byte[] encryptionKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -110,10 +108,10 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum CreateEncryptorWithGivenSalt(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] string password,
-			[NotNull] byte[] salt,
+			this SymmetricAlgorithm algorithm,
+			KeyedHashAlgorithm checksumHasher,
+			string password,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -129,10 +127,10 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum CreateEncryptorWithGivenSalt(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] string password,
-			[NotNull] string salt,
+			this SymmetricAlgorithm algorithm,
+			KeyedHashAlgorithm checksumHasher,
+			string password,
+			string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 		{
@@ -150,7 +148,7 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of Generic CreateEncryptor Method ]
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptor<TEncryptor, THasher>(
-			[NotNull] byte[] encryptionKey,
+			byte[] encryptionKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
@@ -162,7 +160,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptor<TEncryptor, THasher>(
-			[NotNull] string secretKey,
+			string secretKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
@@ -184,7 +182,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptor<TEncryptor, THasher>(
-			[NotNull] string secretKey,
+			string secretKey,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
@@ -207,8 +205,8 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of Generic CreateEncryptor Method using a given Salt ]
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptorWithGivenSalt<TEncryptor, THasher>(
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] salt,
+			byte[] encryptionKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
@@ -220,8 +218,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptorWithGivenSalt<TEncryptor, THasher>(
-			[NotNull] string secretKey,
-			[NotNull] byte[] salt,
+			string secretKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
@@ -242,8 +240,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static EncryptorWithChecksum<TEncryptor, THasher> CreateEncryptorWithGivenSalt<TEncryptor, THasher>(
-			[NotNull] string secretKey,
-			[NotNull] string salt,
+			string secretKey,
+			string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 			where TEncryptor : SymmetricAlgorithm

@@ -26,8 +26,6 @@ namespace MiscCorLib
 	using System.Diagnostics.Contracts;
 	using System.Text;
 
-	using JetBrains.Annotations;
-
 	/// <summary>
 	/// A set of static extension methods for byte arrays.
 	/// </summary>
@@ -52,7 +50,7 @@ namespace MiscCorLib
 		/// </summary>
 		/// <param name="inArray"></param>
 		/// <returns></returns>
-		public delegate string ConvertNonNullArray([NotNull] byte[] inArray);
+		public delegate string ConvertNonNullArray(byte[] inArray);
 
 		/// <summary>
 		/// 
@@ -66,7 +64,7 @@ namespace MiscCorLib
 
 		#region [ Encoding Methods typically used for compact storage of encrypted bytes ]
 
-		public static string ToBase64String([NotNull] this byte[] inArray)
+		public static string ToBase64String(this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 
@@ -83,7 +81,7 @@ namespace MiscCorLib
 			return inArray.ToBase64String();
 		}
 
-		public static string ToHexadecimalString([NotNull] this byte[] inArray)
+		public static string ToHexadecimalString(this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 
@@ -119,7 +117,7 @@ namespace MiscCorLib
 		}
 
 		public static string ToEncodedString(
-			[NotNull] this byte[] inArray, ByteArrayStringEncoding encoding = DefaultStringEncoding)
+			this byte[] inArray, ByteArrayStringEncoding encoding = DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 
@@ -152,7 +150,7 @@ namespace MiscCorLib
 
 		#region [ Encoding Methods for transforming decrypted bytes back to human text ]
 
-		public static string ToText([NotNull] this byte[] inArray, [NotNull] Encoding encoding)
+		public static string ToText(this byte[] inArray, Encoding encoding)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 			Contract.Requires<ArgumentNullException>(encoding != null);
@@ -163,7 +161,7 @@ namespace MiscCorLib
 			return encoding.GetString(inArray);
 		}
 
-		public static string ToText(this byte[] inArray, [NotNull] Encoding encoding, bool allowNulls)
+		public static string ToText(this byte[] inArray, Encoding encoding, bool allowNulls)
 		{
 			if (allowNulls && (inArray == null))
 			{
@@ -174,7 +172,7 @@ namespace MiscCorLib
 		}
 
 		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		public static string ToASCII([NotNull] this byte[] inArray)
+		public static string ToASCII(this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 
@@ -188,7 +186,7 @@ namespace MiscCorLib
 		}
 
 		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		public static string ToUTF8([NotNull] this byte[] inArray)
+		public static string ToUTF8(this byte[] inArray)
 		{
 			Contract.Requires<ArgumentNullException>(inArray != null);
 
@@ -205,7 +203,7 @@ namespace MiscCorLib
 		// this is not efficient for looking up singleton Encoding types.
 		// Better to send Encoding as a parameter, as above.
 		/*
-			public static string ToText<T>([NotNull] this byte[] inArray)
+			public static string ToText<T>(this byte[] inArray)
 				where T : Encoding
 			{
 				return CreateEncoding<T>().GetString(inArray);

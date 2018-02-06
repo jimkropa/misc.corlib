@@ -26,8 +26,6 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Security.Cryptography;
 	using System.Text;
 
-	using JetBrains.Annotations;
-
 	/// <summary>
 	/// Encapsulation of an encryption operation
 	/// with a simple contract: An encryptor encrypts
@@ -72,8 +70,8 @@ namespace MiscCorLib.Security.Cryptography
 		/// 
 		/// </param>
 		internal Encryptor(
-			[NotNull] SymmetricAlgorithm algorithm,
-			[NotNull] byte[] encryptionKey,
+			SymmetricAlgorithm algorithm,
+			byte[] encryptionKey,
 			out byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, out initializationVector, options)
@@ -83,9 +81,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal Encryptor(
-			[NotNull] SymmetricAlgorithm algorithm,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			SymmetricAlgorithm algorithm,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
@@ -114,8 +112,8 @@ namespace MiscCorLib.Security.Cryptography
 		// ...save that for the factory method.
 
 		internal Encryptor(
-			[NotNull] T algorithm,
-			[NotNull] byte[] encryptionKey,
+			T algorithm,
+			byte[] encryptionKey,
 			out byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, true, encryptionKey, null, options)
@@ -128,9 +126,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal Encryptor(
-			[NotNull] T algorithm,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			T algorithm,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, true, encryptionKey, initializationVector, options)
 		{
@@ -140,7 +138,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal Encryptor(
-			[NotNull] byte[] encryptionKey,
+			byte[] encryptionKey,
 			out byte[] initializationVector,
 			EncryptionOptions options)
 			: base(true, encryptionKey, null, options)
@@ -152,8 +150,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal Encryptor(
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(true, encryptionKey, initializationVector, options)
 		{
@@ -180,7 +178,7 @@ namespace MiscCorLib.Security.Cryptography
 
 		public byte[] Encrypt(
 			string plaintext,
-			[NotNull] Encoding plaintextEncoding)
+			Encoding plaintextEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
@@ -201,7 +199,7 @@ namespace MiscCorLib.Security.Cryptography
 
 		public string EncryptToString(
 			string plaintext,
-			[NotNull] Encoding plaintextEncoding,
+			Encoding plaintextEncoding,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);

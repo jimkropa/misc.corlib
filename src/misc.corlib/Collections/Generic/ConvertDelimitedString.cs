@@ -30,7 +30,6 @@ namespace MiscCorLib.Collections.Generic
 	/// into typed collections of <see cref="IComparable"/>,
 	/// with options for sorting and removing duplicate entries.
 	/// </summary>
-	[CLSCompliant(true)]
 	public static class ConvertDelimitedString
 	{
 		#region [ Constants Default String Delimiter (a comma) ]

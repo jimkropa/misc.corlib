@@ -26,16 +26,14 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Security.Cryptography;
 	using System.Text;
 
-	using JetBrains.Annotations;
-
 	// TODO: Test whether this functionality is even needed...
 	// If decryption fails, is there an exception or does it just produce nonsense?
 	public sealed class EncryptorWithChecksum : EncryptorWithChecksum<SymmetricAlgorithm, KeyedHashAlgorithm>
 	{
 		internal EncryptorWithChecksum(
-			[NotNull] SymmetricAlgorithm symmetricAlgorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] byte[] encryptionKey,
+			SymmetricAlgorithm symmetricAlgorithm,
+			KeyedHashAlgorithm checksumHasher,
+			byte[] encryptionKey,
 			out byte[] initializationVector,
 			EncryptionOptions options)
 			: base(symmetricAlgorithm, checksumHasher, encryptionKey, out initializationVector, options)
@@ -46,10 +44,10 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal EncryptorWithChecksum(
-			[NotNull] SymmetricAlgorithm symmetricAlgorithm,
-			[NotNull] KeyedHashAlgorithm checksumHasher,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			SymmetricAlgorithm symmetricAlgorithm,
+			KeyedHashAlgorithm checksumHasher,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(symmetricAlgorithm, checksumHasher, encryptionKey, initializationVector, options)
 		{
@@ -75,9 +73,9 @@ namespace MiscCorLib.Security.Cryptography
 		private readonly KeyedHasher<THasher> hasher;
 
 		internal EncryptorWithChecksum(
-			[NotNull] TEncryptor symmetricAlgorithm,
-			[NotNull] THasher checksumHasher,
-			[NotNull] byte[] encryptionKey,
+			TEncryptor symmetricAlgorithm,
+			THasher checksumHasher,
+			byte[] encryptionKey,
 			out byte[] initializationVector,
 			EncryptionOptions options)
 			: base(symmetricAlgorithm, encryptionKey, out initializationVector, options)
@@ -87,10 +85,10 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal EncryptorWithChecksum(
-			[NotNull] TEncryptor algorithm,
-			[NotNull] THasher checksumHasher,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			TEncryptor algorithm,
+			THasher checksumHasher,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
@@ -99,7 +97,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal EncryptorWithChecksum(
-			[NotNull] byte[] encryptionKey,
+			byte[] encryptionKey,
 			out byte[] initializationVector,
 			EncryptionOptions options)
 			: base(encryptionKey, out initializationVector, options)
@@ -109,8 +107,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal EncryptorWithChecksum(
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(encryptionKey, initializationVector, options)
 		{
@@ -136,7 +134,7 @@ namespace MiscCorLib.Security.Cryptography
 
 		public byte[] Encrypt(
 			string plaintext,
-			[NotNull] Encoding plaintextEncoding,
+			Encoding plaintextEncoding,
 			out byte[] checksum)
 		{
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
@@ -166,7 +164,7 @@ namespace MiscCorLib.Security.Cryptography
 
 		public string EncryptToString(
 			string plaintext,
-			[NotNull] Encoding plaintextEncoding,
+			Encoding plaintextEncoding,
 			out string checksum,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{

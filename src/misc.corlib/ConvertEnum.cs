@@ -31,7 +31,6 @@ namespace MiscCorLib
 	/// A set of static method for converting an
 	/// enumeration type into other constructs.
 	/// </summary>
-	[CLSCompliant(true)]
 	public static class ConvertEnum
 	{
 		#region [ Main Overloads of ToDictionary ]

@@ -1,34 +1,11 @@
-#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections.Generic
-	ConvertStrings.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace MiscCorLib.Collections.Generic
 {
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.Diagnostics.Contracts;
-	using System.Linq;
-
-	using JetBrains.Annotations;
-
 	/// <summary>
 	/// A set of static methods for converting collections of strings
 	/// into generic collections of <see cref="ValueType"/>.
@@ -41,7 +18,6 @@ namespace MiscCorLib.Collections.Generic
 	/// reversing the process.
 	/// </para>
 	/// </remarks>
-	[CLSCompliant(true)]
 	public static class ConvertStrings
 	{
 		#region [ TryConvertFromString Method and TryParseFromString<T> Delegate Contract ]
@@ -132,11 +108,11 @@ namespace MiscCorLib.Collections.Generic
 		/// <c>true</c> if <paramref name="s"/> was
 		/// converted successfully; otherwise, <c>false</c>.
 		/// </returns>
-		[System.Diagnostics.Contracts.Pure, JetBrains.Annotations.Pure]
+		[Pure]
 		public static bool TryConvertFromString<T>(
-			[NotNull] TypeConverter converter,
+			TypeConverter converter,
 			bool throwTypeConversionExceptions,
-			[NotNull] string s,
+			string s,
 			out T result)
 			where T : struct
 		{
@@ -186,14 +162,12 @@ namespace MiscCorLib.Collections.Generic
 					return false;
 				}
 
-				FormatException formatException = e.InnerException as FormatException;
-				if (formatException != null)
+			    if (e.InnerException is FormatException formatException)
 				{
 					throw formatException;
 				}
 
-				NotSupportedException notSupportedException = e.InnerException as NotSupportedException;
-				if (notSupportedException != null)
+			    if (e.InnerException is NotSupportedException notSupportedException)
 				{
 					throw notSupportedException;
 				}
@@ -555,8 +529,7 @@ namespace MiscCorLib.Collections.Generic
 			// Do not try to parse strings that are null or white space.
 			foreach (string s in strings.Where(value => !string.IsNullOrWhiteSpace(value)))
 			{
-				T result;
-				if (!TryConvertFromString(converter, throwTypeConversionExceptions, s, out result))
+			    if (!TryConvertFromString(converter, throwTypeConversionExceptions, s, out T result))
 				{
 					continue;
 				}
@@ -622,8 +595,7 @@ namespace MiscCorLib.Collections.Generic
 			// Do not try to parse strings that are null or white space.
 			foreach (string s in strings.Where(value => !string.IsNullOrWhiteSpace(value)))
 			{
-				T result;
-				if (!tryParseDelegate(s, out result))
+			    if (!tryParseDelegate(s, out T result))
 				{
 					continue;
 				}
@@ -662,7 +634,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		public static string ToDelimitedString(
 			this IEnumerable<string> collection,
-			[NotNull] string separator = ConvertDelimitedString.DefaultSeparator)
+			string separator = ConvertDelimitedString.DefaultSeparator)
 		{
 			Contract.Requires<ArgumentException>(!IsNullOrWhiteSpace(separator));
 

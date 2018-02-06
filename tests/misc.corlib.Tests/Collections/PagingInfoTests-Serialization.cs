@@ -45,7 +45,7 @@ namespace MiscCorLib.Collections
 			}
 
 			/*
-			[Test]
+			[Fact]
 			public void Scratchpad()
 			{
 				PagingInfo pagingInfo1 = new PagingInfo(PageNumberAndSize.Unbounded, 1701);
@@ -59,7 +59,7 @@ namespace MiscCorLib.Collections
 			}
 			*/
 
-			[Test]
+			[Fact]
 			public void Serializes_All_Properties()
 			{
 				PagingInfo pagingInfo = new PagingInfo(7, 20, 1138);
@@ -69,7 +69,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(Page7_Size20_Total1138, serializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_With_All_Pages_When_Specified()
 			{
 				PagingInfo pagingInfo = new PagingInfo(2, 10, 27, true);
@@ -79,7 +79,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(Page2_Size10_Total27_WithAllPages, serializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_Unbounded_Value()
 			{
 				PagingInfo pagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 1701);
@@ -88,7 +88,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(Unbounded_Total1701, serializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_Unbounded_Value_With_All_Pages()
 			{
 				PagingInfo pagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 1138, true);
@@ -97,7 +97,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(Unbounded_Total1138_WithAllPages, serializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_Empty_Value()
 			{
 				string serializedPagingInfo = JsonConvert.SerializeObject(PagingInfo.Empty, settings);
@@ -105,7 +105,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(EmptySerialized, serializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_From_Minimal_Specification()
 			{
 				PagingInfo expectedPagingInfo = new PagingInfo(7, 20, 1138);
@@ -121,7 +121,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(expectedPagingInfo, deserializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_And_Ignores_Inconsistency_From_Excessive_Specification()
 			{
 				PagingInfo expectedPagingInfo = new PagingInfo(8, 17, 666);
@@ -137,7 +137,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(expectedPagingInfo, deserializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_As_Invalid_From_Negative_Page_Number()
 			{
 				PagingInfo deserializedPagingInfo
@@ -149,7 +149,7 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(deserializedPagingInfo.CurrentPage.HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_As_Invalid_From_Negative_TotalItems()
 			{
 				PagingInfo deserializedPagingInfo
@@ -161,7 +161,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(deserializedPagingInfo.CurrentPage.HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Negative_Page_Size()
 			{
 				Assert.Throws<JsonSerializationException>(
@@ -169,7 +169,7 @@ namespace MiscCorLib.Collections
 						@"{""CurrentPage"":{""Number"":7,""Size"":-20},""TotalItems"":1138}"));
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Omitted_Page_Number()
 			{
 				Assert.Throws<JsonSerializationException>(
@@ -177,7 +177,7 @@ namespace MiscCorLib.Collections
 						@"{""CurrentPage"":{""Size"":20},""TotalItems"":1138}"));
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Omitted_Page_Size()
 			{
 				Assert.Throws<JsonSerializationException>(
@@ -185,7 +185,7 @@ namespace MiscCorLib.Collections
 						@"{""CurrentPage"":{""Number"":7},""TotalItems"":1138}"));
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Omitted_TotalItems()
 			{
 				Assert.Throws<JsonSerializationException>(

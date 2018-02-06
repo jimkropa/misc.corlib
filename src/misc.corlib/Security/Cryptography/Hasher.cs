@@ -26,13 +26,11 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Security.Cryptography;
 	using System.Threading;
 
-	using JetBrains.Annotations;
-
 	public sealed class Hasher : Hasher<HashAlgorithm>
 	{
 		internal Hasher(
-			[NotNull] HashAlgorithm algorithm,
-			[NotNull] byte[] salt,
+			HashAlgorithm algorithm,
+			byte[] salt,
 			bool allowNulls)
 			: base(algorithm, salt, allowNulls)
 		{
@@ -137,8 +135,8 @@ namespace MiscCorLib.Security.Cryptography
 		/// </para>
 		/// </remarks>
 		internal Hasher(
-			[NotNull] T algorithm,
-			[NotNull] byte[] salt,
+			T algorithm,
+			byte[] salt,
 			bool allowNulls)
 			: this(salt, allowNulls)
 		{
@@ -156,7 +154,7 @@ namespace MiscCorLib.Security.Cryptography
 		/// <param name="salt"></param>
 		/// <param name="allowNulls"></param>
 		internal Hasher(
-			[NotNull] byte[] salt,
+			byte[] salt,
 			bool allowNulls)
 		{
 			Contract.Requires<ArgumentNullException>(salt != null);

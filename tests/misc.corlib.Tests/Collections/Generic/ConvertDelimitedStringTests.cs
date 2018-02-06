@@ -40,7 +40,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToArray
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				int[] result = SampleIntegersString.ToArray<int>();
@@ -53,7 +53,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				int[] result = SampleIntegersString.ToArray<int>(true);
@@ -65,7 +65,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
 				int[] result = PartlyInvalidIntsString.ToArray<int>(true);
@@ -77,14 +77,14 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToArray<int>(false, true));
 				Assert.Throws<FormatException>(() => "1:7:0:1:A".ToArray<int>(":", false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Parser()
 			{
 				int[] result = SampleIntegersString.ToArray<int>(int.TryParse, true);
@@ -96,7 +96,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
 				int[] result = PartlyInvalidIntsString.ToArray<int>(int.TryParse);
@@ -109,7 +109,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				const string nullString = null;
@@ -126,7 +126,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(0, result4.Length);
 			}
 
-			[Test]
+			[Fact]
 			public void TryParse_Allows_Custom_Separator()
 			{
 				int[] result = "1:7:0:1:A".ToArray<int>(":", int.TryParse, true);
@@ -137,7 +137,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(0, result[2]);
 			}
 
-			[Test]
+			[Fact]
 			public void Convert_Allows_Custom_Separator()
 			{
 				int[] result = "1:7:0:1:A".ToArray<int>(":", true);
@@ -152,7 +152,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToEnumerable
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				IReadOnlyList<int> result = SampleIntegersString.ToEnumerable<int>();
@@ -165,7 +165,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				IReadOnlyList<int> result = SampleIntegersString.ToEnumerable<int>(true);
@@ -177,7 +177,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
 				IReadOnlyList<int> result = PartlyInvalidIntsString.ToEnumerable<int>(true);
@@ -189,14 +189,14 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToEnumerable<int>(false, true));
 				Assert.Throws<FormatException>(() => "1:7:0:1:A".ToEnumerable<int>(":", false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Parser()
 			{
 				IReadOnlyList<int> result = SampleIntegersString.ToEnumerable<int>(int.TryParse, true);
@@ -208,7 +208,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
 				IReadOnlyList<int> result = PartlyInvalidIntsString.ToEnumerable<int>(int.TryParse);
@@ -221,7 +221,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				const string nullString = null;
@@ -238,7 +238,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(0, result4.Count);
 			}
 
-			[Test]
+			[Fact]
 			public void TryParse_Allows_Custom_Separator()
 			{
 				IReadOnlyList<int> result = "1:7:0:1:A".ToEnumerable<int>(":", int.TryParse, true);
@@ -249,7 +249,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(0, result[2]);
 			}
 
-			[Test]
+			[Fact]
 			public void Convert_Allows_Custom_Separator()
 			{
 				IReadOnlyList<int> result = "1:7:0:1:A".ToEnumerable<int>(":", true);
@@ -264,7 +264,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToList
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				IList<int> result = SampleIntegersString.ToList<int>();
@@ -277,7 +277,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				IList<int> result = SampleIntegersString.ToList<int>(true);
@@ -289,7 +289,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
 				IList<int> result = PartlyInvalidIntsString.ToList<int>(true);
@@ -301,14 +301,14 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntsString.ToList<int>(false, true));
 				Assert.Throws<FormatException>(() => "1:7:0:1:A".ToList<int>(":", false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Parser()
 			{
 				IList<int> result = SampleIntegersString.ToList<int>(int.TryParse, true);
@@ -320,7 +320,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
 				IList<int> result = PartlyInvalidIntsString.ToList<int>(int.TryParse);
@@ -333,7 +333,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				const string nullString = null;
@@ -350,7 +350,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(0, result4.Count);
 			}
 
-			[Test]
+			[Fact]
 			public void TryParse_Allows_Custom_Separator()
 			{
 				IList<int> result = "1:7:0:1:A".ToList<int>(":", int.TryParse, true);
@@ -361,7 +361,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(0, result[2]);
 			}
 
-			[Test]
+			[Fact]
 			public void Convert_Allows_Custom_Separator()
 			{
 				IList<int> result = "1:7:0:1:A".ToList<int>(":", true);

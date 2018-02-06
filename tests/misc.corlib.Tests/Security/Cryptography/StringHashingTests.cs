@@ -53,7 +53,7 @@ namespace MiscCorLib.Security.Cryptography
 			{
 			}
 
-			[Test]
+			[Fact]
 			public void ComputesKnownHashesForEmptyString()
 			{
 				Assert.AreEqual(EmptySHA1, string.Empty.HashToHexadecimalString<SHA1>());
@@ -67,7 +67,7 @@ namespace MiscCorLib.Security.Cryptography
 				Assert.AreEqual(EmptySHA512, string.Empty.HashToHexadecimalString<SHA512Managed>());
 			}
 
-			[Test]
+			[Fact]
 			public void ThrowsExceptionForNullString()
 			{
 				Assert.Throws<ArgumentNullException>(
@@ -89,7 +89,7 @@ namespace MiscCorLib.Security.Cryptography
 			{
 			}
 
-			[Test]
+			[Fact]
 			public void ComputesKnownHashesForEmptyString()
 			{
 				Console.WriteLine(string.Empty.HashToBase64String<SHA1>());

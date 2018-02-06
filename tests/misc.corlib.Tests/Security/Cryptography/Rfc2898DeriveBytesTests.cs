@@ -39,7 +39,7 @@ namespace MiscCorLib.Security.Cryptography
 		// Encrypt data1 with key k1 using symmetric encryption, creating edata1.
 		// Decrypt edata1 with key k2 using symmetric decryption, creating data2.
 		// data2 should equal data1.
-		[Test]
+		[Fact]
 		public void MsdnExample()
 		{
 			const string pwd1 = "b@nana!123";
@@ -120,7 +120,7 @@ namespace MiscCorLib.Security.Cryptography
 			Assert.IsTrue(data1.Equals(data2));
 		}
 
-		[Test]
+		[Fact]
 		public void SpecifyingSaltSizeGeneratesRandomSalt()
 		{
 			////	byte[] nullArray = null;

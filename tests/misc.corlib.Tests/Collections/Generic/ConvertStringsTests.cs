@@ -40,7 +40,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToArray
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				int[] result = SampleIntegerStringCollection.ToArray<int>();
@@ -53,7 +53,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				int[] result = SampleIntegerStringCollection.ToArray<int>(true);
@@ -65,7 +65,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
 				int[] result = PartlyInvalidIntStringCollection.ToArray<int>(true);
@@ -77,13 +77,13 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntStringCollection.ToArray<int>(false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Parser()
 			{
 				int[] result = SampleIntegerStringCollection.ToArray<int>(int.TryParse, true);
@@ -95,7 +95,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
 				int[] result = PartlyInvalidIntStringCollection.ToArray<int>(int.TryParse);
@@ -108,7 +108,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				const IEnumerable<string> nullArray = null;
@@ -125,7 +125,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToEnumerable
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>();
@@ -138,7 +138,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>(true);
@@ -150,7 +150,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
 				IReadOnlyList<int> result = PartlyInvalidIntStringCollection.ToEnumerable<int>(true);
@@ -162,13 +162,13 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntStringCollection.ToEnumerable<int>(false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Parser()
 			{
 				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>(int.TryParse, true);
@@ -180,7 +180,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
 				IReadOnlyList<int> result = PartlyInvalidIntStringCollection.ToEnumerable<int>(int.TryParse);
@@ -193,7 +193,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				const IEnumerable<string> nullArray = null;
@@ -210,7 +210,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToList
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				IList<int> result = SampleIntegerStringCollection.ToList<int>();
@@ -223,7 +223,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				IList<int> result = SampleIntegerStringCollection.ToList<int>(true);
@@ -235,7 +235,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Suppresses_Exceptions_By_Default()
 			{
 				IList<int> result = PartlyInvalidIntStringCollection.ToList<int>(true);
@@ -247,13 +247,13 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Converter_Throws_Exceptions_When_Specified()
 			{
 				Assert.Throws<FormatException>(() => PartlyInvalidIntStringCollection.ToList<int>(false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Parser()
 			{
 				IList<int> result = SampleIntegerStringCollection.ToList<int>(int.TryParse, true);
@@ -265,7 +265,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(5, result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Custom_Parser_Ignores_NonParsing_Values()
 			{
 				IList<int> result = PartlyInvalidIntStringCollection.ToList<int>(int.TryParse);
@@ -278,7 +278,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(4, result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				const IEnumerable<string> nullArray = null;

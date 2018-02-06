@@ -30,7 +30,6 @@ namespace MiscCorLib.Collections
 	/// contains metadata about the position of the
 	/// page within the longer list.
 	/// </summary>
-	[CLSCompliant(true)]
 	public interface IPagedCollection : IEnumerable
 	{
 		/// <summary>

@@ -34,7 +34,7 @@ namespace MiscCorLib.Collections
 	/// A zero-based index value is accessible
 	/// via the <see cref="Index"/> property.
 	/// </remarks>
-	[CLSCompliant(true), Serializable, DataContract]
+	[Serializable, DataContract]
 	public struct PageNumberAndSize
 		: IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
 	{

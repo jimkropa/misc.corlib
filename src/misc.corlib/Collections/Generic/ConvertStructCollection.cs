@@ -25,8 +25,6 @@ namespace MiscCorLib.Collections.Generic
 	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
 
-	using JetBrains.Annotations;
-
 	/// <summary>
 	/// A set of static extension methods for converting generic
 	/// collections of <see cref="ValueType"/> (a.k.a. "struct" values)
@@ -40,7 +38,6 @@ namespace MiscCorLib.Collections.Generic
 	/// and <see cref="ConvertDelimitedString"/>.
 	/// </para>
 	/// </remarks>
-	[CLSCompliant(true)]
 	public static class ConvertStructCollection
 	{
 		/// <summary>
@@ -258,7 +255,7 @@ namespace MiscCorLib.Collections.Generic
 		/// </returns>
 		public static string ToDelimitedString<T>(
 			this IEnumerable<T> collection,
-			[NotNull] string separator,
+			string separator,
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
@@ -302,7 +299,7 @@ namespace MiscCorLib.Collections.Generic
 		public static string ToDelimitedString<T>(
 			this IEnumerable<T> collection,
 			Func<T, string> toStringMethod,
-			[NotNull] string separator,
+			string separator,
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{

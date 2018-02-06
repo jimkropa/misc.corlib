@@ -33,7 +33,7 @@ namespace MiscCorLib.Collections
 		[TestFixture]
 		public sealed class JsonNetSerialization
 		{
-			[Test]
+			[Fact]
 			public void Serializes_All_Properties()
 			{
 				PageNumberAndSize page = new PageNumberAndSize(7, 20);
@@ -44,7 +44,7 @@ namespace MiscCorLib.Collections
 					serializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_Unbounded_Value()
 			{
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Unbounded);
@@ -54,7 +54,7 @@ namespace MiscCorLib.Collections
 					serializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_Empty_Value()
 			{
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndSize.Empty);
@@ -64,7 +64,7 @@ namespace MiscCorLib.Collections
 					serializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_From_Minimal_Specification()
 			{
 				PageNumberAndSize page = new PageNumberAndSize(7);
@@ -75,7 +75,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(page, deserializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_And_Ignores_Inconsistency_From_Excessive_Specification()
 			{
 				PageNumberAndSize page = new PageNumberAndSize(7, 20);
@@ -86,7 +86,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(page, deserializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_As_Invalid_From_Negative_Page_Number()
 			{
 				PageNumberAndSize deserializedPage
@@ -97,7 +97,7 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(deserializedPage.IsUnbounded);
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Negative_Page_Size()
 			{
 				Assert.Throws<JsonSerializationException>(
@@ -105,7 +105,7 @@ namespace MiscCorLib.Collections
 						"{\"Number\":0,\"Size\":-1}"));
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Omitted_Page_Number()
 			{
 				Assert.Throws<JsonSerializationException>(
@@ -113,7 +113,7 @@ namespace MiscCorLib.Collections
 						"{\"Size\":20}"));
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Omitted_Page_Size()
 			{
 				Assert.Throws<JsonSerializationException>(

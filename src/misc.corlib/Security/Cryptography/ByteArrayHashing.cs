@@ -26,8 +26,6 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Security.Cryptography;
 	using System.Text;
 
-	using JetBrains.Annotations;
-
 	public static class ByteArrayHashing
 	{
 
@@ -58,7 +56,7 @@ namespace MiscCorLib.Security.Cryptography
 		/// </summary>
 		public static readonly Encoding DefaultHashKeyEncoding = Encoding.ASCII;
 
-		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes)
+		public static byte[] ComputeHash<T>(this byte[] bytes)
 			where T : HashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
@@ -83,7 +81,7 @@ namespace MiscCorLib.Security.Cryptography
 			return hashedBytes;
 		}
 
-		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes, [NotNull] byte[] key)
+		public static byte[] ComputeHash<T>(this byte[] bytes, byte[] key)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
@@ -123,7 +121,7 @@ namespace MiscCorLib.Security.Cryptography
 		/// specified as <typeparamref name="T"/>.
 		/// </param>
 		/// <returns></returns>
-		public static byte[] ComputeHash<T>([NotNull] this byte[] bytes, [NotNull] string key)
+		public static byte[] ComputeHash<T>(this byte[] bytes, string key)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
@@ -133,9 +131,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static byte[] ComputeHash<T>(
-			[NotNull] this byte[] bytes,
-			[NotNull] string key,
-			[NotNull] Encoding keyEncoding)
+			this byte[] bytes,
+			string key,
+			Encoding keyEncoding)
 			where T : KeyedHashAlgorithm
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);

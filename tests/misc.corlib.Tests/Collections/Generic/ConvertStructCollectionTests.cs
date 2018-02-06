@@ -39,7 +39,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToStringArray
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				string[] result = SampleIntegerCollection.ToStringArray();
@@ -52,7 +52,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("5", result[4]);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				string[] result = SampleIntegerCollection.ToStringArray(true);
@@ -64,7 +64,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("5", result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Formatter()
 			{
 				string[] result = SampleIntegerCollection.ToStringArray(item => item.ToString("00"), true);
@@ -76,7 +76,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("05", result[3]);
 			}
 
-			[Test]
+			[Fact]
 			public void Uses_Ordinal_String_Comparison()
 			{
 				string[] result = SampleCharCollection.ToStringArray();
@@ -85,7 +85,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("a", result[1]);
 			}
 
-			[Test]
+			[Fact]
 			public void Omits_Empty_Strings()
 			{
 				string[] result = SampleCharCollection.ToStringArray();
@@ -93,7 +93,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual(2, result.Length);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				IEnumerable<char> nullArray = null;
@@ -108,7 +108,7 @@ namespace MiscCorLib.Collections.Generic
 		[TestFixture]
 		public sealed class ToDelimitedString
 		{
-			[Test]
+			[Fact]
 			public void Preserves_Duplicates_By_Default()
 			{
 				string result = SampleIntegerCollection.ToDelimitedString();
@@ -116,7 +116,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("7,3,9,3,5", result);
 			}
 
-			[Test]
+			[Fact]
 			public void Removes_Duplicates_When_Specified()
 			{
 				string result = SampleIntegerCollection.ToDelimitedString(true);
@@ -124,7 +124,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("7,3,9,5", result);
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Formatter()
 			{
 				string result = SampleIntegerCollection.ToDelimitedString(item => item.ToString("00"));
@@ -132,7 +132,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("07,03,09,03,05", result);
 			}
 
-			[Test]
+			[Fact]
 			public void Allows_Custom_Separator()
 			{
 				string result = SampleIntegerCollection.ToDelimitedString(":", true);
@@ -140,7 +140,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("7:3:9:5", result);
 			}
 
-			[Test]
+			[Fact]
 			public void Uses_Ordinal_String_Comparison()
 			{
 				string result = SampleCharCollection.ToDelimitedString();
@@ -148,7 +148,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("A,a", result);
 			}
 
-			[Test]
+			[Fact]
 			public void Omits_Empty_Strings()
 			{
 				string result = SampleCharCollection.ToDelimitedString();
@@ -156,7 +156,7 @@ namespace MiscCorLib.Collections.Generic
 				Assert.AreEqual("A,a", result);
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null_Input()
 			{
 				IEnumerable<char> nullArray = null;

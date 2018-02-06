@@ -26,8 +26,6 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Security.Cryptography;
 	using System.Text;
 
-	using JetBrains.Annotations;
-
 	/// <summary>
 	/// Factory producting <see cref="Encryptor"/>
 	/// and <see cref="Decryptor"/> instances.
@@ -47,7 +45,7 @@ namespace MiscCorLib.Security.Cryptography
 		public static readonly Encoding DefaultTextEncoding = Encoding.UTF8;
 
 		public static byte[] DeriveEncryptionKeyAndSaltFromPassword(
-			[NotNull] string password, int keySize, int saltSize, out byte[] randomSalt)
+			string password, int keySize, int saltSize, out byte[] randomSalt)
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
 
@@ -69,7 +67,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static byte[] DeriveEncryptionKeyFromPasswordAndSalt(
-			[NotNull] string password, int keySize, [NotNull] byte[] salt)
+			string password, int keySize, byte[] salt)
 		{
 			Contract.Requires<ArgumentNullException>(password != null);
 

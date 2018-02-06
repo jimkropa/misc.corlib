@@ -25,16 +25,14 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 
-	using JetBrains.Annotations;
-
 	// Refer to Encryption.cs for documentation comments of partial class.
 	public static partial class Encryption
 	{
 		#region [ Overloads of CreateEncryptor Extension Method for SymmetricAlgorithm ]
 
 		public static Encryptor CreateEncryptor(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] byte[] encryptionKey,
+			this SymmetricAlgorithm algorithm,
+			byte[] encryptionKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
@@ -45,8 +43,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor CreateEncryptor(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] string secretKey,
+			this SymmetricAlgorithm algorithm,
+			string secretKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
@@ -63,8 +61,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor CreateEncryptor(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] string secretKey,
+			this SymmetricAlgorithm algorithm,
+			string secretKey,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
@@ -85,9 +83,9 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of CreateEncryptor Extension Method using a given Salt ]
 
 		public static Encryptor CreateEncryptorWithGivenSalt(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] salt,
+			this SymmetricAlgorithm algorithm,
+			byte[] encryptionKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -98,9 +96,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor CreateEncryptorWithGivenSalt(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] string secretKey,
-			[NotNull] byte[] salt,
+			this SymmetricAlgorithm algorithm,
+			string secretKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
 			Contract.Requires<ArgumentNullException>(algorithm != null);
@@ -114,9 +112,9 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor CreateEncryptorWithGivenSalt(
-			[NotNull] this SymmetricAlgorithm algorithm,
-			[NotNull] string secretKey,
-			[NotNull] string salt,
+			this SymmetricAlgorithm algorithm,
+			string secretKey,
+			string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 		{
@@ -132,7 +130,7 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of Generic CreateEncryptor Method ]
 
 		public static Encryptor<T> CreateEncryptor<T>(
-			[NotNull] byte[] encryptionKey,
+			byte[] encryptionKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
@@ -143,7 +141,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
-			[NotNull] string secretKey,
+			string secretKey,
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
@@ -164,7 +162,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor<T> CreateEncryptor<T>(
-			[NotNull] string secretKey,
+			string secretKey,
 			out string randomSalt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
@@ -185,8 +183,8 @@ namespace MiscCorLib.Security.Cryptography
 		#region [ Overloads of Generic CreateEncryptor Method using a given Salt ]
 
 		public static Encryptor<T> CreateEncryptorWithGivenSalt<T>(
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] salt,
+			byte[] encryptionKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
@@ -197,8 +195,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor<T> CreateEncryptorWithGivenSalt<T>(
-			[NotNull] string secretKey,
-			[NotNull] byte[] salt,
+			string secretKey,
+			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
@@ -218,8 +216,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public static Encryptor<T> CreateEncryptorWithGivenSalt<T>(
-			[NotNull] string secretKey,
-			[NotNull] string salt,
+			string secretKey,
+			string salt,
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm

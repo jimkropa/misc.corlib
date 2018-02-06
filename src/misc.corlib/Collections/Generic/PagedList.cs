@@ -36,7 +36,7 @@ namespace MiscCorLib.Collections.Generic
 	/// <typeparam name="T">
 	/// The type of elements in the paged list.
 	/// </typeparam>
-	[CLSCompliant(true), Serializable]
+	[Serializable]
 	public class PagedList<T> : List<T>, IPagedList<T>
 	{
 		#region [ Private ReadOnly Field and Constructor Overloads ]
@@ -133,10 +133,7 @@ namespace MiscCorLib.Collections.Generic
 
 		#endregion
 
-		/// <summary>
-		/// Gets the metadata about this "page" of
-		/// a longer list which spans multiple pages.
-		/// </summary>
-		public PagingInfo PagingInfo { get { return this.pagingInfo; } }
+		/// <inheritdoc />
+		public PagingInfo PagingInfo => this.pagingInfo;
 	}
 }

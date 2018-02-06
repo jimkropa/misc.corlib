@@ -76,7 +76,7 @@ namespace MiscCorLib
 		[TestFixture]
 		public sealed class ToByteArray
 		{
-			[Test]
+			[Fact]
 			public void Disallows_Null_Array_By_Default()
 			{
 				// ReSharper disable once AssignNullToNotNullAttribute
@@ -88,7 +88,7 @@ namespace MiscCorLib
 					() => ConvertEncodedString.ToByteArray(null, ByteArrayStringEncoding.Hexadecimal));
 			}
 
-			[Test]
+			[Fact]
 			public void Optionally_Returns_Null_From_Null_Array()
 			{
 				Assert.Throws<ArgumentNullException>(
@@ -102,7 +102,7 @@ namespace MiscCorLib
 				Assert.IsNull(ConvertEncodedString.ToByteArray(null, true, ByteArrayStringEncoding.Hexadecimal));
 			}
 
-			[Test]
+			[Fact]
 			public void Ignores_Invalid_Encoding_With_Null_Input()
 			{
 				const ByteArrayStringEncoding invalidEncoding = (ByteArrayStringEncoding)17;
@@ -117,7 +117,7 @@ namespace MiscCorLib
 				Assert.IsNull(ConvertEncodedString.ToByteArray(null, true, invalidEncoding));
 			}
 
-			[Test]
+			[Fact]
 			public void Rejects_Invalid_Encoding_With_Valid_Input()
 			{
 				const ByteArrayStringEncoding invalidEncoding = (ByteArrayStringEncoding)17;
@@ -133,7 +133,7 @@ namespace MiscCorLib
 					() => validInputString.ToByteArray(false, invalidEncoding));
 			}
 
-			[Test]
+			[Fact]
 			public void Uses_Correct_Encoding()
 			{
 				Assert.AreEqual(
@@ -173,7 +173,7 @@ namespace MiscCorLib
 			protected abstract ConvertEncodedString.ConvertString Converter { get; }
 			protected abstract string KnownConstantString { get; }
 
-			[Test]
+			[Fact]
 			public void Disallows_Null_Array_By_Default()
 			{
 				// ReSharper disable once AssignNullToNotNullAttribute
@@ -181,7 +181,7 @@ namespace MiscCorLib
 					() => this.NonNullConverter(null));
 			}
 
-			[Test]
+			[Fact]
 			public void Optionally_Returns_Null_From_Null_Array()
 			{
 				Assert.Throws<ArgumentNullException>(
@@ -190,7 +190,7 @@ namespace MiscCorLib
 				Assert.IsNull(this.Converter(null, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Converts_Known_String_Input_To_Known_Bytes()
 			{
 				Assert.AreEqual(ConvertByteArrayTests.KnownConstantByteArray, this.NonNullConverter(this.KnownConstantString));

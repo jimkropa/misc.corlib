@@ -25,14 +25,12 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 
-	using JetBrains.Annotations;
-
 	public sealed class KeyedHasher : KeyedHasher<KeyedHashAlgorithm>
 	{
 		internal KeyedHasher(
-			[NotNull] KeyedHashAlgorithm algorithm,
-			[NotNull] byte[] key,
-			[NotNull] byte[] salt,
+			KeyedHashAlgorithm algorithm,
+			byte[] key,
+			byte[] salt,
 			bool allowNulls)
 			: base(algorithm, key, salt, allowNulls)
 		{
@@ -62,9 +60,9 @@ namespace MiscCorLib.Security.Cryptography
 		private readonly byte[] key;
 
 		internal KeyedHasher(
-			[NotNull] T algorithm,
-			[NotNull] byte[] key,
-			[NotNull] byte[] salt,
+			T algorithm,
+			byte[] key,
+			byte[] salt,
 			bool allowNulls)
 			: base(algorithm, salt, allowNulls)
 		{
@@ -77,8 +75,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		internal KeyedHasher(
-			[NotNull] byte[] key,
-			[NotNull] byte[] salt,
+			byte[] key,
+			byte[] salt,
 			bool allowNulls)
 			: base(salt, allowNulls)
 		{

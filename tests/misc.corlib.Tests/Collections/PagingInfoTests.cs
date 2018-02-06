@@ -35,7 +35,7 @@ namespace MiscCorLib.Collections
 			private const int TestTotalItems = 1138;
 			private readonly PagingInfo defaultPagingInfo = new PagingInfo(PageNumberAndSize.Default, TestTotalItems);
 
-			[Test]
+			[Fact]
 			public void HasValidItemNumbers()
 			{
 				Assert.AreEqual(1, this.defaultPagingInfo.FirstItemNumber);
@@ -45,7 +45,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.defaultPagingInfo.LastItemNumber - 1, this.defaultPagingInfo.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidFirstAndLastPages()
 			{
 				AssertIsFirstPage(this.defaultPagingInfo);
@@ -65,7 +65,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.ItemCount);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidNextPageAndEmptyPreviousPage()
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfo.PreviousPage);
@@ -74,7 +74,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.NextPage.Size);
 			}
 
-			[Test]
+			[Fact]
 			public void HasFullSetOfAllPages()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfo.AllPagesAndItemNumbers();
@@ -101,7 +101,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(pages[0].HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void ConvertsToString()
 			{
 				Assert.AreEqual("PagingInfo[Page[Number=1,Size=10],TotalItems=1138]", this.defaultPagingInfo.ToString());
@@ -114,7 +114,7 @@ namespace MiscCorLib.Collections
 			private const int TestTotalItems = 1138;
 			private readonly PagingInfo defaultPagingInfoLastPage = new PagingInfo(250, 10, TestTotalItems);
 
-			[Test]
+			[Fact]
 			public void HasValidItemNumbers()
 			{
 				Assert.AreEqual(1131, this.defaultPagingInfoLastPage.FirstItemNumber);
@@ -124,7 +124,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.defaultPagingInfoLastPage.LastItemNumber - 1, this.defaultPagingInfoLastPage.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidFirstAndLastPages()
 			{
 				AssertIsLastPage(this.defaultPagingInfoLastPage);
@@ -141,7 +141,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.ItemCount);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidNextPageAndEmptyPreviousPage()
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfoLastPage.NextPage);
@@ -150,7 +150,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.PreviousPage.Size);
 			}
 
-			[Test]
+			[Fact]
 			public void HasFullSetOfAllPages()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfoLastPage.AllPagesAndItemNumbers();
@@ -177,7 +177,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(pages[0].HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void ConvertsToString()
 			{
 				Assert.AreEqual("PagingInfo[Page[Number=114,Size=10],TotalItems=1138]", this.defaultPagingInfoLastPage.ToString());
@@ -191,7 +191,7 @@ namespace MiscCorLib.Collections
 			private readonly PagingInfo defaultPagingInfo = new PagingInfo(
 				new PageNumberAndSize(250, 20), ZeroTotalItems);
 
-			[Test]
+			[Fact]
 			public void HasValidItemNumbers()
 			{
 				Assert.AreEqual(0, this.defaultPagingInfo.FirstItemNumber);
@@ -200,7 +200,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(-1, this.defaultPagingInfo.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidFirstAndLastPages()
 			{
 				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.CurrentPage);
@@ -217,14 +217,14 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(this.defaultPagingInfo.IsLastPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasEmptyNextAndPreviousPages()
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfo.NextPage);
 				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfo.PreviousPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasZeroItems()
 			{
 				Assert.AreEqual(-1, this.defaultPagingInfo.FirstItemIndex, "FirstItemIndex");
@@ -234,7 +234,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(1, this.defaultPagingInfo.TotalPages, "TotalPages");
 			}
 
-			[Test]
+			[Fact]
 			public void HasOneEmptyPage()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfo.AllPagesAndItemNumbers();
@@ -246,7 +246,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(pages[0].HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void ConvertsToString()
 			{
 				Assert.AreEqual("PagingInfo[Page[Number=1,Size=20],TotalItems=0]", this.defaultPagingInfo.ToString());
@@ -258,7 +258,7 @@ namespace MiscCorLib.Collections
 		{
 			private readonly PagingInfo emptyPagingInfo = new PagingInfo();
 
-			[Test]
+			[Fact]
 			public void HasValidItemNumbers()
 			{
 				Assert.AreEqual(0, this.emptyPagingInfo.FirstItemNumber);
@@ -267,7 +267,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(-1, this.emptyPagingInfo.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasEmptyPages()
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.emptyPagingInfo.CurrentPage);
@@ -282,14 +282,14 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(this.emptyPagingInfo.IsLastPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasUninitializedItemIndices()
 			{
 				Assert.AreEqual(-1, this.emptyPagingInfo.FirstItemIndex);
 				Assert.AreEqual(-1, this.emptyPagingInfo.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasZeroTotalItems()
 			{
 				Assert.AreEqual(0, this.emptyPagingInfo.TotalItems);
@@ -297,7 +297,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(0, this.emptyPagingInfo.ItemCount);
 			}
 
-			[Test]
+			[Fact]
 			public void HasNoPages()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages = this.emptyPagingInfo.AllPagesAndItemNumbers();
@@ -305,7 +305,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(0, pages.Count);
 			}
 
-			[Test]
+			[Fact]
 			public void ConvertsToString()
 			{
 				Assert.AreEqual("PagingInfo[Page[Number=0,Size=0],TotalItems=0]", this.emptyPagingInfo.ToString());
@@ -319,7 +319,7 @@ namespace MiscCorLib.Collections
 			private readonly PagingInfo unboundedPagingInfo = new PagingInfo(
 				PageNumberAndSize.Unbounded, TestTotalItems);
 
-			[Test]
+			[Fact]
 			public void HasValidItemNumbers()
 			{
 				Assert.AreEqual(1, this.unboundedPagingInfo.FirstItemNumber);
@@ -329,7 +329,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(this.unboundedPagingInfo.LastItemNumber - 1, this.unboundedPagingInfo.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidFirstAndLastPages()
 			{
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.CurrentPage);
@@ -345,14 +345,14 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(this.unboundedPagingInfo.IsLastPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasEmptyNextAndPreviousPages()
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.unboundedPagingInfo.NextPage);
 				PageNumberAndSizeTests.AssertIsEmpty(this.unboundedPagingInfo.PreviousPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasAllItems()
 			{
 				Assert.AreEqual(0, this.unboundedPagingInfo.FirstItemIndex);
@@ -362,7 +362,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(1, this.unboundedPagingInfo.TotalPages);
 			}
 
-			[Test]
+			[Fact]
 			public void HasOneHugePage()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages = this.unboundedPagingInfo.AllPagesAndItemNumbers();
@@ -374,7 +374,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(pages[0].HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void ConvertsToString()
 			{
 				Assert.AreEqual("PagingInfo[Page[Number=1,Size=0],TotalItems=65075262]", this.unboundedPagingInfo.ToString());
@@ -388,7 +388,7 @@ namespace MiscCorLib.Collections
 			private readonly PagingInfo unboundedPagingInfo = new PagingInfo(
 				PageNumberAndSize.Unbounded, ZeroTotalItems);
 
-			[Test]
+			[Fact]
 			public void HasValidItemNumbers()
 			{
 				Assert.AreEqual(0, this.unboundedPagingInfo.FirstItemNumber);
@@ -397,7 +397,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(-1, this.unboundedPagingInfo.LastItemIndex);
 			}
 
-			[Test]
+			[Fact]
 			public void HasValidFirstAndLastPages()
 			{
 				PageNumberAndSizeTests.AssertIsUnbounded(this.unboundedPagingInfo.CurrentPage);
@@ -413,14 +413,14 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(this.unboundedPagingInfo.IsLastPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasEmptyNextAndPreviousPages()
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.unboundedPagingInfo.NextPage);
 				PageNumberAndSizeTests.AssertIsEmpty(this.unboundedPagingInfo.PreviousPage);
 			}
 
-			[Test]
+			[Fact]
 			public void HasZeroItems()
 			{
 				Assert.AreEqual(-1, this.unboundedPagingInfo.FirstItemIndex, "FirstItemIndex");
@@ -430,7 +430,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(1, this.unboundedPagingInfo.TotalPages, "TotalPages");
 			}
 
-			[Test]
+			[Fact]
 			public void HasOneEmptyPage()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages = this.unboundedPagingInfo.AllPagesAndItemNumbers();
@@ -442,7 +442,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(pages[0].HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void ConvertsToString()
 			{
 				Assert.AreEqual("PagingInfo[Page[Number=1,Size=0],TotalItems=0]", this.unboundedPagingInfo.ToString());
@@ -454,7 +454,7 @@ namespace MiscCorLib.Collections
 		{
 			private readonly PagingInfo readonlyPagingInfo = new PagingInfo();
 
-			[Test]
+			[Fact]
 			public void DoesNotDisruptReadOnlyReference()
 			{
 				Assert.IsNull(this.readonlyPagingInfo.AllPages);
@@ -469,7 +469,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(PagingInfo.Empty.Equals(this.readonlyPagingInfo));
 			}
 
-			[Test]
+			[Fact]
 			public void DoesNotDisruptDeserializedReference()
 			{
 				PagingInfo deserializedPagingInfo
@@ -494,7 +494,7 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(deserializedPagingInfo.IsLastPage);
 			}
 
-			[Test]
+			[Fact]
 			public void MovesToLastPageWhenTurningPast()
 			{
 				PagingInfo pagingInfo = new PagingInfo(27, 20, 39);
@@ -504,7 +504,7 @@ namespace MiscCorLib.Collections
 				AssertIsLastPage(pagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void CalculatesCorrectTotalPages()
 			{
 				Assert.Throws<ArgumentOutOfRangeException>(
@@ -526,7 +526,7 @@ namespace MiscCorLib.Collections
 			private readonly PagingInfo samplePagingInfo = new PagingInfo(
 				new PageNumberAndSize(7, 20), 1138);
 
-			[Test]
+			[Fact]
 			public void IsTrueWhenSame()
 			{
 				PagingInfo samePagingInfo = new PagingInfo(7, 20, 1138);
@@ -534,7 +534,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(this.samplePagingInfo, samePagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void IsTrueWhenEmpty()
 			{
 				PagingInfo empty1 = new PagingInfo();
@@ -544,7 +544,7 @@ namespace MiscCorLib.Collections
 				AssertInequality(this.samplePagingInfo, PagingInfo.Empty);
 			}
 
-			[Test]
+			[Fact]
 			public void IsTrueWhenDeserialized()
 			{
 				PagingInfo deserializedPagingInfo
@@ -554,7 +554,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(this.samplePagingInfo, deserializedPagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void IsTrueWhenHasAllPages()
 			{
 				PagingInfo samePagingInfo = new PagingInfo(7, 20, 1138, true);
@@ -562,7 +562,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(this.samplePagingInfo, samePagingInfo);
 			}
 
-			[Test]
+			[Fact]
 			public void IsFalseWhenDifferentPageNumber()
 			{
 				PagingInfo differentPageNumber = new PagingInfo(8, 20, 1138);
@@ -570,7 +570,7 @@ namespace MiscCorLib.Collections
 				AssertInequality(samplePagingInfo, differentPageNumber);
 			}
 
-			[Test]
+			[Fact]
 			public void IsFalseWhenDifferentPageSize()
 			{
 				PagingInfo differentPageSize = new PagingInfo(7, 19, 1138);
@@ -589,7 +589,7 @@ namespace MiscCorLib.Collections
 		[TestFixture]
 		public sealed class TurnToPage
 		{
-			[Test]
+			[Fact]
 			public void DefaultCaseReusesSize()
 			{
 				PagingInfo validPagingInfo = new PagingInfo(3, 10, 57);
@@ -600,7 +600,7 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(newPage.IsUnbounded);
 			}
 
-			[Test]
+			[Fact]
 			public void AllowsTurningPastLastPage()
 			{
 				PagingInfo validPagingInfo = new PagingInfo(3, 10, 57);
@@ -611,7 +611,7 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(newPage.IsUnbounded);
 			}
 
-			[Test]
+			[Fact]
 			public void ReturnsUnboundedFromUnbounded()
 			{
 				PagingInfo unboundedPagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 57);
@@ -622,7 +622,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(newPage.IsUnbounded);
 			}
 
-			[Test]
+			[Fact]
 			public void ReturnsEmptyFromEmpty()
 			{
 				PageNumberAndSize newPage = PagingInfo.Empty.TurnToPage(6);

@@ -24,8 +24,6 @@ namespace MiscCorLib
 	using System;
 	using System.Diagnostics.Contracts;
 
-	using JetBrains.Annotations;
-
 	public static class ConvertEncodedString
 	{
 		#region [ Constants and Delegates describing Common Method Signatures ]
@@ -41,7 +39,7 @@ namespace MiscCorLib
 		/// </summary>
 		/// <param name="encodedString"></param>
 		/// <returns></returns>
-		public delegate byte[] ConvertNonNullString([NotNull] string encodedString);
+		public delegate byte[] ConvertNonNullString(string encodedString);
 
 		/// <summary>
 		/// 
@@ -53,7 +51,7 @@ namespace MiscCorLib
 
 		#endregion
 
-		public static byte[] FromBase64([NotNull] this string encodedString)
+		public static byte[] FromBase64(this string encodedString)
 		{
 			Contract.Requires<ArgumentNullException>(encodedString != null);
 
@@ -70,7 +68,7 @@ namespace MiscCorLib
 			return encodedString.FromBase64();
 		}
 		
-		public static byte[] FromHexadecimal([NotNull] this string encodedString)
+		public static byte[] FromHexadecimal(this string encodedString)
 		{
 			Contract.Requires<ArgumentNullException>(encodedString != null);
 
@@ -95,7 +93,7 @@ namespace MiscCorLib
 		}
 		
 		public static byte[] ToByteArray(
-			[NotNull] this string encodedString,
+			this string encodedString,
 			ByteArrayStringEncoding fromEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
 			Contract.Requires<ArgumentNullException>(encodedString != null);

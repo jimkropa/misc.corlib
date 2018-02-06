@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
@@ -26,8 +25,7 @@ namespace MiscCorLib.Collections
 	/// page number, page size, and total number of items.
 	/// </para>
 	/// </remarks>
-	[CLSCompliant(true), Serializable, DataContract]
-	[SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Relay of read-only property from internal state.")]
+	[Serializable, DataContract]
 	public struct PagingInfo : IEquatable<PagingInfo>, IHasValue
 	{
 		#region [ Public Constants for Default and Empty Values ]

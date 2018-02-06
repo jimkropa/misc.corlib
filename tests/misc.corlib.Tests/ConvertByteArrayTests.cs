@@ -1,31 +1,9 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib
-	ConvertByteArrayTests.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using Xunit;
 
 namespace MiscCorLib
 {
-	using System;
-
-	using NUnit.Framework;
-
-	/// <summary>
+    /// <summary>
 	/// Automated unit tests of the <see cref="ConvertByteArray"/> extention methods.
 	/// </summary>
 	[TestFixture]
@@ -82,7 +60,7 @@ namespace MiscCorLib
 			protected abstract ConvertByteArray.ConvertArray Converter { get; }
 			protected abstract string KnownConstantString { get; }
 
-			[Test]
+			[Fact]
 			public void Disallows_Null_Array_By_Default()
 			{
 				// ReSharper disable once AssignNullToNotNullAttribute
@@ -90,7 +68,7 @@ namespace MiscCorLib
 					() => this.NonNullConverter(null));
 			}
 
-			[Test]
+			[Fact]
 			public void Optionally_Returns_Null_From_Null_Array()
 			{
 				Assert.Throws<ArgumentNullException>(
@@ -99,7 +77,7 @@ namespace MiscCorLib
 				Assert.IsNull(this.Converter(null, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Converts_Known_Input_To_Known_String()
 			{
 				Assert.AreEqual(this.KnownConstantString, this.NonNullConverter(KnownConstantByteArray));

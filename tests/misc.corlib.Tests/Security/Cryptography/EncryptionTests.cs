@@ -44,7 +44,7 @@ namespace MiscCorLib.Security.Cryptography
 				this.testPassword = Guid.NewGuid().ToString("N").ToLowerInvariant();
 			}
 
-			[Test]
+			[Fact]
 			public void Derives_Same_Key_Using_Original_Salt()
 			{
 				byte[] salt;
@@ -57,7 +57,7 @@ namespace MiscCorLib.Security.Cryptography
 				Assert.AreEqual(originalKey, recreatedKey);
 			}
 
-			[Test]
+			[Fact]
 			public void Derives_Different_Key_Using_Different_Salt()
 			{
 				byte[] salt;
@@ -72,7 +72,7 @@ namespace MiscCorLib.Security.Cryptography
 				Assert.AreNotEqual(originalKey, keyFromDifferentSalt);
 			}
 
-			[Test]
+			[Fact]
 			public void Uses_Case_Sensitive_Password()
 			{
 				byte[] salt;

@@ -25,8 +25,6 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Diagnostics.Contracts;
 	using System.Security.Cryptography;
 
-	using JetBrains.Annotations;
-
 	/// <summary>
 	/// Encapsulation of a decryption operation
 	/// with a simple contract: A decryptor decrypts
@@ -43,9 +41,9 @@ namespace MiscCorLib.Security.Cryptography
 	public sealed class Decryptor : Decryptor<SymmetricAlgorithm>
 	{
 		public Decryptor(
-			[NotNull] SymmetricAlgorithm algorithm,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			SymmetricAlgorithm algorithm,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
@@ -59,9 +57,9 @@ namespace MiscCorLib.Security.Cryptography
 		where T : SymmetricAlgorithm
 	{
 		public Decryptor(
-			[NotNull] T algorithm,
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			T algorithm,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(algorithm, false, encryptionKey, initializationVector, options)
 		{
@@ -71,8 +69,8 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		public Decryptor(
-			[NotNull] byte[] encryptionKey,
-			[NotNull] byte[] initializationVector,
+			byte[] encryptionKey,
+			byte[] initializationVector,
 			EncryptionOptions options)
 			: base(false, encryptionKey, initializationVector, options)
 		{

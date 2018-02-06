@@ -26,15 +26,12 @@ namespace MiscCorLib.Collections.Specialized
 	using System.Collections.Specialized;
 	using System.Diagnostics.Contracts;
 
-	using JetBrains.Annotations;
-
 	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
 	/// A set of static methods for extracting values from
 	/// <see cref="NameValueCollection"/> objects.
 	/// </summary>
-	[CLSCompliant(true)]
 	public static class NameValueCollectionExtensions
 	{
 		/// <summary>
@@ -92,8 +89,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// True if the named value was converted successfully, otherwise false.
 		/// </returns>
 		public static bool TryParseValue<T>(
-			[NotNull] this NameValueCollection collection,
-			[NotNull] ConvertStrings.TryParseFromString<T> tryParseDelegate,
+			this NameValueCollection collection,
+			ConvertStrings.TryParseFromString<T> tryParseDelegate,
 			string name,
 			out T result)
 			where T : struct
@@ -146,8 +143,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// or the value of the <paramref name="defaultReturn"/> parameter.
 		/// </returns>
 		public static T GetValue<T>(
-			[NotNull] this NameValueCollection collection,
-			[NotNull] ConvertStrings.TryParseFromString<T> tryParseDelegate, 
+			this NameValueCollection collection,
+			ConvertStrings.TryParseFromString<T> tryParseDelegate, 
 			string name,
 			T defaultReturn)
 			where T : struct
@@ -202,8 +199,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// or the type's default value.
 		/// </returns>
 		public static T GetValue<T>(
-			[NotNull] this NameValueCollection collection,
-			[NotNull] ConvertStrings.TryParseFromString<T> tryParseDelegate, 
+			this NameValueCollection collection,
+			ConvertStrings.TryParseFromString<T> tryParseDelegate, 
 			string name)
 			where T : struct
 		{
@@ -373,7 +370,7 @@ namespace MiscCorLib.Collections.Specialized
 		/// true if the named value was converted successfully, otherwise false.
 		/// </returns>
 		public static bool TryParseEnum<T>(
-			[NotNull] this NameValueCollection collection, string name, bool allowMultipleFlagsBits, out T result)
+			this NameValueCollection collection, string name, bool allowMultipleFlagsBits, out T result)
 		{
 			Contract.Requires<ArgumentNullException>(collection != null);
 

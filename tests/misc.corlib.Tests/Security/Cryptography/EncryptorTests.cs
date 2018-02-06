@@ -38,7 +38,7 @@ namespace MiscCorLib.Security.Cryptography
 		[TestFixture]
 		public sealed class Encrypt
 		{
-			[Test]
+			[Fact]
 			public void Returns_InitializationVector()
 			{
 				using (SymmetricAlgorithm algorithm = TestObjectFactory.CreateAlgorithm())

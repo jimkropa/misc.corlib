@@ -32,26 +32,26 @@ namespace MiscCorLib
 		[TestFixture]
 		public sealed class ToEmptyIfNull
 		{
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Null()
 			{
 				Assert.IsEmpty(FormatString.ToEmptyIfNull(null));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_Empty()
 			{
 				Assert.IsEmpty(string.Empty.ToEmptyIfNull());
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Empty_From_WhiteSpace()
 			{
 				Assert.IsEmpty(@" 
   ".ToEmptyIfNull());
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Trimmed_From_String()
 			{
 				Assert.AreEqual("hello, world", @"  hello, world 
@@ -62,26 +62,26 @@ namespace MiscCorLib
 		[TestFixture]
 		public sealed class ToNullIfEmpty
 		{
-			[Test]
+			[Fact]
 			public void Returns_Null_From_Null()
 			{
 				Assert.IsNull(FormatString.ToNullIfEmpty(null));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Null_From_Empty()
 			{
 				Assert.IsNull(string.Empty.ToNullIfEmpty());
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Null_From_WhiteSpace()
 			{
 				Assert.IsNull(@" 
   ".ToNullIfEmpty());
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Trimmed_From_String()
 			{
 				Assert.AreEqual("hello, world", @"  hello, world 
@@ -92,21 +92,21 @@ namespace MiscCorLib
 		[TestFixture]
 		public sealed class ToCompactWhiteSpace
 		{
-			[Test]
+			[Fact]
 			public void Returns_EmptyOrNull_From_Null()
 			{
 				Assert.IsEmpty(FormatString.ToCompactWhiteSpace(null));
 				Assert.IsNull(FormatString.ToCompactWhiteSpace(null, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_EmptyOrNull_From_Empty()
 			{
 				Assert.IsEmpty(string.Empty.ToCompactWhiteSpace());
 				Assert.IsNull(string.Empty.ToCompactWhiteSpace(true));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_EmptyOrNull_From_WhiteSpace()
 			{
 				Assert.IsEmpty(@" 
@@ -115,7 +115,7 @@ namespace MiscCorLib
   ".ToCompactWhiteSpace(true));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Trimmed_And_Compacted_From_String()
 			{
 				Assert.AreEqual("hello, world", @"    
@@ -131,7 +131,7 @@ namespace MiscCorLib
 		[TestFixture]
 		public sealed class ToHtmlParagraph
 		{
-			[Test]
+			[Fact]
 			public void Returns_EmptyOrNull_From_Null()
 			{
 				Assert.IsEmpty(FormatString.ToHtmlParagraph(null));
@@ -140,7 +140,7 @@ namespace MiscCorLib
 				Assert.IsNull(FormatString.ToHtmlParagraph(null, false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_EmptyOrNull_From_Empty()
 			{
 				Assert.IsEmpty(string.Empty.ToHtmlParagraph());
@@ -149,7 +149,7 @@ namespace MiscCorLib
 				Assert.IsNull(string.Empty.ToHtmlParagraph(false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_EmptyOrNull_From_WhiteSpace()
 			{
 				Assert.IsEmpty(@" 
@@ -162,7 +162,7 @@ namespace MiscCorLib
   ".ToHtmlParagraph(false, true));
 			}
 
-			[Test]
+			[Fact]
 			public void Returns_Html_From_MultiLine_String()
 			{
 				Assert.AreEqual(@"<p>

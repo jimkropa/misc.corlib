@@ -29,8 +29,6 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Security.Cryptography;
 	using System.Threading;
 
-	using JetBrains.Annotations;
-
 	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
@@ -143,9 +141,9 @@ namespace MiscCorLib.Security.Cryptography
 		/// </para>
 		/// </remarks>
 		protected SymmetricTransformer(
-			[NotNull] T algorithm,
+			T algorithm,
 			bool isEncryptor,
-			[NotNull] byte[] encryptionKey,
+			byte[] encryptionKey,
 			byte[] initializationVector,
 			EncryptionOptions options)
 			: this(isEncryptor, encryptionKey, initializationVector, options)
@@ -185,7 +183,7 @@ namespace MiscCorLib.Security.Cryptography
 		/// <param name="options"></param>
 		protected SymmetricTransformer(
 			bool isEncryptor,
-			[NotNull] byte[] encryptionKey,
+			byte[] encryptionKey,
 			byte[] initializationVector,
 			EncryptionOptions options)
 		{

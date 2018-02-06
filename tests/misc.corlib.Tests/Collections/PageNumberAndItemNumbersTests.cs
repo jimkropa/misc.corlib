@@ -36,7 +36,7 @@ namespace MiscCorLib.Collections
 		[TestFixture]
 		public sealed class JsonNetSerialization
 		{
-			[Test]
+			[Fact]
 			public void Serializes_All_Properties()
 			{
 				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(4, 10, 36);
@@ -47,7 +47,7 @@ namespace MiscCorLib.Collections
 					serializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Serializes_Empty_Value()
 			{
 				string serializedPage = JsonConvert.SerializeObject(PageNumberAndItemNumbers.Empty);
@@ -57,7 +57,7 @@ namespace MiscCorLib.Collections
 					serializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_From_Minimal_Specification()
 			{
 				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(8, 20, 148);
@@ -68,7 +68,7 @@ namespace MiscCorLib.Collections
 				AssertEquality(page, deserializedPage);
 			}
 
-			[Test]
+			[Fact]
 			public void Deserializes_As_Invalid_From_Negative_Numbers()
 			{
 				PageNumberAndItemNumbers deserializedPage
@@ -90,7 +90,7 @@ namespace MiscCorLib.Collections
 				Assert.IsFalse(deserializedPage.HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void Does_Not_Deserialize_From_Omitted_Numbers()
 			{
 				Assert.Throws<JsonSerializationException>(
@@ -110,7 +110,7 @@ namespace MiscCorLib.Collections
 		[TestFixture]
 		public sealed class AllPagesAndItemNumbers
 		{
-			[Test]
+			[Fact]
 			public void CaclucatesCorrectlyFromValidSizes()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages
@@ -137,7 +137,7 @@ namespace MiscCorLib.Collections
 				Assert.IsTrue(pages[0].HasValue);
 			}
 
-			[Test]
+			[Fact]
 			public void ReturnsOnePageForZeroItems()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesWithSize
@@ -159,7 +159,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(0, zeroPagesUnbounded[0].LastItemNumber);
 			}
 
-			[Test]
+			[Fact]
 			public void ReturnsOnePageForUnbounded()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pagesUnbounded
@@ -172,7 +172,7 @@ namespace MiscCorLib.Collections
 				Assert.AreEqual(57, pagesUnbounded[0].LastItemNumber);
 			}
 
-			[Test]
+			[Fact]
 			public void DoesNotAllowInvalidSizes()
 			{
 				Assert.Throws<ArgumentOutOfRangeException>(
