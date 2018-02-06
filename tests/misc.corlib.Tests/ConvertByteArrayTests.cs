@@ -3,50 +3,29 @@ using Xunit;
 
 namespace MiscCorLib
 {
-    /// <summary>
+	/// <summary>
 	/// Automated unit tests of the <see cref="ConvertByteArray"/> extention methods.
 	/// </summary>
-	[TestFixture]
 	public sealed class ConvertByteArrayTests
 	{
 		internal static readonly byte[] KnownConstantByteArray = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
-		[TestFixture]
 		public sealed class ToBase64String : ConvertByteArrayTestsBase
 		{
-			protected override ConvertByteArray.ConvertNonNullArray NonNullConverter
-			{
-				get { return ConvertByteArray.ToBase64String; }
-			}
+			protected override ConvertByteArray.ConvertNonNullArray NonNullConverter => ConvertByteArray.ToBase64String;
 
-			protected override ConvertByteArray.ConvertArray Converter
-			{
-				get { return ConvertByteArray.ToBase64String; }
-			}
+			protected override ConvertByteArray.ConvertArray Converter => ConvertByteArray.ToBase64String;
 
-			protected override string KnownConstantString
-			{
-				get { return ConvertEncodedStringTests.KnownConstantBase64String; }
-			}
+			protected override string KnownConstantString => ConvertEncodedStringTests.KnownConstantBase64String;
 		}
 
-		[TestFixture]
 		public sealed class ToHexadecimalString : ConvertByteArrayTestsBase
 		{
-			protected override ConvertByteArray.ConvertNonNullArray NonNullConverter
-			{
-				get { return ConvertByteArray.ToHexadecimalString; }
-			}
+			protected override ConvertByteArray.ConvertNonNullArray NonNullConverter => ConvertByteArray.ToHexadecimalString;
 
-			protected override ConvertByteArray.ConvertArray Converter
-			{
-				get { return ConvertByteArray.ToHexadecimalString; }
-			}
+			protected override ConvertByteArray.ConvertArray Converter => ConvertByteArray.ToHexadecimalString;
 
-			protected override string KnownConstantString
-			{
-				get { return ConvertEncodedStringTests.KnownConstantHexadecimalString; }
-			}
+			protected override string KnownConstantString => ConvertEncodedStringTests.KnownConstantHexadecimalString;
 		}
 
 		/// <summary>
@@ -74,25 +53,25 @@ namespace MiscCorLib
 				Assert.Throws<ArgumentNullException>(
 					() => this.Converter(null, false));
 
-				Assert.IsNull(this.Converter(null, true));
+				Assert.Null(this.Converter(null, true));
 			}
 
 			[Fact]
 			public void Converts_Known_Input_To_Known_String()
 			{
-				Assert.AreEqual(this.KnownConstantString, this.NonNullConverter(KnownConstantByteArray));
-				Assert.AreEqual(this.KnownConstantString, this.Converter(KnownConstantByteArray, true));
-				Assert.AreEqual(this.KnownConstantString, this.Converter(KnownConstantByteArray, false));
+				Assert.Equal(this.KnownConstantString, this.NonNullConverter(KnownConstantByteArray));
+				Assert.Equal(this.KnownConstantString, this.Converter(KnownConstantByteArray, true));
+				Assert.Equal(this.KnownConstantString, this.Converter(KnownConstantByteArray, false));
 
-				Assert.IsTrue(string.Equals(
+				Assert.True(string.Equals(
 					this.KnownConstantString,
 					this.NonNullConverter(KnownConstantByteArray),
 					StringComparison.Ordinal));
-				Assert.IsTrue(string.Equals(
+				Assert.True(string.Equals(
 					this.KnownConstantString,
 					this.Converter(KnownConstantByteArray, true),
 					StringComparison.Ordinal));
-				Assert.IsTrue(string.Equals(
+				Assert.True(string.Equals(
 					this.KnownConstantString,
 					this.Converter(KnownConstantByteArray, false),
 					StringComparison.Ordinal));

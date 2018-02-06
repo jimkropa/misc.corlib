@@ -1,43 +1,19 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections.Generic
-	ConvertStringsTests.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Collections.Generic;
+using Xunit;
 
 namespace MiscCorLib.Collections.Generic
 {
-	using System;
-	using System.Collections.Generic;
-
-	using NUnit.Framework;
-
 	/// <summary>
 	/// Automated NUnit tests of the
 	/// <see cref="ConvertStrings"/>
 	/// static extension methods.
 	/// </summary>
-	[TestFixture]
 	public sealed class ConvertStringsTests
 	{
 		private static readonly IEnumerable<string> SampleIntegerStringCollection = new[] { "7", "3", "9", "3", "5" };
 		private static readonly IEnumerable<string> PartlyInvalidIntStringCollection = new[] { "8", "whatever", "2", string.Empty, "6", null, "2", "4" };
 
-		[TestFixture]
 		public sealed class ToArray
 		{
 			[Fact]
@@ -45,12 +21,12 @@ namespace MiscCorLib.Collections.Generic
 			{
 				int[] result = SampleIntegerStringCollection.ToArray<int>();
 
-				Assert.AreEqual(5, result.Length);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(3, result[3]);
-				Assert.AreEqual(5, result[4]);
+				Assert.Equal(5, result.Length);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(3, result[3]);
+				Assert.Equal(5, result[4]);
 			}
 
 			[Fact]
@@ -58,11 +34,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				int[] result = SampleIntegerStringCollection.ToArray<int>(true);
 
-				Assert.AreEqual(4, result.Length);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(5, result[3]);
+				Assert.Equal(4, result.Length);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(5, result[3]);
 			}
 
 			[Fact]
@@ -70,11 +46,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				int[] result = PartlyInvalidIntStringCollection.ToArray<int>(true);
 
-				Assert.AreEqual(4, result.Length);
-				Assert.AreEqual(8, result[0]);
-				Assert.AreEqual(2, result[1]);
-				Assert.AreEqual(6, result[2]);
-				Assert.AreEqual(4, result[3]);
+				Assert.Equal(4, result.Length);
+				Assert.Equal(8, result[0]);
+				Assert.Equal(2, result[1]);
+				Assert.Equal(6, result[2]);
+				Assert.Equal(4, result[3]);
 			}
 
 			[Fact]
@@ -88,11 +64,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				int[] result = SampleIntegerStringCollection.ToArray<int>(int.TryParse, true);
 
-				Assert.AreEqual(4, result.Length);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(5, result[3]);
+				Assert.Equal(4, result.Length);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(5, result[3]);
 			}
 
 			[Fact]
@@ -100,12 +76,12 @@ namespace MiscCorLib.Collections.Generic
 			{
 				int[] result = PartlyInvalidIntStringCollection.ToArray<int>(int.TryParse);
 
-				Assert.AreEqual(5, result.Length);
-				Assert.AreEqual(8, result[0]);
-				Assert.AreEqual(2, result[1]);
-				Assert.AreEqual(6, result[2]);
-				Assert.AreEqual(2, result[3]);
-				Assert.AreEqual(4, result[4]);
+				Assert.Equal(5, result.Length);
+				Assert.Equal(8, result[0]);
+				Assert.Equal(2, result[1]);
+				Assert.Equal(6, result[2]);
+				Assert.Equal(2, result[3]);
+				Assert.Equal(4, result[4]);
 			}
 
 			[Fact]
@@ -117,12 +93,11 @@ namespace MiscCorLib.Collections.Generic
 				int[] result1 = nullArray.ToArray<int>();
 				int[] result2 = nullArray.ToArray<int>(int.TryParse);
 
-				Assert.AreEqual(0, result1.Length);
-				Assert.AreEqual(0, result2.Length);
+				Assert.Equal(0, result1.Length);
+				Assert.Equal(0, result2.Length);
 			}
 		}
 
-		[TestFixture]
 		public sealed class ToEnumerable
 		{
 			[Fact]
@@ -130,12 +105,12 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>();
 
-				Assert.AreEqual(5, result.Count);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(3, result[3]);
-				Assert.AreEqual(5, result[4]);
+				Assert.Equal(5, result.Count);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(3, result[3]);
+				Assert.Equal(5, result[4]);
 			}
 
 			[Fact]
@@ -143,11 +118,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>(true);
 
-				Assert.AreEqual(4, result.Count);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(5, result[3]);
+				Assert.Equal(4, result.Count);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(5, result[3]);
 			}
 
 			[Fact]
@@ -155,11 +130,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IReadOnlyList<int> result = PartlyInvalidIntStringCollection.ToEnumerable<int>(true);
 
-				Assert.AreEqual(4, result.Count);
-				Assert.AreEqual(8, result[0]);
-				Assert.AreEqual(2, result[1]);
-				Assert.AreEqual(6, result[2]);
-				Assert.AreEqual(4, result[3]);
+				Assert.Equal(4, result.Count);
+				Assert.Equal(8, result[0]);
+				Assert.Equal(2, result[1]);
+				Assert.Equal(6, result[2]);
+				Assert.Equal(4, result[3]);
 			}
 
 			[Fact]
@@ -173,11 +148,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IReadOnlyList<int> result = SampleIntegerStringCollection.ToEnumerable<int>(int.TryParse, true);
 
-				Assert.AreEqual(4, result.Count);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(5, result[3]);
+				Assert.Equal(4, result.Count);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(5, result[3]);
 			}
 
 			[Fact]
@@ -185,12 +160,12 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IReadOnlyList<int> result = PartlyInvalidIntStringCollection.ToEnumerable<int>(int.TryParse);
 
-				Assert.AreEqual(5, result.Count);
-				Assert.AreEqual(8, result[0]);
-				Assert.AreEqual(2, result[1]);
-				Assert.AreEqual(6, result[2]);
-				Assert.AreEqual(2, result[3]);
-				Assert.AreEqual(4, result[4]);
+				Assert.Equal(5, result.Count);
+				Assert.Equal(8, result[0]);
+				Assert.Equal(2, result[1]);
+				Assert.Equal(6, result[2]);
+				Assert.Equal(2, result[3]);
+				Assert.Equal(4, result[4]);
 			}
 
 			[Fact]
@@ -202,12 +177,11 @@ namespace MiscCorLib.Collections.Generic
 				IReadOnlyList<int> result1 = nullArray.ToEnumerable<int>();
 				IReadOnlyList<int> result2 = nullArray.ToEnumerable<int>(int.TryParse);
 
-				Assert.AreEqual(0, result1.Count);
-				Assert.AreEqual(0, result2.Count);
+				Assert.Equal(0, result1.Count);
+				Assert.Equal(0, result2.Count);
 			}
 		}
 
-		[TestFixture]
 		public sealed class ToList
 		{
 			[Fact]
@@ -215,12 +189,12 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IList<int> result = SampleIntegerStringCollection.ToList<int>();
 
-				Assert.AreEqual(5, result.Count);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(3, result[3]);
-				Assert.AreEqual(5, result[4]);
+				Assert.Equal(5, result.Count);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(3, result[3]);
+				Assert.Equal(5, result[4]);
 			}
 
 			[Fact]
@@ -228,11 +202,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IList<int> result = SampleIntegerStringCollection.ToList<int>(true);
 
-				Assert.AreEqual(4, result.Count);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(5, result[3]);
+				Assert.Equal(4, result.Count);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(5, result[3]);
 			}
 
 			[Fact]
@@ -240,11 +214,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IList<int> result = PartlyInvalidIntStringCollection.ToList<int>(true);
 
-				Assert.AreEqual(4, result.Count);
-				Assert.AreEqual(8, result[0]);
-				Assert.AreEqual(2, result[1]);
-				Assert.AreEqual(6, result[2]);
-				Assert.AreEqual(4, result[3]);
+				Assert.Equal(4, result.Count);
+				Assert.Equal(8, result[0]);
+				Assert.Equal(2, result[1]);
+				Assert.Equal(6, result[2]);
+				Assert.Equal(4, result[3]);
 			}
 
 			[Fact]
@@ -258,11 +232,11 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IList<int> result = SampleIntegerStringCollection.ToList<int>(int.TryParse, true);
 
-				Assert.AreEqual(4, result.Count);
-				Assert.AreEqual(7, result[0]);
-				Assert.AreEqual(3, result[1]);
-				Assert.AreEqual(9, result[2]);
-				Assert.AreEqual(5, result[3]);
+				Assert.Equal(4, result.Count);
+				Assert.Equal(7, result[0]);
+				Assert.Equal(3, result[1]);
+				Assert.Equal(9, result[2]);
+				Assert.Equal(5, result[3]);
 			}
 
 			[Fact]
@@ -270,12 +244,12 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IList<int> result = PartlyInvalidIntStringCollection.ToList<int>(int.TryParse);
 
-				Assert.AreEqual(5, result.Count);
-				Assert.AreEqual(8, result[0]);
-				Assert.AreEqual(2, result[1]);
-				Assert.AreEqual(6, result[2]);
-				Assert.AreEqual(2, result[3]);
-				Assert.AreEqual(4, result[4]);
+				Assert.Equal(5, result.Count);
+				Assert.Equal(8, result[0]);
+				Assert.Equal(2, result[1]);
+				Assert.Equal(6, result[2]);
+				Assert.Equal(2, result[3]);
+				Assert.Equal(4, result[4]);
 			}
 
 			[Fact]
@@ -287,8 +261,8 @@ namespace MiscCorLib.Collections.Generic
 				IList<int> result1 = nullArray.ToList<int>();
 				IList<int> result2 = nullArray.ToList<int>(int.TryParse);
 
-				Assert.AreEqual(0, result1.Count);
-				Assert.AreEqual(0, result2.Count);
+				Assert.Equal(0, result1.Count);
+				Assert.Equal(0, result2.Count);
 			}
 		}
 	}

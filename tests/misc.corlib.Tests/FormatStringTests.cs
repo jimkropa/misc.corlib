@@ -1,171 +1,145 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib
-	FormatStringTests.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using Xunit;
 
 namespace MiscCorLib
 {
-	using NUnit.Framework;
-
 	/// <summary>
 	/// Automated unit tests of the <see cref="FormatString"/> extention methods.
 	/// </summary>
-	[TestFixture]
 	public sealed class FormatStringTests
 	{
-		[TestFixture]
 		public sealed class ToEmptyIfNull
 		{
 			[Fact]
 			public void Returns_Empty_From_Null()
 			{
-				Assert.IsEmpty(FormatString.ToEmptyIfNull(null));
+				Assert.Empty(FormatString.ToEmptyIfNull(null));
 			}
 
 			[Fact]
 			public void Returns_Empty_From_Empty()
 			{
-				Assert.IsEmpty(string.Empty.ToEmptyIfNull());
+				Assert.Empty(string.Empty.ToEmptyIfNull());
 			}
 
 			[Fact]
 			public void Returns_Empty_From_WhiteSpace()
 			{
-				Assert.IsEmpty(@" 
+				Assert.Empty(@" 
   ".ToEmptyIfNull());
 			}
 
 			[Fact]
 			public void Returns_Trimmed_From_String()
 			{
-				Assert.AreEqual("hello, world", @"  hello, world 
+				Assert.Equal("hello, world", @"  hello, world 
   ".ToEmptyIfNull());
 			}
 		}
 
-		[TestFixture]
 		public sealed class ToNullIfEmpty
 		{
 			[Fact]
 			public void Returns_Null_From_Null()
 			{
-				Assert.IsNull(FormatString.ToNullIfEmpty(null));
+				Assert.Null(FormatString.ToNullIfEmpty(null));
 			}
 
 			[Fact]
 			public void Returns_Null_From_Empty()
 			{
-				Assert.IsNull(string.Empty.ToNullIfEmpty());
+				Assert.Null(string.Empty.ToNullIfEmpty());
 			}
 
 			[Fact]
 			public void Returns_Null_From_WhiteSpace()
 			{
-				Assert.IsNull(@" 
+				Assert.Null(@" 
   ".ToNullIfEmpty());
 			}
 
 			[Fact]
 			public void Returns_Trimmed_From_String()
 			{
-				Assert.AreEqual("hello, world", @"  hello, world 
+				Assert.Equal("hello, world", @"  hello, world 
   ".ToNullIfEmpty());
 			}
 		}
 
-		[TestFixture]
 		public sealed class ToCompactWhiteSpace
 		{
 			[Fact]
 			public void Returns_EmptyOrNull_From_Null()
 			{
-				Assert.IsEmpty(FormatString.ToCompactWhiteSpace(null));
-				Assert.IsNull(FormatString.ToCompactWhiteSpace(null, true));
+				Assert.Empty(FormatString.ToCompactWhiteSpace(null));
+				Assert.Null(FormatString.ToCompactWhiteSpace(null, true));
 			}
 
 			[Fact]
 			public void Returns_EmptyOrNull_From_Empty()
 			{
-				Assert.IsEmpty(string.Empty.ToCompactWhiteSpace());
-				Assert.IsNull(string.Empty.ToCompactWhiteSpace(true));
+				Assert.Empty(string.Empty.ToCompactWhiteSpace());
+				Assert.Null(string.Empty.ToCompactWhiteSpace(true));
 			}
 
 			[Fact]
 			public void Returns_EmptyOrNull_From_WhiteSpace()
 			{
-				Assert.IsEmpty(@" 
+				Assert.Empty(@" 
   ".ToCompactWhiteSpace());
-				Assert.IsNull(@" 
+				Assert.Null(@" 
   ".ToCompactWhiteSpace(true));
 			}
 
 			[Fact]
 			public void Returns_Trimmed_And_Compacted_From_String()
 			{
-				Assert.AreEqual("hello, world", @"    
+				Assert.Equal("hello, world", @"    
  hello,     
  world   
   ".ToCompactWhiteSpace());
 
-				Assert.AreEqual("hello, world",
+				Assert.Equal("hello, world",
 					@"  hello,                                                                              world    ".ToCompactWhiteSpace());
 			}
 		}
 
-		[TestFixture]
 		public sealed class ToHtmlParagraph
 		{
 			[Fact]
 			public void Returns_EmptyOrNull_From_Null()
 			{
-				Assert.IsEmpty(FormatString.ToHtmlParagraph(null));
-				Assert.IsEmpty(FormatString.ToHtmlParagraph(null, false));
-				Assert.IsNull(FormatString.ToHtmlParagraph(null, true, true));
-				Assert.IsNull(FormatString.ToHtmlParagraph(null, false, true));
+				Assert.Empty(FormatString.ToHtmlParagraph(null));
+				Assert.Empty(FormatString.ToHtmlParagraph(null, false));
+				Assert.Null(FormatString.ToHtmlParagraph(null, true, true));
+				Assert.Null(FormatString.ToHtmlParagraph(null, false, true));
 			}
 
 			[Fact]
 			public void Returns_EmptyOrNull_From_Empty()
 			{
-				Assert.IsEmpty(string.Empty.ToHtmlParagraph());
-				Assert.IsEmpty(string.Empty.ToHtmlParagraph(false));
-				Assert.IsNull(string.Empty.ToHtmlParagraph(true, true));
-				Assert.IsNull(string.Empty.ToHtmlParagraph(false, true));
+				Assert.Empty(string.Empty.ToHtmlParagraph());
+				Assert.Empty(string.Empty.ToHtmlParagraph(false));
+				Assert.Null(string.Empty.ToHtmlParagraph(true, true));
+				Assert.Null(string.Empty.ToHtmlParagraph(false, true));
 			}
 
 			[Fact]
 			public void Returns_EmptyOrNull_From_WhiteSpace()
 			{
-				Assert.IsEmpty(@" 
+				Assert.Empty(@" 
   ".ToHtmlParagraph());
-				Assert.IsEmpty(@" 
+				Assert.Empty(@" 
   ".ToHtmlParagraph(false));
-				Assert.IsNull(@" 
+				Assert.Null(@" 
   ".ToHtmlParagraph(true, true));
-				Assert.IsNull(@" 
+				Assert.Null(@" 
   ".ToHtmlParagraph(false, true));
 			}
 
 			[Fact]
 			public void Returns_Html_From_MultiLine_String()
 			{
-				Assert.AreEqual(@"<p>
+				Assert.Equal(@"<p>
 hello,
 <br />
 world

@@ -1,79 +1,34 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib
-	ConvertEncodedStringTests.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using Xunit;
 
 namespace MiscCorLib
 {
-	using System;
-
-	using NUnit.Framework;
-
 	/// <summary>
 	/// Automated unit tests of the <see cref="ConvertEncodedString"/> extention methods.
 	/// </summary>
-	[TestFixture]
 	public sealed class ConvertEncodedStringTests
 	{
 		internal const string KnownConstantBase64String = @"AAEDBw8fP3//";
 		internal const string KnownConstantHexadecimalString = @"000103070f1f3f7fff";
 
-		[TestFixture]
 		public sealed class FromBase64String : ConvertEncodedStringTestsBase
 		{
-			protected override ConvertEncodedString.ConvertNonNullString NonNullConverter
-			{
-				get { return ConvertEncodedString.FromBase64; }
-			}
+			protected override ConvertEncodedString.ConvertNonNullString NonNullConverter => ConvertEncodedString.FromBase64;
 
-			protected override ConvertEncodedString.ConvertString Converter
-			{
-				get { return ConvertEncodedString.FromBase64; }
-			}
+			protected override ConvertEncodedString.ConvertString Converter => ConvertEncodedString.FromBase64;
 
-			protected override string KnownConstantString
-			{
-				get { return KnownConstantBase64String; }
-			}
+			protected override string KnownConstantString => KnownConstantBase64String;
 		}
 
-		[TestFixture]
 		public sealed class ToHexadecimalString : ConvertEncodedStringTestsBase
 		{
-			protected override ConvertEncodedString.ConvertNonNullString NonNullConverter
-			{
-				get { return ConvertEncodedString.FromHexadecimal; }
-			}
+			protected override ConvertEncodedString.ConvertNonNullString NonNullConverter => ConvertEncodedString.FromHexadecimal;
 
-			protected override ConvertEncodedString.ConvertString Converter
-			{
-				get { return ConvertEncodedString.FromHexadecimal; }
-			}
+			protected override ConvertEncodedString.ConvertString Converter => ConvertEncodedString.FromHexadecimal;
 
-			protected override string KnownConstantString
-			{
-				get { return KnownConstantHexadecimalString; }
-			}
+			protected override string KnownConstantString => KnownConstantHexadecimalString;
 		}
 
-
-		[TestFixture]
 		public sealed class ToByteArray
 		{
 			[Fact]
@@ -94,12 +49,12 @@ namespace MiscCorLib
 				Assert.Throws<ArgumentNullException>(
 					() => ConvertEncodedString.ToByteArray(null, false));
 
-				Assert.IsNull(ConvertEncodedString.ToByteArray(null, true));
+				Assert.Null(ConvertEncodedString.ToByteArray(null, true));
 
 				Assert.Throws<ArgumentNullException>(
 					() => ConvertEncodedString.ToByteArray(null, false, ByteArrayStringEncoding.Hexadecimal));
 
-				Assert.IsNull(ConvertEncodedString.ToByteArray(null, true, ByteArrayStringEncoding.Hexadecimal));
+				Assert.Null(ConvertEncodedString.ToByteArray(null, true, ByteArrayStringEncoding.Hexadecimal));
 			}
 
 			[Fact]
@@ -114,7 +69,7 @@ namespace MiscCorLib
 				Assert.Throws<ArgumentNullException>(
 					() => ConvertEncodedString.ToByteArray(null, false, invalidEncoding));
 
-				Assert.IsNull(ConvertEncodedString.ToByteArray(null, true, invalidEncoding));
+				Assert.Null(ConvertEncodedString.ToByteArray(null, true, invalidEncoding));
 			}
 
 			[Fact]
@@ -136,27 +91,27 @@ namespace MiscCorLib
 			[Fact]
 			public void Uses_Correct_Encoding()
 			{
-				Assert.AreEqual(
+				Assert.Equal(
 					ConvertByteArrayTests.KnownConstantByteArray,
 					KnownConstantBase64String.ToByteArray());
 
-				Assert.AreEqual(
+				Assert.Equal(
 					ConvertByteArrayTests.KnownConstantByteArray,
 					KnownConstantBase64String.ToByteArray(true));
 
-				Assert.AreEqual(
+				Assert.Equal(
 					ConvertByteArrayTests.KnownConstantByteArray,
 					KnownConstantBase64String.ToByteArray(false));
 
-				Assert.AreEqual(
+				Assert.Equal(
 					ConvertByteArrayTests.KnownConstantByteArray,
 					KnownConstantHexadecimalString.ToByteArray(ByteArrayStringEncoding.Hexadecimal));
 
-				Assert.AreEqual(
+				Assert.Equal(
 					ConvertByteArrayTests.KnownConstantByteArray,
 					KnownConstantHexadecimalString.ToByteArray(true, ByteArrayStringEncoding.Hexadecimal));
 
-				Assert.AreEqual(
+				Assert.Equal(
 					ConvertByteArrayTests.KnownConstantByteArray,
 					KnownConstantHexadecimalString.ToByteArray(false, ByteArrayStringEncoding.Hexadecimal));
 			}
@@ -187,15 +142,15 @@ namespace MiscCorLib
 				Assert.Throws<ArgumentNullException>(
 					() => this.Converter(null, false));
 
-				Assert.IsNull(this.Converter(null, true));
+				Assert.Null(this.Converter(null, true));
 			}
 
 			[Fact]
 			public void Converts_Known_String_Input_To_Known_Bytes()
 			{
-				Assert.AreEqual(ConvertByteArrayTests.KnownConstantByteArray, this.NonNullConverter(this.KnownConstantString));
-				Assert.AreEqual(ConvertByteArrayTests.KnownConstantByteArray, this.Converter(this.KnownConstantString, true));
-				Assert.AreEqual(ConvertByteArrayTests.KnownConstantByteArray, this.Converter(this.KnownConstantString, false));
+				Assert.Equal(ConvertByteArrayTests.KnownConstantByteArray, this.NonNullConverter(this.KnownConstantString));
+				Assert.Equal(ConvertByteArrayTests.KnownConstantByteArray, this.Converter(this.KnownConstantString, true));
+				Assert.Equal(ConvertByteArrayTests.KnownConstantByteArray, this.Converter(this.KnownConstantString, false));
 			}
 		}
 	}

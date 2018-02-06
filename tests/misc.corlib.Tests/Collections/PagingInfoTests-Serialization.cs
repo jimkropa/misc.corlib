@@ -1,34 +1,11 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections
-	PagingInfoTests-Serialization.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using Newtonsoft.Json;
+using Xunit;
 
 namespace MiscCorLib.Collections
 {
-	using Newtonsoft.Json;
-
-	using NUnit.Framework;
-
 	// This is a partial class. Refer to PagingInfoTests.cs for the main part.
 	public sealed partial class PagingInfoTests
 	{
-		[TestFixture]
 		public sealed class JsonNetSerialization
 		{
 			private const Formatting DefaultFormatting = Formatting.Indented;
@@ -66,7 +43,7 @@ namespace MiscCorLib.Collections
 				string serializedPagingInfo = JsonConvert.SerializeObject(
 					pagingInfo, DefaultFormatting, this.settings);
 
-				Assert.AreEqual(Page7_Size20_Total1138, serializedPagingInfo);
+				Assert.Equal(Page7_Size20_Total1138, serializedPagingInfo);
 			}
 
 			[Fact]
@@ -76,7 +53,7 @@ namespace MiscCorLib.Collections
 				string serializedPagingInfo = JsonConvert.SerializeObject(
 					pagingInfo, DefaultFormatting, this.settings);
 
-				Assert.AreEqual(Page2_Size10_Total27_WithAllPages, serializedPagingInfo);
+				Assert.Equal(Page2_Size10_Total27_WithAllPages, serializedPagingInfo);
 			}
 
 			[Fact]
@@ -85,7 +62,7 @@ namespace MiscCorLib.Collections
 				PagingInfo pagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 1701);
 				string serializedPagingInfo = JsonConvert.SerializeObject(pagingInfo, DefaultFormatting, this.settings);
 
-				Assert.AreEqual(Unbounded_Total1701, serializedPagingInfo);
+				Assert.Equal(Unbounded_Total1701, serializedPagingInfo);
 			}
 
 			[Fact]
@@ -94,7 +71,7 @@ namespace MiscCorLib.Collections
 				PagingInfo pagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 1138, true);
 				string serializedPagingInfo = JsonConvert.SerializeObject(pagingInfo, DefaultFormatting, this.settings);
 
-				Assert.AreEqual(Unbounded_Total1138_WithAllPages, serializedPagingInfo);
+				Assert.Equal(Unbounded_Total1138_WithAllPages, serializedPagingInfo);
 			}
 
 			[Fact]
@@ -102,7 +79,7 @@ namespace MiscCorLib.Collections
 			{
 				string serializedPagingInfo = JsonConvert.SerializeObject(PagingInfo.Empty, settings);
 
-				Assert.AreEqual(EmptySerialized, serializedPagingInfo);
+				Assert.Equal(EmptySerialized, serializedPagingInfo);
 			}
 
 			[Fact]
@@ -113,10 +90,10 @@ namespace MiscCorLib.Collections
 					= JsonConvert.DeserializeObject<PagingInfo>(
 						DeserializeMinimal_Page7_Size20_Total1138, this.settings);
 
-				Assert.AreEqual(expectedPagingInfo.CurrentPage.Number, deserializedPagingInfo.CurrentPage.Number);
-				Assert.AreEqual(expectedPagingInfo.CurrentPage.Size, deserializedPagingInfo.CurrentPage.Size);
-				Assert.AreEqual(expectedPagingInfo.TotalItems, deserializedPagingInfo.TotalItems);
-				Assert.AreEqual(expectedPagingInfo.TotalPages, deserializedPagingInfo.TotalPages);
+				Assert.Equal(expectedPagingInfo.CurrentPage.Number, deserializedPagingInfo.CurrentPage.Number);
+				Assert.Equal(expectedPagingInfo.CurrentPage.Size, deserializedPagingInfo.CurrentPage.Size);
+				Assert.Equal(expectedPagingInfo.TotalItems, deserializedPagingInfo.TotalItems);
+				Assert.Equal(expectedPagingInfo.TotalPages, deserializedPagingInfo.TotalPages);
 
 				AssertEquality(expectedPagingInfo, deserializedPagingInfo);
 			}
@@ -129,10 +106,10 @@ namespace MiscCorLib.Collections
 					= JsonConvert.DeserializeObject<PagingInfo>(
 						DeserializeExcessive_Page8_Size17_Total666, this.settings);
 
-				Assert.AreEqual(expectedPagingInfo.CurrentPage.Number, deserializedPagingInfo.CurrentPage.Number);
-				Assert.AreEqual(expectedPagingInfo.CurrentPage.Size, deserializedPagingInfo.CurrentPage.Size);
-				Assert.AreEqual(expectedPagingInfo.TotalItems, deserializedPagingInfo.TotalItems);
-				Assert.AreEqual(expectedPagingInfo.TotalPages, deserializedPagingInfo.TotalPages);
+				Assert.Equal(expectedPagingInfo.CurrentPage.Number, deserializedPagingInfo.CurrentPage.Number);
+				Assert.Equal(expectedPagingInfo.CurrentPage.Size, deserializedPagingInfo.CurrentPage.Size);
+				Assert.Equal(expectedPagingInfo.TotalItems, deserializedPagingInfo.TotalItems);
+				Assert.Equal(expectedPagingInfo.TotalPages, deserializedPagingInfo.TotalPages);
 
 				AssertEquality(expectedPagingInfo, deserializedPagingInfo);
 			}
@@ -144,9 +121,9 @@ namespace MiscCorLib.Collections
 					= JsonConvert.DeserializeObject<PagingInfo>(
 						 @"{""CurrentPage"":{""Number"":-7,""Size"":20},""TotalItems"":1138}");
 
-				Assert.IsFalse(deserializedPagingInfo.HasValue);
-				Assert.AreEqual(-7, deserializedPagingInfo.CurrentPage.Number);
-				Assert.IsFalse(deserializedPagingInfo.CurrentPage.HasValue);
+				Assert.False(deserializedPagingInfo.HasValue);
+				Assert.Equal(-7, deserializedPagingInfo.CurrentPage.Number);
+				Assert.False(deserializedPagingInfo.CurrentPage.HasValue);
 			}
 
 			[Fact]
@@ -156,9 +133,9 @@ namespace MiscCorLib.Collections
 					= JsonConvert.DeserializeObject<PagingInfo>(
 						 @"{""CurrentPage"":{""Number"":7,""Size"":20},""TotalItems"":-1138}");
 
-				Assert.IsFalse(deserializedPagingInfo.HasValue);
-				Assert.AreEqual(-1138, deserializedPagingInfo.TotalItems);
-				Assert.IsTrue(deserializedPagingInfo.CurrentPage.HasValue);
+				Assert.False(deserializedPagingInfo.HasValue);
+				Assert.Equal(-1138, deserializedPagingInfo.TotalItems);
+				Assert.True(deserializedPagingInfo.CurrentPage.HasValue);
 			}
 
 			[Fact]
