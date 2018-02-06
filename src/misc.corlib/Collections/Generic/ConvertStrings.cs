@@ -162,12 +162,12 @@ namespace MiscCorLib.Collections.Generic
 					return false;
 				}
 
-			    if (e.InnerException is FormatException formatException)
+				if (e.InnerException is FormatException formatException)
 				{
 					throw formatException;
 				}
 
-			    if (e.InnerException is NotSupportedException notSupportedException)
+				if (e.InnerException is NotSupportedException notSupportedException)
 				{
 					throw notSupportedException;
 				}
@@ -529,7 +529,7 @@ namespace MiscCorLib.Collections.Generic
 			// Do not try to parse strings that are null or white space.
 			foreach (string s in strings.Where(value => !string.IsNullOrWhiteSpace(value)))
 			{
-			    if (!TryConvertFromString(converter, throwTypeConversionExceptions, s, out T result))
+				if (!TryConvertFromString(converter, throwTypeConversionExceptions, s, out T result))
 				{
 					continue;
 				}
@@ -595,7 +595,7 @@ namespace MiscCorLib.Collections.Generic
 			// Do not try to parse strings that are null or white space.
 			foreach (string s in strings.Where(value => !string.IsNullOrWhiteSpace(value)))
 			{
-			    if (!tryParseDelegate(s, out T result))
+				if (!tryParseDelegate(s, out T result))
 				{
 					continue;
 				}
