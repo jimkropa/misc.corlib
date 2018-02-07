@@ -27,16 +27,16 @@ namespace MiscCorLib.Collections
 
 	/// <summary>
 	/// An internal value backing the public properties
-	/// of the <see cref="PagingInfo"/> class, for
+	/// of the <see cref="PagingInfo" /> class, for
 	/// optimizing deserialization. Calculates and
-	/// holds values all based on initial <see cref="PagingInfo.CurrentPage"/>
-	/// and <see cref="PagingInfo.TotalItems"/> values.
+	/// holds values all based on initial <see cref="PagingInfo.CurrentPage" />
+	/// and <see cref="PagingInfo.TotalItems" /> values.
 	/// </summary>
 	/// <remarks>
 	/// <para>
 	/// To understand how this works, refer to the
-	/// <see cref="PagingInfo.Calculator"/> property
-	/// and the <see cref="PagingInfo(PagingInfoCalculator)"/>
+	/// <see cref="PagingInfo.Calculator" /> property
+	/// and the <see cref="PagingInfo(PagingInfoCalculator)" />
 	/// constructor.
 	/// </para>
 	/// </remarks>
@@ -61,42 +61,42 @@ namespace MiscCorLib.Collections
 		public readonly IReadOnlyList<PageNumberAndItemNumbers> AllPages;
 
 		/// <summary>
-		/// Used by the <see cref="PagingInfo.Calculator"/> property
+		/// Used by the <see cref="PagingInfo.Calculator" /> property
 		/// </summary>
 		internal static PagingInfoCalculator Empty = new PagingInfoCalculator();
 
 		/// <summary>
 		/// Relays a value sent to the constructor back to the
-		/// <see cref="PagingInfo"/> which initialized this value.
+		/// <see cref="PagingInfo" /> which initialized this value.
 		/// </summary>
 		internal readonly bool IncludeAllPagesAndItemNumbers;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfoCalculator"/> struct.
-		/// Invoked by the private <see cref="PagingInfo.Calculator"/>
-		/// property of an owner <see cref="PagingInfo"/> value,
+		/// Initializes a new instance of the <see cref="PagingInfoCalculator" /> struct.
+		/// Invoked by the private <see cref="PagingInfo.Calculator" />
+		/// property of an owner <see cref="PagingInfo" /> value,
 		/// calculates metadata for paging UI, optionally including
 		/// a list of all pages and item numbers. For effective lazy
 		/// initialization following deserialization from bare essentials.
 		/// </summary>
 		/// <param name="currentPage">
-		/// The page <see cref="PageNumberAndSize.Number"/>
-		/// and <see cref="PageNumberAndSize.Size"/>.
-		/// If <see cref="PageNumberAndSize.Unbounded"/> is sent,
+		/// The page <see cref="PageNumberAndSize.Number" />
+		/// and <see cref="PageNumberAndSize.Size" />.
+		/// If <see cref="PageNumberAndSize.Unbounded" /> is sent,
 		/// all of the items are returned on a single page as large
-		/// as the number of <paramref name="totalItems"/>.
+		/// as the number of <paramref name="totalItems" />.
 		/// </param>
 		/// <param name="totalItems">
 		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems"/> field.
+		/// initial value for the immutable <see cref="TotalItems" /> field.
 		/// </param>
 		/// <param name="includeAllPagesAndItemNumbers">
-		/// Whether to fill the set of <see cref="AllPages"/>
+		/// Whether to fill the set of <see cref="AllPages" />
 		/// including the item numbers on each page,
 		/// which may be useful for some paging UI.
-		/// Relayed back to the <see cref="PagingInfo"/> via the
-		/// <see cref="IncludeAllPagesAndItemNumbers"/> field,
-		/// adds the private <see cref="PagingInfo.AllPages"/>
+		/// Relayed back to the <see cref="PagingInfo" /> via the
+		/// <see cref="IncludeAllPagesAndItemNumbers" /> field,
+		/// adds the private <see cref="PagingInfo.AllPages" />
 		/// property to the serialization output for JSON.
 		/// </param>
 		internal PagingInfoCalculator(
@@ -222,7 +222,7 @@ namespace MiscCorLib.Collections
 		/// of items in the collection.
 		/// </summary>
 		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size"/>
+		/// The <see cref="PageNumberAndSize.Size" />
 		/// of each page in a "paged" collection.
 		/// Must be greater than zero so that there
 		/// is no risk of division by zero.
@@ -234,8 +234,8 @@ namespace MiscCorLib.Collections
 		/// </param>
 		/// <returns>
 		/// The total number of pages, approximately
-		/// <paramref name="totalItems"/> divided by
-		/// <paramref name="pageSize"/>, rounding up.
+		/// <paramref name="totalItems" /> divided by
+		/// <paramref name="pageSize" />, rounding up.
 		/// </returns>
 		internal static int CalculateTotalPages(byte pageSize, int totalItems)
 		{
@@ -265,11 +265,11 @@ namespace MiscCorLib.Collections
 		/// <summary>
 		/// Calculates the full set of page numbers and item numbers
 		/// from parameters relayed by the public static
-		/// <see cref="PageNumberAndItemNumbers.Calculate"/>
-		/// method of <see cref="PageNumberAndItemNumbers"/>.
+		/// <see cref="PageNumberAndItemNumbers.Calculate" />
+		/// method of <see cref="PageNumberAndItemNumbers" />.
 		/// </summary>
 		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size"/>
+		/// The <see cref="PageNumberAndSize.Size" />
 		/// of each page in a "paged" collection.
 		/// </param>
 		/// <param name="totalItems">
@@ -301,14 +301,14 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Calculates the full set of page numbers and item numbers
-		/// for the <see cref="PagingInfo.AllPages"/> property of a
-		/// given <see cref="PagingInfo"/> value.
+		/// for the <see cref="PagingInfo.AllPages" /> property of a
+		/// given <see cref="PagingInfo" /> value.
 		/// </summary>
 		/// <param name="pagingInfo">
-		/// A <see cref="PagingInfo"/> value from which to gather
-		/// page <see cref="PageNumberAndSize.Size"/>,
-		/// <see cref="PagingInfo.TotalItems"/>, and
-		/// <see cref="PagingInfo.TotalPages"/> values.
+		/// A <see cref="PagingInfo" /> value from which to gather
+		/// page <see cref="PageNumberAndSize.Size" />,
+		/// <see cref="PagingInfo.TotalItems" />, and
+		/// <see cref="PagingInfo.TotalPages" /> values.
 		/// </param>
 		/// <returns>
 		/// The full set of page numbers and item numbers.
@@ -324,24 +324,24 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Private overload shared by the two internal overloads,
-		/// assumes that <paramref name="totalPages"/> value
+		/// assumes that <paramref name="totalPages" /> value
 		/// is correct, having already been calculated by the
-		/// <see cref="CalculateTotalPages"/> method.
+		/// <see cref="CalculateTotalPages" /> method.
 		/// </summary>
 		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size"/>
+		/// The <see cref="PageNumberAndSize.Size" />
 		/// of each page in a "paged" collection.
 		/// </param>
 		/// <param name="totalItems">
 		/// The total number of items in a "paged" collection,
-		/// corresponding to the <see cref="PagingInfo.TotalItems"/>
-		/// of a <see cref="PagingInfo"/> value.
+		/// corresponding to the <see cref="PagingInfo.TotalItems" />
+		/// of a <see cref="PagingInfo" /> value.
 		/// </param>
 		/// <param name="totalPages">
 		/// The total number of items in a "paged" collection,
-		/// corresponding to the <see cref="PagingInfo.TotalPages"/>
-		/// of a <see cref="PagingInfo"/> value, or otherwise calculated
-		/// by the <see cref="CalculateTotalPages"/> method.
+		/// corresponding to the <see cref="PagingInfo.TotalPages" />
+		/// of a <see cref="PagingInfo" /> value, or otherwise calculated
+		/// by the <see cref="CalculateTotalPages" /> method.
 		/// </param>
 		/// <returns>
 		/// The full set of page numbers and item numbers.

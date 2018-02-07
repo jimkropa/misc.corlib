@@ -30,41 +30,41 @@ namespace MiscCorLib.Security.Cryptography
 	/// Encapsulation of an encryption operation
 	/// with a simple contract: An encryptor encrypts
 	/// plaintext bytes using any implementation of
-	/// <see cref="SymmetricAlgorithm"/>.
+	/// <see cref="SymmetricAlgorithm" />.
 	/// </summary>
 	/// <remarks>
 	/// <para>
 	/// This type is derived from the generic
-	/// <see cref="Encryptor{T}"/>. Refer to
+	/// <see cref="Encryptor{T}" />. Refer to
 	/// remarks there for more details.
 	/// </para>
 	/// </remarks>
 	public sealed class Encryptor : Encryptor<SymmetricAlgorithm>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Encryptor"/> class
+		/// Initializes a new instance of the <see cref="Encryptor" /> class
 		/// which generates a random initialization vector using the
-		/// <see cref="SymmetricAlgorithm.GenerateIV"/> method
-		/// of its embedded <see cref="SymmetricAlgorithm"/>.
-		/// The new <paramref name="initializationVector"/> must be
-		/// preserved, in addition to the <paramref name="encryptionKey"/>,
+		/// <see cref="SymmetricAlgorithm.GenerateIV" /> method
+		/// of its embedded <see cref="SymmetricAlgorithm" />.
+		/// The new <paramref name="initializationVector" /> must be
+		/// preserved, in addition to the <paramref name="encryptionKey" />,
 		/// to decrypt ciphertext created by this encryptor.
 		/// </summary>
 		/// <param name="algorithm">
-		/// An instance of <see cref="SymmetricAlgorithm"/>
+		/// An instance of <see cref="SymmetricAlgorithm" />
 		/// to use for an encryption operation.
 		/// </param>
 		/// <param name="encryptionKey">
-		/// A value for the <see cref="SymmetricAlgorithm.Key"/>
-		/// of the embedded <see cref="SymmetricAlgorithm"/>.
+		/// A value for the <see cref="SymmetricAlgorithm.Key" />
+		/// of the embedded <see cref="SymmetricAlgorithm" />.
 		/// </param>
 		/// <param name="initializationVector">
 		/// Returns a new pseudo-random value which has been
-		/// generated for the <see cref="SymmetricAlgorithm.IV"/>
-		/// of the embedded <see cref="SymmetricAlgorithm"/>.
+		/// generated for the <see cref="SymmetricAlgorithm.IV" />
+		/// of the embedded <see cref="SymmetricAlgorithm" />.
 		/// This value must be preserved, in addition to the
-		/// <paramref name="encryptionKey"/>, to decrypt
-		/// ciphertext created by this <see cref="Encryptor"/>.
+		/// <paramref name="encryptionKey" />, to decrypt
+		/// ciphertext created by this <see cref="Encryptor" />.
 		/// </param>
 		/// <param name="options">
 		/// 

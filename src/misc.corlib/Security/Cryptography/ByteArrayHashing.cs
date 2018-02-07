@@ -47,12 +47,12 @@ namespace MiscCorLib.Security.Cryptography
 
 		/// <summary>
 		/// When a string is passed to the overload of
-		/// <see cref="ComputeHash{T}(byte[],string)"/>
-		/// to be used as the <see cref="KeyedHashAlgorithm.Key"/>
-		/// for a <see cref="KeyedHashAlgorithm"/>, unless
-		/// another <see cref="Encoding"/> is provided,
+		/// <see cref="ComputeHash{T}(byte[],string)" />
+		/// to be used as the <see cref="KeyedHashAlgorithm.Key" />
+		/// for a <see cref="KeyedHashAlgorithm" />, unless
+		/// another <see cref="Encoding" /> is provided,
 		/// the string key is presumed to be encoded
-		/// as <see cref="Encoding.ASCII"/>.
+		/// as <see cref="Encoding.ASCII" />.
 		/// </summary>
 		public static readonly Encoding DefaultHashKeyEncoding = Encoding.ASCII;
 
@@ -116,9 +116,9 @@ namespace MiscCorLib.Security.Cryptography
 		/// <param name="bytes"></param>
 		/// <param name="key">
 		/// An ASCII-encoded string to be used as the
-		/// <see cref="KeyedHashAlgorithm.Key"/>
-		/// for the <see cref="KeyedHashAlgorithm"/>
-		/// specified as <typeparamref name="T"/>.
+		/// <see cref="KeyedHashAlgorithm.Key" />
+		/// for the <see cref="KeyedHashAlgorithm" />
+		/// specified as <typeparamref name="T" />.
 		/// </param>
 		/// <returns></returns>
 		public static byte[] ComputeHash<T>(this byte[] bytes, string key)

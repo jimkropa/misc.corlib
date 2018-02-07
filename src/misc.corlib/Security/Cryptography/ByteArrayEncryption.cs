@@ -31,11 +31,11 @@ namespace MiscCorLib.Security.Cryptography
 		/// <summary>
 		/// When a string is passed to the overload of
 		/// Encrypt
-		/// to be used as the <see cref="SymmetricAlgorithm.Key"/>
-		/// for a <see cref="SymmetricAlgorithm"/>, unless
-		/// another <see cref="Encoding"/> is provided,
+		/// to be used as the <see cref="SymmetricAlgorithm.Key" />
+		/// for a <see cref="SymmetricAlgorithm" />, unless
+		/// another <see cref="Encoding" /> is provided,
 		/// the string key is presumed to be encoded
-		/// as <see cref="Encoding.ASCII"/>.
+		/// as <see cref="Encoding.ASCII" />.
 		/// </summary>
 		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
 
@@ -43,11 +43,11 @@ namespace MiscCorLib.Security.Cryptography
 		/// <summary>
 		/// When a string is passed to the overload of
 		/// ComputeHash
-		/// to be used as the <see cref="SymmetricAlgorithm.Key"/>
-		/// for a <see cref="SymmetricAlgorithm"/>, unless
-		/// another <see cref="Encoding"/> is provided,
+		/// to be used as the <see cref="SymmetricAlgorithm.Key" />
+		/// for a <see cref="SymmetricAlgorithm" />, unless
+		/// another <see cref="Encoding" /> is provided,
 		/// the string key is presumed to be encoded
-		/// as <see cref="Encoding.ASCII"/>.
+		/// as <see cref="Encoding.ASCII" />.
 		/// </summary>
 		public static readonly Encoding DefaultIVEncoding = Encoding.ASCII;
 

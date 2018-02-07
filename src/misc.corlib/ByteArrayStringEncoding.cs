@@ -29,14 +29,14 @@ namespace MiscCorLib
 	{
 		/// <summary>
 		/// Indication to use
-		/// <see cref="ConvertByteArray.ToBase64String(byte[])"/>
+		/// <see cref="ConvertByteArray.ToBase64String(byte[])" />
 		/// when encoding a byte array to string.
 		/// </summary>
 		Base64 = byte.MinValue,
 
 		/// <summary>
 		/// Indication to use
-		/// <see cref="ConvertByteArray.ToHexadecimalString(byte[])"/>
+		/// <see cref="ConvertByteArray.ToHexadecimalString(byte[])" />
 		/// when encoding a byte array to string.
 		/// </summary>
 		Hexadecimal = byte.MaxValue

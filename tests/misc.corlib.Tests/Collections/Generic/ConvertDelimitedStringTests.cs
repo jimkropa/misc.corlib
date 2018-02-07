@@ -6,7 +6,7 @@ namespace MiscCorLib.Collections.Generic
 {
 	/// <summary>
 	/// Automated NUnit tests of the
-	/// <see cref="ConvertDelimitedString"/>
+	/// <see cref="ConvertDelimitedString" />
 	/// static extension methods.
 	/// </summary>
 	public sealed class ConvertDelimitedStringTests

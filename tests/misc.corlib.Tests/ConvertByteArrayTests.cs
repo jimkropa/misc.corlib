@@ -4,7 +4,7 @@ using Xunit;
 namespace MiscCorLib
 {
 	/// <summary>
-	/// Automated unit tests of the <see cref="ConvertByteArray"/> extention methods.
+	/// Automated unit tests of the <see cref="ConvertByteArray" /> extention methods.
 	/// </summary>
 	public sealed class ConvertByteArrayTests
 	{

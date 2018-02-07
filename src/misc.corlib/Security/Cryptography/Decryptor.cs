@@ -29,12 +29,12 @@ namespace MiscCorLib.Security.Cryptography
 	/// Encapsulation of a decryption operation
 	/// with a simple contract: A decryptor decrypts
 	/// ciphertext bytes using any implementation of
-	/// <see cref="SymmetricAlgorithm"/>.
+	/// <see cref="SymmetricAlgorithm" />.
 	/// </summary>
 	/// <remarks>
 	/// <para>
 	/// This type is derived from the generic
-	/// <see cref="Decryptor{T}"/>. Refer to
+	/// <see cref="Decryptor{T}" />. Refer to
 	/// remarks there for more details.
 	/// </para>
 	/// </remarks>

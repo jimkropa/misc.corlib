@@ -45,7 +45,7 @@ namespace MiscCorLib
 		public const string DoubleCrLf = "\r\n\r\n";
 
 		/// <summary>
-		/// A concatenation of two <see cref="Environment.NewLine"/> strings.
+		/// A concatenation of two <see cref="Environment.NewLine" /> strings.
 		/// </summary>
 		public static readonly string DoubleNewLine = Environment.NewLine + Environment.NewLine;
 
@@ -66,25 +66,25 @@ namespace MiscCorLib
 
 		/// <summary>
 		/// Static allocation of an array for splitting a string using the
-		/// <see cref="string.Split(string[],StringSplitOptions)"/> method,
+		/// <see cref="string.Split(string[],StringSplitOptions)" /> method,
 		/// to avoid the expensive allocation each time it is used by the
-		/// <see cref="ToCompactWhiteSpace"/> method.
+		/// <see cref="ToCompactWhiteSpace" /> method.
 		/// </summary>
 		public static readonly string[] TabSplitter = { Tab };
 
 		/// <summary>
 		/// Static allocation of an array for splitting a string using the
-		/// <see cref="string.Split(string[],StringSplitOptions)"/> method,
+		/// <see cref="string.Split(string[],StringSplitOptions)" /> method,
 		/// to avoid the expensive allocation each time it is used by the
-		/// <see cref="ToCompactWhiteSpace"/> method.
+		/// <see cref="ToCompactWhiteSpace" /> method.
 		/// </summary>
 		public static readonly string[] NewLineSplitter = { Environment.NewLine, CrLf, Cr, Lf };
 
 		/// <summary>
 		/// Static allocation of an array for splitting a string using the
-		/// <see cref="string.Split(string[],StringSplitOptions)"/> method,
+		/// <see cref="string.Split(string[],StringSplitOptions)" /> method,
 		/// to avoid the expensive allocation each time it is used by the
-		/// <see cref="ToCompactWhiteSpace"/> method.
+		/// <see cref="ToCompactWhiteSpace" /> method.
 		/// </summary>
 		public static readonly string[] DoubleSpaceSplitter = { DoubleSpace };
 
@@ -122,7 +122,7 @@ namespace MiscCorLib
 		/// A string which may be a null reference.
 		/// </param>
 		/// <returns>
-		/// The <paramref name="value"/> parameter,
+		/// The <paramref name="value" /> parameter,
 		/// or an empty string if the value is null.
 		/// </returns>
 		public static string ToEmptyIfNull(this string value)
@@ -139,7 +139,7 @@ namespace MiscCorLib
 		/// A string which may be a null reference.
 		/// </param>
 		/// <returns>
-		/// The <paramref name="value"/> parameter,
+		/// The <paramref name="value" /> parameter,
 		/// or null if the value is null or empty.
 		/// </returns>
 		public static string ToNullIfEmpty(this string value)
@@ -163,7 +163,7 @@ namespace MiscCorLib
 		/// 
 		/// </param>
 		/// <returns>
-		/// A string based on the <paramref name="value"/> parameter
+		/// A string based on the <paramref name="value" /> parameter
 		/// with all of the white space compacted to single spaces.
 		/// </returns>
 		public static string ToCompactWhiteSpace(
@@ -216,7 +216,7 @@ namespace MiscCorLib
 		/// </param>
 		/// <returns>
 		/// A string containing the HTML marked-up version
-		/// of the <paramref name="value"/> parameter.
+		/// of the <paramref name="value" /> parameter.
 		/// </returns>
 		public static string ToHtmlParagraph(
 			this string value, bool includeContainerElement = true, bool returnNullIfEmptyOrNull = false)
@@ -257,7 +257,7 @@ namespace MiscCorLib
 		/// leaving only alphanumeric characters.
 		/// </summary>
 		/// <param name="value">
-		/// A <see cref="string"/> that needs to be cleaned up.
+		/// A <see cref="string" /> that needs to be cleaned up.
 		/// </param>
 		/// <param name="returnNullIfEmptyOrNull">
 		/// 

@@ -32,20 +32,20 @@ namespace MiscCorLib.Security.Cryptography
 	using MiscCorLib.Collections.Generic;
 
 	/// <summary>
-	/// Common base class for generic <see cref="Encryptor{T}"/>
-	/// and <see cref="Decryptor{T}"/> types, with an internal
+	/// Common base class for generic <see cref="Encryptor{T}" />
+	/// and <see cref="Decryptor{T}" /> types, with an internal
 	/// abstract factory which automatically creates an instance
-	/// of a specific <see cref="SymmetricAlgorithm"/> based on
-	/// the generic type parameter <typeparamref name="T"/>.
+	/// of a specific <see cref="SymmetricAlgorithm" /> based on
+	/// the generic type parameter <typeparamref name="T" />.
 	/// </summary>
 	/// <typeparam name="T">
-	/// The type of <see cref="SymmetricAlgorithm"/>
+	/// The type of <see cref="SymmetricAlgorithm" />
 	/// to use for encryption and decryption.
 	/// </typeparam>
 	/// <remarks>
 	/// <para>
 	/// This class is optimized for memory.
-	/// Special implementation of <see cref="IDisposable"/>.
+	/// Special implementation of <see cref="IDisposable" />.
 	/// </para>
 	/// </remarks>
 	public abstract class SymmetricTransformer<T> : IDisposable
@@ -54,31 +54,31 @@ namespace MiscCorLib.Security.Cryptography
 		private const byte BitsPerByte = 8;
 
 		/// <summary>
-		/// Private backing field for <see cref="IsEncryptor"/>
-		/// and <see cref="IsDecryptor"/> properties.
+		/// Private backing field for <see cref="IsEncryptor" />
+		/// and <see cref="IsDecryptor" /> properties.
 		/// </summary>
 		private readonly bool isEncryptor;
 
 		/// <summary>
 		/// An internal semaphore indicating responsibility for disposing
-		/// an internal instance of <see cref="SymmetricAlgorithm"/>.
+		/// an internal instance of <see cref="SymmetricAlgorithm" />.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// If <c>true</c>, the internal instance of
-		/// <see cref="SymmetricAlgorithm"/>
+		/// <see cref="SymmetricAlgorithm" />
 		/// should <em>not</em> be disposed, even when
-		/// <see cref="Dispose"/> is invoked.
-		/// The instance of <see cref="SymmetricAlgorithm"/>
+		/// <see cref="Dispose" /> is invoked.
+		/// The instance of <see cref="SymmetricAlgorithm" />
 		/// was passed to a constructor overload, and its
 		/// creator assumes responsibility for its disposal.
 		/// If it were disposed here, the absence of the object
 		/// might cause other trouble later.
 		/// </para>
 		/// <para>
-		/// If <c>false</c>, the <see cref="SymmetricAlgorithm"/>
+		/// If <c>false</c>, the <see cref="SymmetricAlgorithm" />
 		/// was created internally by the lazy initializer of
-		/// the <see cref="Algorithm"/> property, so this
+		/// the <see cref="Algorithm" /> property, so this
 		/// object is responsible for disposing it.
 		/// </para>
 		/// </remarks>
@@ -90,7 +90,7 @@ namespace MiscCorLib.Security.Cryptography
 		private readonly byte[] initializationVector;
 
 		/// <summary>
-		/// The <see cref="SymmetricAlgorithm"/>
+		/// The <see cref="SymmetricAlgorithm" />
 		/// used for encryption and decryption.
 		/// </summary>
 		/// <remarks>
@@ -101,21 +101,21 @@ namespace MiscCorLib.Security.Cryptography
 		private T algorithm;
 
 		/// <summary>
-		/// <see cref="System.Security.Cryptography.ICryptoTransform"/>
+		/// <see cref="System.Security.Cryptography.ICryptoTransform" />
 		/// defines the basic operations of cryptographic transformations.
 		/// </summary>
 		private ICryptoTransform transform;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SymmetricTransformer{T}"/> class
-		/// using a given <see cref="SymmetricAlgorithm"/> instance.
+		/// Initializes a new instance of the <see cref="SymmetricTransformer{T}" /> class
+		/// using a given <see cref="SymmetricAlgorithm" /> instance.
 		/// </summary>
 		/// <param name="algorithm">
-		/// An instance of <see cref="SymmetricAlgorithm"/>
+		/// An instance of <see cref="SymmetricAlgorithm" />
 		/// to use for encryption or decryption.
 		/// Beware of side effect: The values
-		/// of its <see cref="SymmetricAlgorithm.Key"/>
-		/// and <see cref="SymmetricAlgorithm.IV"/>
+		/// of its <see cref="SymmetricAlgorithm.Key" />
+		/// and <see cref="SymmetricAlgorithm.IV" />
 		/// properties will be changed.
 		/// </param>
 		/// <param name="isEncryptor"></param>
@@ -125,17 +125,17 @@ namespace MiscCorLib.Security.Cryptography
 		/// <remarks>
 		/// <para>
 		/// This is <em>not a pure method</em>, so beware of this side effect:
-		/// When the given <see cref="SymmetricAlgorithm"/>
+		/// When the given <see cref="SymmetricAlgorithm" />
 		/// instance is passed to this constructor, the values
-		/// of its <see cref="SymmetricAlgorithm.Key"/>
-		/// and <see cref="SymmetricAlgorithm.IV"/>
+		/// of its <see cref="SymmetricAlgorithm.Key" />
+		/// and <see cref="SymmetricAlgorithm.IV" />
 		/// properties will be changed by code inside
 		/// this constructor.
 		/// </para>
 		/// <para>
-		/// Also note that the instance of <see cref="SymmetricAlgorithm"/>
+		/// Also note that the instance of <see cref="SymmetricAlgorithm" />
 		/// will not be disposed when this transformer object's
-		/// <see cref="Dispose"/> method is invoked, so the
+		/// <see cref="Dispose" /> method is invoked, so the
 		/// same algorithm object may be re-used later, and its
 		/// creator assumes responsibility to dispose of it.
 		/// </para>
@@ -198,9 +198,9 @@ namespace MiscCorLib.Security.Cryptography
 
 		/// <summary>
 		/// Lazy initializer of an internal instance of
-		/// a <see cref="SymmetricAlgorithm"/>
-		/// of type <typeparamref name="T"/>,
-		/// created by <see cref="CreateValidAlgorithm"/>.
+		/// a <see cref="SymmetricAlgorithm" />
+		/// of type <typeparamref name="T" />,
+		/// created by <see cref="CreateValidAlgorithm" />.
 		/// </summary>
 		protected internal T Algorithm
 		{
@@ -215,7 +215,7 @@ namespace MiscCorLib.Security.Cryptography
 		}
 
 		/// <summary>
-		/// Gets a reference to an <see cref="ICryptoTransform"/>
+		/// Gets a reference to an <see cref="ICryptoTransform" />
 		/// used for encryption or decryption, initializing the
 		/// reference if none exists.
 		/// </summary>
@@ -440,13 +440,13 @@ namespace MiscCorLib.Security.Cryptography
 
 		/// <summary>
 		/// Internal method for lazy initialization
-		/// of the <see cref="algorithm"/> field by
-		/// the <see cref="Algorithm"/> property.
+		/// of the <see cref="algorithm" /> field by
+		/// the <see cref="Algorithm" /> property.
 		/// </summary>
 		/// <returns>
-		/// An instance of <see cref="SymmetricAlgorithm"/>
-		/// initialized using the <see cref="encryptionKey"/>
-		/// and <see cref="initializationVector"/> values
+		/// An instance of <see cref="SymmetricAlgorithm" />
+		/// initialized using the <see cref="encryptionKey" />
+		/// and <see cref="initializationVector" /> values
 		/// passed to the constructor.
 		/// </returns>
 		private T CreateValidAlgorithm()

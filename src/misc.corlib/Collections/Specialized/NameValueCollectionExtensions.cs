@@ -30,7 +30,7 @@ namespace MiscCorLib.Collections.Specialized
 
 	/// <summary>
 	/// A set of static methods for extracting values from
-	/// <see cref="NameValueCollection"/> objects.
+	/// <see cref="NameValueCollection" /> objects.
 	/// </summary>
 	public static class NameValueCollectionExtensions
 	{
@@ -41,17 +41,17 @@ namespace MiscCorLib.Collections.Specialized
 
 		/// <summary>
 		/// Checks the existence of a named item in
-		/// a <see cref="NameValueCollection"/>.
+		/// a <see cref="NameValueCollection" />.
 		/// </summary>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="name"/> value is present in the
-		/// keys of the <see cref="NameValueCollection"/>, otherwise false.
+		/// True if the <paramref name="name" /> value is present in the
+		/// keys of the <see cref="NameValueCollection" />, otherwise false.
 		/// </returns>
 		public static bool ValueExists(this NameValueCollection collection, string name)
 		{
@@ -63,26 +63,26 @@ namespace MiscCorLib.Collections.Specialized
 		#region [ Generic Retrieval of Values based on Keys ]
 
 		/// <summary>
-		/// Converts an item in a <see cref="NameValueCollection"/>
-		/// to the generic type <typeparamref name="T"/>.
+		/// Converts an item in a <see cref="NameValueCollection" />
+		/// to the generic type <typeparamref name="T" />.
 		/// A return value indicates whether the conversion succeeded or failed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="tryParseDelegate">
 		/// 
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to the generic type <typeparamref name="T"/>,
+		/// Returns the value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter
+		/// converted to the generic type <typeparamref name="T" />,
 		/// or the default value of the generic type if the conversion failed.
 		/// </param>
 		/// <returns>
@@ -102,20 +102,20 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Gets the value from the <see cref="NameValueCollection"/>.
+		/// Gets the value from the <see cref="NameValueCollection" />.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// This method seeks to make value retrieval from
-		/// the <see cref="NameValueCollection"/> as
+		/// the <see cref="NameValueCollection" /> as
 		/// simple as possible. Implemented using generics,
-		/// you simply pass both the <see cref="Type"/>
+		/// you simply pass both the <see cref="Type" />
 		/// to return and the name of the item in the collection.
 		/// </para>
 		/// <para>
 		/// In the event that the collection does not contain the
 		/// named item or the proper conversion cannot be made,
-		/// the value of the <paramref name="defaultReturn"/>
+		/// the value of the <paramref name="defaultReturn" />
 		/// parameter is returned.
 		/// </para>
 		/// </remarks>
@@ -123,24 +123,24 @@ namespace MiscCorLib.Collections.Specialized
 		/// The type of value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/>
+		/// An instance of <see cref="NameValueCollection" />
 		/// from which to retrieve the value.
 		/// </param>
 		/// <param name="tryParseDelegate">
 		/// 
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="defaultReturn">
 		/// A value to return if the item could not be found or if the conversion fails.
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// matching the <paramref name="name"/> parameter,
-		/// coverted to the <see cref="Type"/> indicated by
-		/// the generic type parameter <typeparamref name="T"/>,
-		/// or the value of the <paramref name="defaultReturn"/> parameter.
+		/// The value from the <see cref="NameValueCollection" />
+		/// matching the <paramref name="name" /> parameter,
+		/// coverted to the <see cref="Type" /> indicated by
+		/// the generic type parameter <typeparamref name="T" />,
+		/// or the value of the <paramref name="defaultReturn" /> parameter.
 		/// </returns>
 		public static T GetValue<T>(
 			this NameValueCollection collection,
@@ -162,40 +162,40 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Gets the value from the <see cref="NameValueCollection"/>.
+		/// Gets the value from the <see cref="NameValueCollection" />.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// This method seeks to make value retrieval from
-		/// the <see cref="NameValueCollection"/> as
+		/// the <see cref="NameValueCollection" /> as
 		/// simple as possible. Implemented using generics,
-		/// you simply pass both the <see cref="Type"/>
+		/// you simply pass both the <see cref="Type" />
 		/// to return and the name of the item in the collection.
 		/// </para>
 		/// <para>
 		/// In the event that the collection does not contain the
 		/// named item or the proper conversion cannot be made,
-		/// the default value of type <typeparamref name="T"/> is returned.
+		/// the default value of type <typeparamref name="T" /> is returned.
 		/// </para>
 		/// </remarks>
 		/// <typeparam name="T">
 		/// The type of value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/>
+		/// An instance of <see cref="NameValueCollection" />
 		/// from which to retrieve the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="tryParseDelegate">
 		/// 
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// matching the <paramref name="name"/> parameter,
-		/// coverted to the <see cref="Type"/> indicated by
-		/// the generic type parameter <typeparamref name="T"/>,
+		/// The value from the <see cref="NameValueCollection" />
+		/// matching the <paramref name="name" /> parameter,
+		/// coverted to the <see cref="Type" /> indicated by
+		/// the generic type parameter <typeparamref name="T" />,
 		/// or the type's default value.
 		/// </returns>
 		public static T GetValue<T>(
@@ -215,23 +215,23 @@ namespace MiscCorLib.Collections.Specialized
 		#region [ Public Static TryGetString and GetString Overloads ]
 
 		/// <summary>
-		/// Retrieves a string value from a <see cref="NameValueCollection"/>,
+		/// Retrieves a string value from a <see cref="NameValueCollection" />,
 		/// or an empty string if the value does not exist.
 		/// A return value indicates whether the value exists.
 		/// </summary>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/>, or an empty
+		/// Returns the value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" />, or an empty
 		/// string if there is no matching value in the collection.
 		/// </param>
 		/// <returns>
-		/// true if the named value exists in the <paramref name="collection"/>, otherwise false.
+		/// true if the named value exists in the <paramref name="collection" />, otherwise false.
 		/// </returns>
 		public static bool TryGetString(this NameValueCollection collection, string name, out string result)
 		{
@@ -248,19 +248,19 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Retrieves a string value from a <see cref="NameValueCollection"/>,
+		/// Retrieves a string value from a <see cref="NameValueCollection" />,
 		/// or an empty string if the value does not exist.
 		/// </summary>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/>
+		/// An instance of <see cref="NameValueCollection" />
 		/// from which to retrieve the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
+		/// The value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter,
 		/// or an empty string if none could be found.
 		/// </returns>
 		public static string GetString(this NameValueCollection collection, string name)
@@ -271,23 +271,23 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Retrieves a string value from a <see cref="NameValueCollection"/>,
+		/// Retrieves a string value from a <see cref="NameValueCollection" />,
 		/// or a specified default value if the value does not exist.
 		/// </summary>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/>
+		/// An instance of <see cref="NameValueCollection" />
 		/// from which to retrieve the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="defaultReturn">
 		/// A value to return if the item could not be found or if the conversion fails.
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of the <paramref name="defaultReturn"/>
+		/// The value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter,
+		/// or the value of the <paramref name="defaultReturn" />
 		/// parameter if none could be found.
 		/// </returns>
 		public static string GetString(this NameValueCollection collection, string name, string defaultReturn)
@@ -308,24 +308,24 @@ namespace MiscCorLib.Collections.Specialized
 		#region [ Public Static TryParseEnum and GetEnum Overloads ]
 
 		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/>
-		/// to an <see cref="Enum"/> value. A return value indicates
+		/// Converts a value in a <see cref="NameValueCollection" />
+		/// to an <see cref="Enum" /> value. A return value indicates
 		/// whether the conversion succeeded or failed.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type derived from <see cref="Enum"/>
+		/// A type derived from <see cref="Enum" />
 		/// for the value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="Enum"/>, or
+		/// Returns the value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter
+		/// converted to <see cref="Enum" />, or
 		/// zero if the conversion failed.
 		/// </param>
 		/// <returns>
@@ -339,31 +339,31 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/>
-		/// to an <see cref="Enum"/> value. A return value indicates
+		/// Converts a value in a <see cref="NameValueCollection" />
+		/// to an <see cref="Enum" /> value. A return value indicates
 		/// whether the conversion succeeded or failed.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type derived from <see cref="Enum"/>
+		/// A type derived from <see cref="Enum" />
 		/// for the value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="allowMultipleFlagsBits">
 		/// Whether to allow any combination of bitwise values matching
-		/// the underlying type of <typeparamref name="T"/> where
-		/// the <see cref="FlagsAttribute"/> is set, or to return zero
+		/// the underlying type of <typeparamref name="T" /> where
+		/// the <see cref="FlagsAttribute" /> is set, or to return zero
 		/// if the value does not match one of the explicitly enumerated
-		/// values for <typeparamref name="T"/>.
+		/// values for <typeparamref name="T" />.
 		/// </param>
 		/// <param name="result">
-		/// Returns the value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter
-		/// converted to <see cref="Enum"/>, or
+		/// Returns the value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter
+		/// converted to <see cref="Enum" />, or
 		/// zero if the conversion failed.
 		/// </param>
 		/// <returns>
@@ -438,23 +438,23 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to an
-		/// <see cref="Enum"/> value, returning the enumeration's default
+		/// Converts a value in a <see cref="NameValueCollection" /> to an
+		/// <see cref="Enum" /> value, returning the enumeration's default
 		/// value if the item could not be found or if the conversion fails.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type derived from <see cref="Enum"/>
+		/// A type derived from <see cref="Enum" />
 		/// for the value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
+		/// The value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter,
 		/// or zero if none could be found.
 		/// </returns>
 		public static T GetEnum<T>(this NameValueCollection collection, string name) where T : struct
@@ -465,30 +465,30 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to an
-		/// <see cref="Enum"/> value, returning the enumeration's default
+		/// Converts a value in a <see cref="NameValueCollection" /> to an
+		/// <see cref="Enum" /> value, returning the enumeration's default
 		/// value if the item could not be found or if the conversion fails.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type derived from <see cref="Enum"/>
+		/// A type derived from <see cref="Enum" />
 		/// for the value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="allowMultipleFlagsBits">
 		/// Whether to allow any combination of bitwise values matching
-		/// the underlying type of <typeparamref name="T"/> where
-		/// the <see cref="FlagsAttribute"/> is set, or to return zero
+		/// the underlying type of <typeparamref name="T" /> where
+		/// the <see cref="FlagsAttribute" /> is set, or to return zero
 		/// if the value does not match one of the explicitly enumerated
-		/// values for <typeparamref name="T"/>.
+		/// values for <typeparamref name="T" />.
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
+		/// The value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter,
 		/// or zero if none could be found.
 		/// </returns>
 		public static T GetEnum<T>(this NameValueCollection collection, string name, bool allowMultipleFlagsBits)
@@ -502,34 +502,34 @@ namespace MiscCorLib.Collections.Specialized
 		}
 
 		/// <summary>
-		/// Converts a value in a <see cref="NameValueCollection"/> to
-		/// an <see cref="Enum"/> value, returning a specified default
+		/// Converts a value in a <see cref="NameValueCollection" /> to
+		/// an <see cref="Enum" /> value, returning a specified default
 		/// value if the item could not be found or if the conversion fails.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type derived from <see cref="Enum"/>
+		/// A type derived from <see cref="Enum" />
 		/// for the value to return.
 		/// </typeparam>
 		/// <param name="collection">
-		/// An instance of <see cref="NameValueCollection"/> to check for the value.
+		/// An instance of <see cref="NameValueCollection" /> to check for the value.
 		/// </param>
 		/// <param name="name">
-		/// The indexer for the <see cref="NameValueCollection"/>.
+		/// The indexer for the <see cref="NameValueCollection" />.
 		/// </param>
 		/// <param name="allowMultipleFlagsBits">
 		/// Whether to allow any combination of bitwise values matching
-		/// the underlying type of <typeparamref name="T"/> where
-		/// the <see cref="FlagsAttribute"/> is set, or to return zero
+		/// the underlying type of <typeparamref name="T" /> where
+		/// the <see cref="FlagsAttribute" /> is set, or to return zero
 		/// if the value does not match one of the explicitly enumerated
-		/// values for <typeparamref name="T"/>.
+		/// values for <typeparamref name="T" />.
 		/// </param>
 		/// <param name="defaultReturn">
 		/// A value to return if the item could not be found or if the conversion fails.
 		/// </param>
 		/// <returns>
-		/// The value from the <see cref="NameValueCollection"/>
-		/// corresponding to the <paramref name="name"/> parameter,
-		/// or the value of <paramref name="defaultReturn"/> if none could be found.
+		/// The value from the <see cref="NameValueCollection" />
+		/// corresponding to the <paramref name="name" /> parameter,
+		/// or the value of <paramref name="defaultReturn" /> if none could be found.
 		/// </returns>
 		public static T GetEnum<T>(
 			this NameValueCollection collection,

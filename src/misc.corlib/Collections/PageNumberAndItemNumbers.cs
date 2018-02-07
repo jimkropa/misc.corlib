@@ -38,7 +38,7 @@ namespace MiscCorLib.Collections
 		#region [ Public Fields and Internal Constructor ]
 
 		/// <summary>
-		/// A value of <see cref="PageNumberAndSize"/>
+		/// A value of <see cref="PageNumberAndSize" />
 		/// which is not valid, indicating an unspecified value.
 		/// </summary>
 		public static readonly PageNumberAndItemNumbers Empty
@@ -66,21 +66,21 @@ namespace MiscCorLib.Collections
 		public readonly int LastItemNumber;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers"/> struct.
+		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers" /> struct.
 		/// </summary>
 		/// <param name="pageNumber">
-		/// Initial value for the <see cref="PageNumber"/> field.
+		/// Initial value for the <see cref="PageNumber" /> field.
 		/// </param>
 		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size"/>
+		/// The <see cref="PageNumberAndSize.Size" />
 		/// of each page in a "paged" collection.
 		/// </param>
 		/// <param name="totalItems">
 		/// The total number of items in a "paged" collection.
 		/// </param>
 		/// <param name="isLastPage">
-		/// Optional signal for setting the <see cref="LastItemNumber"/>
-		/// value, whether to calculate if <paramref name="pageNumber"/>
+		/// Optional signal for setting the <see cref="LastItemNumber" />
+		/// value, whether to calculate if <paramref name="pageNumber" />
 		/// is the last page or to use this value.
 		/// </param>
 		internal PageNumberAndItemNumbers(
@@ -121,7 +121,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="PageNumber"/> value is valid.
+		/// <see cref="PageNumber" /> value is valid.
 		/// </summary>
 		////	[NonSerialized] // (this is applicable only to fields, not properties)
 		public bool HasValue
@@ -139,8 +139,8 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers"/> value is less than
-		/// another specified <see cref="PageNumberAndItemNumbers"/> value.
+		/// <see cref="PageNumberAndItemNumbers" /> value is less than
+		/// another specified <see cref="PageNumberAndItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -149,8 +149,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is less than
-		/// <paramref name="right"/>; otherwise, <c>false</c>.
+		/// <c>true</c> if <paramref name="left" /> is less than
+		/// <paramref name="right" />; otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator <(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
 		{
@@ -159,8 +159,8 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers"/> value is greater than
-		/// another specified <see cref="PageNumberAndItemNumbers"/> value.
+		/// <see cref="PageNumberAndItemNumbers" /> value is greater than
+		/// another specified <see cref="PageNumberAndItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -169,8 +169,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is greater than
-		/// <paramref name="right"/>; otherwise, <c>false</c>.
+		/// <c>true</c> if <paramref name="left" /> is greater than
+		/// <paramref name="right" />; otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator >(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
 		{
@@ -179,9 +179,9 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers"/> value
+		/// <see cref="PageNumberAndItemNumbers" /> value
 		/// is less than or equal to another specified
-		/// <see cref="PageNumberAndItemNumbers"/> value.
+		/// <see cref="PageNumberAndItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -190,8 +190,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is
-		/// less than or equal to <paramref name="right"/>;
+		/// <c>true</c> if <paramref name="left" /> is
+		/// less than or equal to <paramref name="right" />;
 		/// otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator <=(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
@@ -201,9 +201,9 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers"/> value
+		/// <see cref="PageNumberAndItemNumbers" /> value
 		/// is greater than or equal to another specified
-		/// <see cref="PageNumberAndItemNumbers"/> value.
+		/// <see cref="PageNumberAndItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -212,8 +212,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is
-		/// greater than or equal to <paramref name="right"/>;
+		/// <c>true</c> if <paramref name="left" /> is
+		/// greater than or equal to <paramref name="right" />;
 		/// otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator >=(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
@@ -223,7 +223,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PageNumberAndItemNumbers"/>
+		/// specified <see cref="PageNumberAndItemNumbers" />
 		/// objects are equal.
 		/// </summary>
 		/// <param name="left">
@@ -233,8 +233,8 @@ namespace MiscCorLib.Collections
 		/// The second object to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/>
-		/// and <paramref name="right"/> are equal;
+		/// <c>true</c> if <paramref name="left" />
+		/// and <paramref name="right" /> are equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
 		public static bool operator ==(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
@@ -244,7 +244,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PageNumberAndItemNumbers"/>
+		/// specified <see cref="PageNumberAndItemNumbers" />
 		/// objects are not equal.
 		/// </summary>
 		/// <param name="left">
@@ -254,8 +254,8 @@ namespace MiscCorLib.Collections
 		/// The second object to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/>
-		/// and <paramref name="right"/> are not equal;
+		/// <c>true</c> if <paramref name="left" />
+		/// and <paramref name="right" /> are not equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
 		public static bool operator !=(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
@@ -267,11 +267,11 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Calculates the full set of page numbers and item
-		/// numbers from given <paramref name="pageSize"/>
-		/// and <paramref name="totalItems"/> values.
+		/// numbers from given <paramref name="pageSize" />
+		/// and <paramref name="totalItems" /> values.
 		/// </summary>
 		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size"/>
+		/// The <see cref="PageNumberAndSize.Size" />
 		/// of each page in a "paged" collection.
 		/// </param>
 		/// <param name="totalItems">
@@ -281,8 +281,8 @@ namespace MiscCorLib.Collections
 		/// The full set of page numbers and item numbers.
 		/// </returns>
 		/// <remarks>
-		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)"/>
-		/// method of <see cref="PagingInfoCalculator"/>.
+		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)" />
+		/// method of <see cref="PagingInfoCalculator" />.
 		/// </remarks>
 		public static IReadOnlyList<PageNumberAndItemNumbers> Calculate(
 			byte pageSize, int totalItems)
@@ -317,7 +317,7 @@ namespace MiscCorLib.Collections
 		/// and a specified object are equal.
 		/// </summary>
 		/// <returns>
-		/// <c>true</c> if <paramref name="obj"/>
+		/// <c>true</c> if <paramref name="obj" />
 		/// and this instance are the same type
 		/// and represent the same value;
 		/// otherwise, <c>false</c>.
@@ -360,22 +360,22 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Compares the current value with another
-		/// <see cref="PageNumberAndItemNumbers"/> value
+		/// <see cref="PageNumberAndItemNumbers" /> value
 		/// and returns an integer that indicates whether
 		/// the current instance precedes, follows, or occurs
 		/// in the same position in the sort order
-		/// as the <paramref name="other"/> value.
+		/// as the <paramref name="other" /> value.
 		/// </summary>
 		/// <param name="other">
 		/// An object to compare with this instance.
 		/// </param>
 		/// <returns>
 		/// A value that indicates the relative order of the objects being compared,
-		/// to implement <see cref="IComparable{T}.CompareTo"/>.
+		/// to implement <see cref="IComparable{T}.CompareTo" />.
 		/// </returns>
 		/// <remarks>
 		/// In this case, the comparison is based on the
-		/// <see cref="LastItemNumber"/> value.
+		/// <see cref="LastItemNumber" /> value.
 		/// </remarks>
 		[Pure]
 		public int CompareTo(PageNumberAndItemNumbers other)
@@ -385,17 +385,17 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether this value and another
-		/// specified <see cref="PageNumberAndItemNumbers"/>
+		/// specified <see cref="PageNumberAndItemNumbers" />
 		/// value are equal.
 		/// </summary>
 		/// <param name="other">
-		/// The <see cref="PageNumberAndItemNumbers"/> value
+		/// The <see cref="PageNumberAndItemNumbers" /> value
 		/// to compare with the current value.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="other"/> and this
-		/// value have the same <see cref="PageNumber"/>,
-		/// <see cref="FirstItemNumber"/>, and <see cref="LastItemNumber"/>
+		/// <c>true</c> if <paramref name="other" /> and this
+		/// value have the same <see cref="PageNumber" />,
+		/// <see cref="FirstItemNumber" />, and <see cref="LastItemNumber" />
 		/// values; otherwise, <c>false</c>.
 		/// </returns>
 		[Pure]

@@ -1,37 +1,13 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	Rfc2898DeriveBytesTests.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using MiscCorLib.Collections.Generic;
+using Xunit;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.IO;
-	using System.Linq;
-	using System.Security.Cryptography;
-	using System.Text;
-
-	using MiscCorLib.Collections.Generic;
-
-	using NUnit.Framework;
-
-	[TestFixture]
 	public class Rfc2898DeriveBytesTests
 	{
 		// Generate a key k1 with password pwd1 and salt salt1.
@@ -116,8 +92,8 @@ namespace MiscCorLib.Security.Cryptography
 			////		Console.WriteLine("Error: {0}", e);
 			////	}
 
-			Assert.AreEqual(data2, data1);
-			Assert.IsTrue(data1.Equals(data2));
+			Assert.Equal(data2, data1);
+			Assert.True(data1.Equals(data2));
 		}
 
 		[Fact]
@@ -189,7 +165,7 @@ namespace MiscCorLib.Security.Cryptography
 				salt2 = k2.Salt;
 			}
 
-			Assert.AreNotEqual(salt1, salt2);
+			Assert.NotEqual(salt1, salt2);
 
 			using (Rfc2898DeriveBytes k3 = new Rfc2898DeriveBytes("whatever", salt2))
 			{
@@ -204,7 +180,7 @@ namespace MiscCorLib.Security.Cryptography
 				Console.WriteLine(k3.Salt.Length);
 				Console.WriteLine();
 
-				Assert.AreEqual(salt2, k3.Salt);
+				Assert.Equal(salt2, k3.Salt);
 			}
 
 			using (SymmetricAlgorithm alg = TripleDES.Create())

@@ -27,8 +27,8 @@ namespace MiscCorLib.Security.Cryptography
 	using System.Text;
 
 	/// <summary>
-	/// Factory producting <see cref="Encryptor"/>
-	/// and <see cref="Decryptor"/> instances.
+	/// Factory producting <see cref="Encryptor" />
+	/// and <see cref="Decryptor" /> instances.
 	/// </summary>
 	/// <remarks>
 	/// <para>

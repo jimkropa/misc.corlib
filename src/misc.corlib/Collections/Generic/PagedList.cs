@@ -26,9 +26,9 @@ namespace MiscCorLib.Collections.Generic
 	using System.Diagnostics.Contracts;
 
 	/// <summary>
-	/// Default implementation of <see cref="IPagedList{T}"/>,
-	/// derived from the base generic <see cref="List{T}"/>
-	/// and adding the <see cref="PagingInfo"/> property.
+	/// Default implementation of <see cref="IPagedList{T}" />,
+	/// derived from the base generic <see cref="List{T}" />
+	/// and adding the <see cref="PagingInfo" /> property.
 	/// A collection of elements that can be accessed by index,
 	/// and which are grouped onto one "page" in a longer list
 	/// of items which is broken into multiple pages.
@@ -43,13 +43,13 @@ namespace MiscCorLib.Collections.Generic
 
 		/// <summary>
 		/// Private backing field for the public
-		/// <see cref="PagingInfo"/> property.
+		/// <see cref="PagingInfo" /> property.
 		/// </summary>
 		private readonly PagingInfo pagingInfo;
 
 		/*
 			/// <summary>
-			/// Initializes a new instance of the <see cref="PagedList{T}"/> class
+			/// Initializes a new instance of the <see cref="PagedList{T}" /> class
 			/// that contains elements copied from the specified collection and has
 			/// sufficient capacity to accommodate the number of elements copied.
 			/// </summary>
@@ -65,7 +65,7 @@ namespace MiscCorLib.Collections.Generic
 		*/
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagedList{T}"/> class
+		/// Initializes a new instance of the <see cref="PagedList{T}" /> class
 		/// that contains elements copied from the specified collection and has
 		/// sufficient capacity to accommodate the number of elements copied.
 		/// </summary>
@@ -76,7 +76,7 @@ namespace MiscCorLib.Collections.Generic
 		/// Metadata about this "page" of a longer list which spans multiple pages.
 		/// </param>
 		/// <exception cref="ArgumentNullException">
-		/// <paramref name="collection"/> is null.
+		/// <paramref name="collection" /> is null.
 		/// </exception>
 		public PagedList(IEnumerable<T> collection, PagingInfo pagingInfo)
 			: base(collection)
@@ -99,7 +99,7 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagedList{T}"/> class
+		/// Initializes a new instance of the <see cref="PagedList{T}" /> class
 		/// that is empty and has the specified initial capacity.
 		/// </summary>
 		/// <param name="capacity">
@@ -109,7 +109,7 @@ namespace MiscCorLib.Collections.Generic
 		/// Metadata about this "page" of a longer list which spans multiple pages.
 		/// </param>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// <paramref name="capacity"/> is less than zero.
+		/// <paramref name="capacity" /> is less than zero.
 		/// </exception>
 		protected PagedList(int capacity, PagingInfo pagingInfo)
 			: base(capacity)

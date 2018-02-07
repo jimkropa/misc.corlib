@@ -8,13 +8,13 @@ namespace MiscCorLib.Collections.Generic
 {
 	/// <summary>
 	/// A set of static methods for converting collections of strings
-	/// into generic collections of <see cref="ValueType"/>.
+	/// into generic collections of <see cref="ValueType" />.
 	/// </summary>
 	/// <remarks>
 	/// <para>
 	/// These methods operate midway between delimited strings
-	/// created by <see cref="ConvertStructCollection"/> methods
-	/// and the <see cref="ConvertDelimitedString"/> methods for
+	/// created by <see cref="ConvertStructCollection" /> methods
+	/// and the <see cref="ConvertDelimitedString" /> methods for
 	/// reversing the process.
 	/// </para>
 	/// </remarks>
@@ -24,12 +24,12 @@ namespace MiscCorLib.Collections.Generic
 
 		/// <summary>
 		/// A value to use when translating from a collection
-		/// of strings to a generic collection of <see cref="ValueType"/>,
+		/// of strings to a generic collection of <see cref="ValueType" />,
 		/// indicating a default preference to suppress any
-		/// <see cref="FormatException"/> or <see cref="NotSupportedException"/>
-		/// encountered during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using a <see cref="TypeConverter"/> to translate
-		/// each string to a generic <see cref="ValueType"/>.
+		/// <see cref="FormatException" /> or <see cref="NotSupportedException" />
+		/// encountered during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using a <see cref="TypeConverter" /> to translate
+		/// each string to a generic <see cref="ValueType" />.
 		/// </summary>
 		public const bool DefaultThrowTypeConversionExceptions = false;
 
@@ -44,68 +44,68 @@ namespace MiscCorLib.Collections.Generic
 
 		/// <summary>
 		/// Delegate contract for an optimization when
-		/// converting generic <see cref="ValueType"/>
+		/// converting generic <see cref="ValueType" />
 		/// values to string. The delegate signature matches
 		/// that of a "TryParse" method common to many
-		/// primitive <see cref="ValueType"/> classes, such as
-		/// <see cref="int.TryParse(string,out int)"/> from integers,
-		/// <see cref="DateTime.TryParse(string,out DateTime)"/>
-		/// from <see cref="DateTime"/>, or
-		/// <see cref="Guid.TryParse(string,out Guid)"/>
-		/// from <see cref="Guid"/>.
+		/// primitive <see cref="ValueType" /> classes, such as
+		/// <see cref="int.TryParse(string,out int)" /> from integers,
+		/// <see cref="DateTime.TryParse(string,out DateTime)" />
+		/// from <see cref="DateTime" />, or
+		/// <see cref="Guid.TryParse(string,out Guid)" />
+		/// from <see cref="Guid" />.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type of <see cref="ValueType"/> to parse from a string.
+		/// A type of <see cref="ValueType" /> to parse from a string.
 		/// </typeparam>
 		/// <param name="s">
-		/// A string containing a <typeparamref name="T"/> value to convert.
+		/// A string containing a <typeparamref name="T" /> value to convert.
 		/// </param>
 		/// <param name="result">
-		/// When this method returns, contains the <typeparamref name="T"/>
-		/// value equivalent of the string contained in <paramref name="s"/>
+		/// When this method returns, contains the <typeparamref name="T" />
+		/// value equivalent of the string contained in <paramref name="s" />
 		/// if the conversion succeeded, or the default value of
-		/// <typeparamref name="T"/> if the conversion failed.
+		/// <typeparamref name="T" /> if the conversion failed.
 		/// This parameter is passed uninitialized; any value originally
-		/// supplied in <paramref name="result"/> will be overwritten.
+		/// supplied in <paramref name="result" /> will be overwritten.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="s"/> was
+		/// <c>true</c> if <paramref name="s" /> was
 		/// converted successfully; otherwise, <c>false</c>.
 		/// </returns>
 		public delegate bool TryParseFromString<T>(string s, out T result) where T : struct;
 
 		/// <summary>
-		/// Converts a string to a <see cref="ValueType"/>
-		/// of <typeparamref name="T"/>, optionally
+		/// Converts a string to a <see cref="ValueType" />
+		/// of <typeparamref name="T" />, optionally
 		/// suppressing exceptions in the conversion.
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type of <see cref="ValueType"/> with
+		/// A type of <see cref="ValueType" /> with
 		/// values to derive from strings.
 		/// </typeparam>
 		/// <param name="converter">
-		/// A <see cref="TypeConverter"/> to convert
-		/// strings to values of <typeparamref name="T"/>.
+		/// A <see cref="TypeConverter" /> to convert
+		/// strings to values of <typeparamref name="T" />.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the given <paramref name="converter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the given <paramref name="converter" />.
 		/// </param>
 		/// <param name="s">
-		/// A string value to convert to <typeparamref name="T"/>.
+		/// A string value to convert to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="result">
-		/// When this method returns, contains the <typeparamref name="T"/>
-		/// value equivalent of the string contained in <paramref name="s"/>,
+		/// When this method returns, contains the <typeparamref name="T" />
+		/// value equivalent of the string contained in <paramref name="s" />,
 		/// if the conversion succeeded, or the default value of
-		/// <typeparamref name="T"/> if the conversion failed.
+		/// <typeparamref name="T" /> if the conversion failed.
 		/// This parameter is passed uninitialized; any value originally
-		/// supplied in <paramref name="result"/> will be overwritten.
+		/// supplied in <paramref name="result" /> will be overwritten.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="s"/> was
+		/// <c>true</c> if <paramref name="s" /> was
 		/// converted successfully; otherwise, <c>false</c>.
 		/// </returns>
 		[Pure]
@@ -181,31 +181,31 @@ namespace MiscCorLib.Collections.Generic
 		#region [ Overloads of Public Static ToArray<T> Method ]
 
 		/// <summary>
-		/// Returns a typed array of <see cref="ValueType"/>
+		/// Returns a typed array of <see cref="ValueType" />
 		/// values parsed from a collection of strings
-		/// using a default <see cref="TypeConverter"/>,
+		/// using a default <see cref="TypeConverter" />,
 		/// optionally having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the default <see cref="TypeConverter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the default <see cref="TypeConverter" />.
 		/// </param>
 		/// <returns>
-		/// An array of type <typeparamref name="T"/>.
+		/// An array of type <typeparamref name="T" />.
 		/// </returns>
 		public static T[] ToArray<T>(
 			this IEnumerable<string> strings,
@@ -218,36 +218,36 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Returns a typed array of <see cref="ValueType"/>
+		/// Returns a typed array of <see cref="ValueType" />
 		/// values parsed from a collection of strings
-		/// using a given <see cref="TypeConverter"/>,
+		/// using a given <see cref="TypeConverter" />,
 		/// optionally having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="converter">
-		/// A <see cref="TypeConverter"/> to convert
-		/// strings to values of <typeparamref name="T"/>.
+		/// A <see cref="TypeConverter" /> to convert
+		/// strings to values of <typeparamref name="T" />.
 		/// If <c>null</c>, the default converter will be used.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the given <paramref name="converter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the given <paramref name="converter" />.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static T[] ToArray<T>(
 			this IEnumerable<string> strings,
@@ -261,33 +261,33 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Returns a typed array of <see cref="ValueType"/> values
+		/// Returns a typed array of <see cref="ValueType" /> values
 		/// parsed from a collection of strings using a specified
-		/// <see cref="TryParseFromString{T}"/> delegate,
+		/// <see cref="TryParseFromString{T}" /> delegate,
 		/// ignoring any values which cannot be parsed
 		/// and optionally having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
-		/// <see cref="TryParseFromString{T}"/>
+		/// <see cref="TryParseFromString{T}" />
 		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
-		/// primitive <see cref="ValueType"/> classes.
+		/// primitive <see cref="ValueType" /> classes.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <returns>
-		/// An array of type <typeparamref name="T"/>.
+		/// An array of type <typeparamref name="T" />.
 		/// </returns>
 		public static T[] ToArray<T>(
 			this IEnumerable<string> strings,
@@ -304,32 +304,32 @@ namespace MiscCorLib.Collections.Generic
 		#region [ Overloads of Public Static ToEnumerable<T> Method ]
 
 		/// <summary>
-		/// Returns a generic <see cref="IReadOnlyList{T}"/>
-		/// of <see cref="ValueType"/> values parsed
+		/// Returns a generic <see cref="IReadOnlyList{T}" />
+		/// of <see cref="ValueType" /> values parsed
 		/// from a collection of strings using a default
-		/// <see cref="TypeConverter"/>, optionally
+		/// <see cref="TypeConverter" />, optionally
 		/// having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the default <see cref="TypeConverter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the default <see cref="TypeConverter" />.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static IReadOnlyList<T> ToEnumerable<T>(
 			this IEnumerable<string> strings,
@@ -342,37 +342,37 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Returns a generic <see cref="IReadOnlyList{T}"/>
-		/// of <see cref="ValueType"/> values parsed
+		/// Returns a generic <see cref="IReadOnlyList{T}" />
+		/// of <see cref="ValueType" /> values parsed
 		/// from a collection of strings using a given
-		/// <see cref="TypeConverter"/>, optionally
+		/// <see cref="TypeConverter" />, optionally
 		/// having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="converter">
-		/// A <see cref="TypeConverter"/> to convert
-		/// strings to values of <typeparamref name="T"/>.
+		/// A <see cref="TypeConverter" /> to convert
+		/// strings to values of <typeparamref name="T" />.
 		/// If <c>null</c>, the default converter will be used.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the given <paramref name="converter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the given <paramref name="converter" />.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static IReadOnlyList<T> ToEnumerable<T>(
 			this IEnumerable<string> strings,
@@ -386,34 +386,34 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Returns a generic <see cref="IReadOnlyList{T}"/>
-		/// of <see cref="ValueType"/> values parsed
+		/// Returns a generic <see cref="IReadOnlyList{T}" />
+		/// of <see cref="ValueType" /> values parsed
 		/// from a collection of strings using a specified
-		/// <see cref="TryParseFromString{T}"/> delegate,
+		/// <see cref="TryParseFromString{T}" /> delegate,
 		/// ignoring any values which cannot be parsed
 		/// and optionally having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
-		/// <see cref="TryParseFromString{T}"/>
+		/// <see cref="TryParseFromString{T}" />
 		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
-		/// primitive <see cref="ValueType"/> classes.
+		/// primitive <see cref="ValueType" /> classes.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static IReadOnlyList<T> ToEnumerable<T>(
 			this IEnumerable<string> strings,
@@ -430,32 +430,32 @@ namespace MiscCorLib.Collections.Generic
 		#region [ Public Static ToList<T> Method Overloads, invoked by other Static Methods ]
 
 		/// <summary>
-		/// Returns a generic <see cref="List{T}"/>
-		/// of <see cref="ValueType"/> values parsed
+		/// Returns a generic <see cref="List{T}" />
+		/// of <see cref="ValueType" /> values parsed
 		/// from a collection of strings using a default
-		/// <see cref="TypeConverter"/>, optionally
+		/// <see cref="TypeConverter" />, optionally
 		/// having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the default <see cref="TypeConverter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the default <see cref="TypeConverter" />.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static List<T> ToList<T>(
 			this IEnumerable<string> strings,
@@ -467,37 +467,37 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Returns a generic <see cref="List{T}"/>
-		/// of <see cref="ValueType"/> values parsed
+		/// Returns a generic <see cref="List{T}" />
+		/// of <see cref="ValueType" /> values parsed
 		/// from a collection of strings using a given
-		/// <see cref="TypeConverter"/>, optionally
+		/// <see cref="TypeConverter" />, optionally
 		/// having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="converter">
-		/// A <see cref="TypeConverter"/> to convert
-		/// strings to values of <typeparamref name="T"/>.
+		/// A <see cref="TypeConverter" /> to convert
+		/// strings to values of <typeparamref name="T" />.
 		/// If <c>null</c>, the default converter will be used.
 		/// </param>
 		/// <param name="throwTypeConversionExceptions">
-		/// Whether to throw any <see cref="FormatException"/>
-		/// or <see cref="NotSupportedException"/> encountered
-		/// during <see cref="TypeConverter.ConvertFrom(object)"/>
-		/// using the given <paramref name="converter"/>.
+		/// Whether to throw any <see cref="FormatException" />
+		/// or <see cref="NotSupportedException" /> encountered
+		/// during <see cref="TypeConverter.ConvertFrom(object)" />
+		/// using the given <paramref name="converter" />.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static List<T> ToList<T>(
 			this IEnumerable<string> strings,
@@ -546,34 +546,34 @@ namespace MiscCorLib.Collections.Generic
 		}
 
 		/// <summary>
-		/// Returns a generic <see cref="List{T}"/>
-		/// of <see cref="ValueType"/> values parsed
+		/// Returns a generic <see cref="List{T}" />
+		/// of <see cref="ValueType" /> values parsed
 		/// from a collection of strings using a specified
-		/// <see cref="TryParseFromString{T}"/> delegate,
+		/// <see cref="TryParseFromString{T}" /> delegate,
 		/// ignoring any values which cannot be parsed
 		/// and optionally having duplicates removed.
 		/// </summary>
 		/// <typeparam name="T">
 		/// The type of array to return, must
-		/// be a <see cref="ValueType"/>.
+		/// be a <see cref="ValueType" />.
 		/// </typeparam>
 		/// <param name="strings">
 		/// A collection of strings to be converted
-		/// to <typeparamref name="T"/>.
+		/// to <typeparamref name="T" />.
 		/// </param>
 		/// <param name="tryParseDelegate">
 		/// A delegate method conforming to the
-		/// <see cref="TryParseFromString{T}"/>
+		/// <see cref="TryParseFromString{T}" />
 		/// signature, for optimized type conversion
 		/// via a "TryParse" method common to many
-		/// primitive <see cref="ValueType"/> classes.
+		/// primitive <see cref="ValueType" /> classes.
 		/// </param>
 		/// <param name="removeDuplicates">
 		/// Whether to remove duplicate items in the array returned.
 		/// Parameter is optional, default value is <c>false</c>.
 		/// </param>
 		/// <returns>
-		/// A list of type <typeparamref name="T"/>.
+		/// A list of type <typeparamref name="T" />.
 		/// </returns>
 		public static List<T> ToList<T>(
 			this IEnumerable<string> strings,
@@ -616,12 +616,12 @@ namespace MiscCorLib.Collections.Generic
 		#region [ ToDelimitedString Extension Method for String Collections ]
 
 		/// <summary>
-		/// Converts a generic collection of <see cref="ValueType"/>
-		/// to a <see cref="string"/> delimited by the value
-		/// of the <paramref name="separator"/> parameter.
+		/// Converts a generic collection of <see cref="ValueType" />
+		/// to a <see cref="string" /> delimited by the value
+		/// of the <paramref name="separator" /> parameter.
 		/// A cousin of a method of the same name in
-		/// <see cref="ConvertStructCollection"/>, and of
-		/// <see cref="string.Join(string,IEnumerable{string})"/>.
+		/// <see cref="ConvertStructCollection" />, and of
+		/// <see cref="string.Join(string,IEnumerable{string})" />.
 		/// </summary>
 		/// <param name="collection">
 		/// A generic collection of strings.
@@ -630,7 +630,7 @@ namespace MiscCorLib.Collections.Generic
 		/// A string delimiter to use instead of a comma.
 		/// </param>
 		/// <returns>
-		/// A <paramref name="separator"/>-delimited string.
+		/// A <paramref name="separator" />-delimited string.
 		/// </returns>
 		public static string ToDelimitedString(
 			this IEnumerable<string> collection,

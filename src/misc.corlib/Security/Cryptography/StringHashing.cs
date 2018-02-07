@@ -29,12 +29,12 @@ namespace MiscCorLib.Security.Cryptography
 	public static class StringHashing
 	{
 		/// <summary>
-		/// Unless a different <see cref="Encoding"/> is specified,
+		/// Unless a different <see cref="Encoding" /> is specified,
 		/// when a string is hashed using one of the extension
 		/// methods in this class, the string is assumed to be
-		/// encoded as <see cref="Encoding.UTF8"/>, the same
-		/// as <see cref="Encryption.DefaultTextEncoding"/>
-		/// for <see cref="Encryption"/>.
+		/// encoded as <see cref="Encoding.UTF8" />, the same
+		/// as <see cref="Encryption.DefaultTextEncoding" />
+		/// for <see cref="Encryption" />.
 		/// </summary>
 		public static readonly Encoding DefaultEncoding = Encryption.DefaultTextEncoding;
 
@@ -44,13 +44,13 @@ namespace MiscCorLib.Security.Cryptography
 		/// 
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type of <see cref="HashAlgorithm"/>
-		/// used to hash the <paramref name="input"/>.
+		/// A type of <see cref="HashAlgorithm" />
+		/// used to hash the <paramref name="input" />.
 		/// </typeparam>
 		/// <param name="input">
 		/// A UTF-8 string to be hashed using
-		/// a type of <see cref="HashAlgorithm"/>
-		/// specified as <typeparamref name="T"/>.
+		/// a type of <see cref="HashAlgorithm" />
+		/// specified as <typeparamref name="T" />.
 		/// </param>
 		/// <returns>
 		/// 
@@ -76,13 +76,13 @@ namespace MiscCorLib.Security.Cryptography
 		/// 
 		/// </summary>
 		/// <typeparam name="T">
-		/// A type of <see cref="KeyedHashAlgorithm"/>
-		/// used to hash the <paramref name="input"/>.
+		/// A type of <see cref="KeyedHashAlgorithm" />
+		/// used to hash the <paramref name="input" />.
 		/// </typeparam>
 		/// <param name="input">
 		/// A UTF-8 string to be hashed using
-		/// a type of <see cref="KeyedHashAlgorithm"/>
-		/// specified as <typeparamref name="T"/>.
+		/// a type of <see cref="KeyedHashAlgorithm" />
+		/// specified as <typeparamref name="T" />.
 		/// </param>
 		/// <param name="key">
 		/// 

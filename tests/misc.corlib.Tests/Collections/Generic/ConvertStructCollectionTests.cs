@@ -5,7 +5,7 @@ namespace MiscCorLib.Collections.Generic
 {
 	/// <summary>
 	/// Automated NUnit tests of the
-	/// <see cref="ConvertStructCollection"/>
+	/// <see cref="ConvertStructCollection" />
 	/// static extension methods.
 	/// </summary>
 	public sealed class ConvertStructCollectionTests

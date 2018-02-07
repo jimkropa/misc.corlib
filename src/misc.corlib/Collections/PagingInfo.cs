@@ -13,8 +13,8 @@ namespace MiscCorLib.Collections
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Initialize using values of the <see cref="CurrentPage"/>
-	/// number and size, and the number of <see cref="TotalItems"/>
+	/// Initialize using values of the <see cref="CurrentPage" />
+	/// number and size, and the number of <see cref="TotalItems" />
 	/// in the collection. All other values, accessible as the
 	/// public read-only properties of this struct, are calculated
 	/// and held by an internal lazy-initialized value.
@@ -36,7 +36,7 @@ namespace MiscCorLib.Collections
 		public const bool DefaultCalculateAllPagesAndItemNumbers = false;
 
 		/// <summary>
-		/// A value of <see cref="PageNumberAndSize"/>
+		/// A value of <see cref="PageNumberAndSize" />
 		/// which is not valid, indicating an unspecified value.
 		/// </summary>
 		public static readonly PagingInfo Empty = new PagingInfo();
@@ -63,7 +63,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Internal semaphore for whether to initialize the
-		/// <see cref="PagingInfoCalculator.AllPages"/>
+		/// <see cref="PagingInfoCalculator.AllPages" />
 		/// property for serializing, usually <c>false</c>,
 		/// set by optional parameter to constructor.
 		/// </summary>
@@ -71,7 +71,7 @@ namespace MiscCorLib.Collections
 		private readonly bool calculateAllPagesAndItemNumbers;
 
 		/// <summary>
-		/// Backing field of the internal <see cref="Calculator"/>,
+		/// Backing field of the internal <see cref="Calculator" />,
 		/// also used as a semaphore indicating whether calculated
 		/// values have been initialized.
 		/// </summary>
@@ -83,19 +83,19 @@ namespace MiscCorLib.Collections
 		#region [ Constructor Overloads ]
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
+		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
 		/// for having all of the items in a collection on a single page
-		/// as large as the number of <paramref name="totalItems"/>.
+		/// as large as the number of <paramref name="totalItems" />.
 		/// </summary>
 		/// <param name="totalItems">
 		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems"/> field.
+		/// initial value for the immutable <see cref="TotalItems" /> field.
 		/// </param>
 		/// <param name="calculateAllPagesAndItemNumbers">
 		/// Indicates whether to include a representation of every
 		/// page and its item numbers in the serialized version of
-		/// this <see cref="PagingInfo"/>, as a list of
-		/// <see cref="PageNumberAndItemNumbers"/>,
+		/// this <see cref="PagingInfo" />, as a list of
+		/// <see cref="PageNumberAndItemNumbers" />,
 		/// for a paging widget which may want to use them.
 		/// </param>
 		public PagingInfo(
@@ -107,24 +107,24 @@ namespace MiscCorLib.Collections
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
+		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
 		/// for pages of a fixed size between 1 and 255.
 		/// </summary>
 		/// <param name="pageNumber">
-		/// The requested page <see cref="PageNumberAndSize.Number"/>.
+		/// The requested page <see cref="PageNumberAndSize.Number" />.
 		/// </param>
 		/// <param name="pageSize">
-		/// The requested page <see cref="PageNumberAndSize.Size"/>.
+		/// The requested page <see cref="PageNumberAndSize.Size" />.
 		/// </param>
 		/// <param name="totalItems">
 		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems"/> field.
+		/// initial value for the immutable <see cref="TotalItems" /> field.
 		/// </param>
 		/// <param name="calculateAllPagesAndItemNumbers">
 		/// Indicates whether to include a representation of every
 		/// page and its item numbers in the serialized version of
-		/// this <see cref="PagingInfo"/>, as a list of
-		/// <see cref="PageNumberAndItemNumbers"/>,
+		/// this <see cref="PagingInfo" />, as a list of
+		/// <see cref="PageNumberAndItemNumbers" />,
 		/// for a paging widget which may want to use them.
 		/// </param>
 		public PagingInfo(
@@ -144,25 +144,25 @@ namespace MiscCorLib.Collections
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
-		/// based on a given <see cref="PageNumberAndSize"/> value.
+		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
+		/// based on a given <see cref="PageNumberAndSize" /> value.
 		/// </summary>
 		/// <param name="requestedPage">
-		/// The requested page <see cref="PageNumberAndSize.Number"/>
-		/// and <see cref="PageNumberAndSize.Size"/>.
-		/// If <see cref="PageNumberAndSize.Unbounded"/> is sent,
+		/// The requested page <see cref="PageNumberAndSize.Number" />
+		/// and <see cref="PageNumberAndSize.Size" />.
+		/// If <see cref="PageNumberAndSize.Unbounded" /> is sent,
 		/// all of the items are returned on a single page as large
-		/// as the number of <paramref name="totalItems"/>.
+		/// as the number of <paramref name="totalItems" />.
 		/// </param>
 		/// <param name="totalItems">
 		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems"/> field.
+		/// initial value for the immutable <see cref="TotalItems" /> field.
 		/// </param>
 		/// <param name="calculateAllPagesAndItemNumbers">
 		/// Indicates whether to include a representation of every
 		/// page and its item numbers in the serialized version of
-		/// this <see cref="PagingInfo"/>, as a list of
-		/// <see cref="PageNumberAndItemNumbers"/>,
+		/// this <see cref="PagingInfo" />, as a list of
+		/// <see cref="PageNumberAndItemNumbers" />,
 		/// for a paging widget which may want to use them.
 		/// </param>
 		public PagingInfo(
@@ -176,17 +176,17 @@ namespace MiscCorLib.Collections
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo"/> struct
-		/// upon deserialization of another <see cref="PagingInfo"/> which
+		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
+		/// upon deserialization of another <see cref="PagingInfo" /> which
 		/// this one replaces, used for lazy initialization by the internal
-		/// <see cref="Calculator"/> property.
+		/// <see cref="Calculator" /> property.
 		/// </summary>
 		/// <param name="calculator">
-		/// A <see cref="PagingInfoCalculator"/> value initialized from
-		/// the <see cref="CurrentPage"/> and <see cref="TotalItems"/>
-		/// values of a <see cref="PagingInfo"/> value to be replaced
+		/// A <see cref="PagingInfoCalculator" /> value initialized from
+		/// the <see cref="CurrentPage" /> and <see cref="TotalItems" />
+		/// values of a <see cref="PagingInfo" /> value to be replaced
 		/// by this new instance. To understand how this works,
-		/// refer to the <see cref="Calculator"/> property.
+		/// refer to the <see cref="Calculator" /> property.
 		/// </param>
 		private PagingInfo(PagingInfoCalculator calculator)
 		{
@@ -202,8 +202,8 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets a value indicating whether
-		/// the <see cref="CurrentPage"/>
-		/// and <see cref="TotalItems"/>
+		/// the <see cref="CurrentPage" />
+		/// and <see cref="TotalItems" />
 		/// values are valid.
 		/// </summary>
 		////	[NonSerialized] // (this is applicable only to fields, not properties)
@@ -221,26 +221,26 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="PageNumberAndSize.Number"/>
-		/// of the <see cref="CurrentPage"/> matches
-		/// <see cref="PageNumberAndSize.FirstPageNumber"/>.
+		/// <see cref="PageNumberAndSize.Number" />
+		/// of the <see cref="CurrentPage" /> matches
+		/// <see cref="PageNumberAndSize.FirstPageNumber" />.
 		/// </summary>
 		/// <remarks>
-		/// If <c>true</c>, <see cref="PreviousPage"/>
-		/// will be <see cref="Empty"/>.
+		/// If <c>true</c>, <see cref="PreviousPage" />
+		/// will be <see cref="Empty" />.
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 3)]
 		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="PageNumberAndSize.Number"/>
-		/// of the <see cref="CurrentPage"/> matches
-		/// the number of <see cref="TotalPages"/>.
+		/// <see cref="PageNumberAndSize.Number" />
+		/// of the <see cref="CurrentPage" /> matches
+		/// the number of <see cref="TotalPages" />.
 		/// </summary>
 		/// <remarks>
-		/// If <c>true</c>, <see cref="NextPage"/>
-		/// will be <see cref="Empty"/>.
+		/// If <c>true</c>, <see cref="NextPage" />
+		/// will be <see cref="Empty" />.
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 4)]
 		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
@@ -266,8 +266,8 @@ namespace MiscCorLib.Collections
 		/// this value will be zero.
 		/// </para>
 		/// <para>
-		/// If the paging is <see cref="PageNumberAndSize.Unbounded"/>,
-		/// this value will equal <see cref="TotalItems"/>.
+		/// If the paging is <see cref="PageNumberAndSize.Unbounded" />,
+		/// this value will equal <see cref="TotalItems" />.
 		/// </para>
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 6)]
@@ -275,7 +275,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
-		/// equal to the value of <see cref="FirstItemNumber"/> minus one.
+		/// equal to the value of <see cref="FirstItemNumber" /> minus one.
 		/// </summary>
 		/// <remarks>
 		/// If the "paged" collection is empty,
@@ -286,7 +286,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
-		/// equal to the value of <see cref="LastItemNumber"/> minus one.
+		/// equal to the value of <see cref="LastItemNumber" /> minus one.
 		/// </summary>
 		/// <remarks>
 		/// If the "paged" collection is empty,
@@ -305,9 +305,9 @@ namespace MiscCorLib.Collections
 		/// </para>
 		/// <para>
 		/// In most other cases, this value will be the same
-		/// as the <see cref="PageNumberAndSize.Size"/>
-		/// of the <see cref="CurrentPage"/>, but if
-		/// <see cref="IsLastPage"/> is <c>true</c>,
+		/// as the <see cref="PageNumberAndSize.Size" />
+		/// of the <see cref="CurrentPage" />, but if
+		/// <see cref="IsLastPage" /> is <c>true</c>,
 		/// this value may be less than the page size.
 		/// </para>
 		/// </remarks>
@@ -315,38 +315,38 @@ namespace MiscCorLib.Collections
 		public int ItemCount { get { return this.Calculator.ItemCount; } }
 
 		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize"/>
+		/// Gets the <see cref="PageNumberAndSize" />
 		/// of the next page of items.
 		/// </summary>
 		/// <remarks>
-		/// If <see cref="IsLastPage"/> is <c>true</c>
-		/// or the paging is <see cref="PageNumberAndSize.Unbounded"/>
-		/// this value will be <see cref="PageNumberAndSize.Empty"/>.
+		/// If <see cref="IsLastPage" /> is <c>true</c>
+		/// or the paging is <see cref="PageNumberAndSize.Unbounded" />
+		/// this value will be <see cref="PageNumberAndSize.Empty" />.
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 10)]
 		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
 
 		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize"/>
+		/// Gets the <see cref="PageNumberAndSize" />
 		/// of the previous page of items.
 		/// </summary>
 		/// <remarks>
-		/// If <see cref="IsFirstPage"/> is <c>true</c>
-		/// or the paging is <see cref="PageNumberAndSize.Unbounded"/>
-		/// this value will be <see cref="PageNumberAndSize.Empty"/>.
+		/// If <see cref="IsFirstPage" /> is <c>true</c>
+		/// or the paging is <see cref="PageNumberAndSize.Unbounded" />
+		/// this value will be <see cref="PageNumberAndSize.Empty" />.
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 11)]
 		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
 
 		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize"/>
+		/// Gets the <see cref="PageNumberAndSize" />
 		/// of the first page of items.
 		/// </summary>
 		[DataMember(IsRequired = false, Order = 12)]
 		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
 
 		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize"/>
+		/// Gets the <see cref="PageNumberAndSize" />
 		/// of the last page of items.
 		/// </summary>
 		[DataMember(IsRequired = false, Order = 13)]
@@ -356,14 +356,14 @@ namespace MiscCorLib.Collections
 		/// Gets a list of all pages and their first and last item numbers.
 		/// This may be useful for some paging UI components, and is
 		/// optionally serialized to JSON. The value may be <c>null</c>,
-		/// depending on whether <see cref="Calculator"/> was initialized with
-		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
+		/// depending on whether <see cref="Calculator" /> was initialized with
+		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers" />.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// The value of this property may be <c>null</c>,
-		/// depending on whether <see cref="Calculator"/> was initialized with
-		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers"/>.
+		/// depending on whether <see cref="Calculator" /> was initialized with
+		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers" />.
 		/// </para>
 		/// <para>
 		/// This property could be private, but is given internal
@@ -380,27 +380,27 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets an internal reference to all of the values
-		/// calculated based on initial <see cref="CurrentPage"/>
-		/// and <see cref="TotalItems"/> values.
+		/// calculated based on initial <see cref="CurrentPage" />
+		/// and <see cref="TotalItems" /> values.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// This property does some clever sleight-of-hand
 		/// for the sake of optimizing serialization and deserialization.
-		/// When deserialized, only the <see cref="CurrentPage"/>
-		/// and <see cref="TotalItems"/> are required, then other
+		/// When deserialized, only the <see cref="CurrentPage" />
+		/// and <see cref="TotalItems" /> are required, then other
 		/// values are calculated once into a "state" object.
 		/// </para>
 		/// <para>
 		/// Internally, the first access of this property
 		/// also has the effect of replacing the parent
-		/// <see cref="PagingInfo"/> value.  It's a "lazy"
-		/// initialization optimized for <see cref="ValueType"/>
+		/// <see cref="PagingInfo" /> value.  It's a "lazy"
+		/// initialization optimized for <see cref="ValueType" />
 		/// requiring this serialization feature.
 		/// </para>
 		/// <para>
 		/// This property backs all of the serialized public
-		/// read-only properties of <see cref="PagingInfo"/>.
+		/// read-only properties of <see cref="PagingInfo" />.
 		/// </para>
 		/// </remarks>
 		private PagingInfoCalculator Calculator
@@ -444,7 +444,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PagingInfo"/>
+		/// specified <see cref="PagingInfo" />
 		/// objects are equal.
 		/// </summary>
 		/// <param name="left">
@@ -454,8 +454,8 @@ namespace MiscCorLib.Collections
 		/// The second object to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/>
-		/// and <paramref name="right"/> are equal;
+		/// <c>true</c> if <paramref name="left" />
+		/// and <paramref name="right" /> are equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
 		public static bool operator ==(PagingInfo left, PagingInfo right)
@@ -465,7 +465,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PagingInfo"/>
+		/// specified <see cref="PagingInfo" />
 		/// objects are not equal.
 		/// </summary>
 		/// <param name="left">
@@ -475,8 +475,8 @@ namespace MiscCorLib.Collections
 		/// The second object to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/>
-		/// and <paramref name="right"/> are not equal;
+		/// <c>true</c> if <paramref name="left" />
+		/// and <paramref name="right" /> are not equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
 		public static bool operator !=(PagingInfo left, PagingInfo right)
@@ -493,13 +493,13 @@ namespace MiscCorLib.Collections
 		/// This may be useful for some paging UI components.
 		/// </summary>
 		/// <returns>
-		/// A sequenced list of <see cref="PageNumberAndItemNumbers"/>
+		/// A sequenced list of <see cref="PageNumberAndItemNumbers" />
 		/// values representing all of the pages of a "paged" collection
 		/// and each page's first and last item numbers.
 		/// </returns>
 		/// <remarks>
 		/// <para>
-		/// This method is marked as <see cref="PureAttribute"/>
+		/// This method is marked as <see cref="PureAttribute" />
 		/// though this is not strictly true. Still, because of the
 		/// internals of this simple struct, it's okay to treat this
 		/// as a pure function.
@@ -507,7 +507,7 @@ namespace MiscCorLib.Collections
 		/// <para>
 		/// This method could have been written as a property,
 		/// but this a clever scheme to optimize the operation
-		/// and serialization of <see cref="PagingInfo"/>.
+		/// and serialization of <see cref="PagingInfo" />.
 		/// </para>
 		/// </remarks>
 		[Pure]
@@ -520,32 +520,32 @@ namespace MiscCorLib.Collections
 		}
 
 		/// <summary>
-		/// Calculates a <see cref="PageNumberAndSize"/> for an
-		/// arbitrary page <see cref="PageNumberAndSize.Number"/>
-		/// using the same page <see cref="PageNumberAndSize.Size"/>.
+		/// Calculates a <see cref="PageNumberAndSize" /> for an
+		/// arbitrary page <see cref="PageNumberAndSize.Number" />
+		/// using the same page <see cref="PageNumberAndSize.Size" />.
 		/// </summary>
 		/// <param name="pageNumber">
 		/// The one-based ordinal
-		/// <see cref="PageNumberAndSize.Number"/>
+		/// <see cref="PageNumberAndSize.Number" />
 		/// of the page to fetch.
 		/// </param>
 		/// <returns>
-		/// A <see cref="PageNumberAndSize"/> value calculated by
-		/// using the same <see cref="PageNumberAndSize.Size"/>
-		/// as the <see cref="CurrentPage"/> and the page
-		/// <see cref="PageNumberAndSize.Number"/> given
-		/// as the <paramref name="pageNumber"/> parameter.
+		/// A <see cref="PageNumberAndSize" /> value calculated by
+		/// using the same <see cref="PageNumberAndSize.Size" />
+		/// as the <see cref="CurrentPage" /> and the page
+		/// <see cref="PageNumberAndSize.Number" /> given
+		/// as the <paramref name="pageNumber" /> parameter.
 		/// </returns>
 		/// <remarks>
 		/// <para>
 		/// Should this operation be closed under the set of
-		/// <see cref="PagingInfo"/> operations? In other words,
-		/// should this method return a new <see cref="PagingInfo"/>
-		/// value instead of a <see cref="PageNumberAndSize"/> value?
+		/// <see cref="PagingInfo" /> operations? In other words,
+		/// should this method return a new <see cref="PagingInfo" />
+		/// value instead of a <see cref="PageNumberAndSize" /> value?
 		/// </para>
 		/// <para>
 		/// The reason it should not is that the number of
-		/// <see cref="TotalItems"/> cannot be assumed to
+		/// <see cref="TotalItems" /> cannot be assumed to
 		/// remain constant between requests. That number
 		/// may have changed between the time that this
 		/// page was retrieved and the retrieval of a different
@@ -554,7 +554,7 @@ namespace MiscCorLib.Collections
 		/// <para>
 		/// That is the same reason for checking the maximum
 		/// allowed page number in this function.
-		/// The <see cref="PagingInfo"/> constructor gracefully
+		/// The <see cref="PagingInfo" /> constructor gracefully
 		/// handles the situation in which a page number
 		/// is higher than the total number of pages.
 		/// </para>
@@ -598,7 +598,7 @@ namespace MiscCorLib.Collections
 		/// and a specified object are equal.
 		/// </summary>
 		/// <returns>
-		/// <c>true</c> if <paramref name="obj"/>
+		/// <c>true</c> if <paramref name="obj" />
 		/// and this instance are the same type
 		/// and represent the same value;
 		/// otherwise, <c>false</c>.
@@ -639,17 +639,17 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether this value and another
-		/// specified <see cref="PagingInfo"/>
+		/// specified <see cref="PagingInfo" />
 		/// value are equal.
 		/// </summary>
 		/// <param name="other">
-		/// The <see cref="PagingInfo"/> value
+		/// The <see cref="PagingInfo" /> value
 		/// to compare with the current value.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="other"/> and this
-		/// value have the same <see cref="CurrentPage"/> and
-		/// <see cref="TotalItems"/> values; otherwise, <c>false</c>.
+		/// <c>true</c> if <paramref name="other" /> and this
+		/// value have the same <see cref="CurrentPage" /> and
+		/// <see cref="TotalItems" /> values; otherwise, <c>false</c>.
 		/// </returns>
 		[Pure]
 		public bool Equals(PagingInfo other)

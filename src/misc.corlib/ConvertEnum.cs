@@ -40,15 +40,15 @@ namespace MiscCorLib
 		/// values and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <returns>
 		/// A dictionary with the enumeration values as the keys,
 		/// and the name of each value as the values.
 		/// </returns>
 		/// <exception cref="ArgumentException">
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </exception>
 		public static IDictionary<T, string> ToDictionary<T>()
 			where T : struct, IComparable, IFormattable
@@ -63,19 +63,19 @@ namespace MiscCorLib
 		/// values and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <param name="underlyingType">
 		/// Returns the integral type underlying the enumeration,
-		/// from the <see cref="Enum.GetUnderlyingType"/> method.
+		/// from the <see cref="Enum.GetUnderlyingType" /> method.
 		/// </param>
 		/// <returns>
 		/// A dictionary with the enumeration values as the keys,
 		/// and the name of each value as the values.
 		/// </returns>
 		/// <exception cref="ArgumentException">
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </exception>
 		public static IDictionary<T, string> ToDictionary<T>(out Type underlyingType)
 			where T : struct, IComparable, IFormattable
@@ -109,16 +109,16 @@ namespace MiscCorLib
 		/// underlying type, and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <typeparam name="TU">
-		/// The underlying type of the <see cref="Enum"/>
-		/// value of <typeparamref name="T"/>, from the
-		/// <see cref="Enum.GetUnderlyingType"/> method.
+		/// The underlying type of the <see cref="Enum" />
+		/// value of <typeparamref name="T" />, from the
+		/// <see cref="Enum.GetUnderlyingType" /> method.
 		/// </typeparam>
 		/// <returns>
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </returns>
 		public static IDictionary<TU, string> ToDictionary<T, TU>()
 			where T : struct, IComparable, IFormattable
@@ -164,11 +164,11 @@ namespace MiscCorLib
 		/// and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <returns>
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </returns>
 		public static IDictionary<byte, string> ToDictionaryByte<T>()
 			where T : struct, IComparable, IFormattable
@@ -182,11 +182,11 @@ namespace MiscCorLib
 		/// and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <returns>
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </returns>
 		public static IDictionary<short, string> ToDictionaryInt16<T>()
 			where T : struct, IComparable, IFormattable
@@ -200,11 +200,11 @@ namespace MiscCorLib
 		/// and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <returns>
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </returns>
 		public static IDictionary<int, string> ToDictionaryInt32<T>()
 			where T : struct, IComparable, IFormattable
@@ -218,11 +218,11 @@ namespace MiscCorLib
 		/// and names to use for each value.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type.
+		/// An <see cref="Enum" /> type.
 		/// </typeparam>
 		/// <returns>
-		/// The generic type parameter <typeparamref name="T"/>
-		/// does not derive from <see cref="Enum"/>.
+		/// The generic type parameter <typeparamref name="T" />
+		/// does not derive from <see cref="Enum" />.
 		/// </returns>
 		public static IDictionary<long, string> ToDictionaryInt64<T>()
 			where T : struct, IComparable, IFormattable
@@ -323,18 +323,18 @@ namespace MiscCorLib
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// True if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum" />. Otherwise, false.
 		/// </returns>
 		public static bool TryParse<TEnum>(this byte enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -353,18 +353,18 @@ namespace MiscCorLib
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// True if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum" />. Otherwise, false.
 		/// </returns>
 		public static bool TryParse<TEnum>(this short enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -382,18 +382,18 @@ namespace MiscCorLib
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// True if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum" />. Otherwise, false.
 		/// </returns>
 		public static bool TryParse<TEnum>(this int enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -411,18 +411,18 @@ namespace MiscCorLib
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// True if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum" />. Otherwise, false.
 		/// </returns>
 		public static bool TryParse<TEnum>(this long enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -438,18 +438,18 @@ namespace MiscCorLib
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// True if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum" />. Otherwise, false.
 		/// </returns>
 		public static bool TryParse<TEnum>(this TEnum enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -472,18 +472,18 @@ namespace MiscCorLib
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// A byte representing a value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// the enumeration value matching the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue"/>
+		/// True if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum"/>. Otherwise, false.
+		/// <typeparamref name="TEnum" />. Otherwise, false.
 		/// </returns>
 		public static bool TryParse<TEnum>(this string enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -515,19 +515,19 @@ namespace MiscCorLib
 			/// </typeparam>
 			/// <param name="enumValue">
 			/// A byte representing a set of bits of
-			/// the <typeparamref name="TEnum"/>.
+			/// the <typeparamref name="TEnum" />.
 			/// </param>
 			/// <param name="enumOut">
 			/// If this method returns true, returns
 			/// an array with the bits of a flags
 			/// enumeration contained in the given
-			/// <paramref name="enumValue"/>.
+			/// <paramref name="enumValue" />.
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
-			/// True if the <paramref name="enumValue"/>
+			/// True if the <paramref name="enumValue" />
 			/// was parsed into at least one value of the
-			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
 			public static bool TryParse<TEnum>(this byte enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
@@ -543,19 +543,19 @@ namespace MiscCorLib
 			/// </typeparam>
 			/// <param name="enumValue">
 			/// A short integer representing a set of bits
-			/// of the <typeparamref name="TEnum"/>.
+			/// of the <typeparamref name="TEnum" />.
 			/// </param>
 			/// <param name="enumOut">
 			/// If this method returns true, returns
 			/// an array with the bits of a flags
 			/// enumeration contained in the given
-			/// <paramref name="enumValue"/>.
+			/// <paramref name="enumValue" />.
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
-			/// True if the <paramref name="enumValue"/>
+			/// True if the <paramref name="enumValue" />
 			/// was parsed into at least one value of the
-			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
 			public static bool TryParse<TEnum>(this short enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
@@ -571,19 +571,19 @@ namespace MiscCorLib
 			/// </typeparam>
 			/// <param name="enumValue">
 			/// An integer representing a set of bits
-			/// of the <typeparamref name="TEnum"/>.
+			/// of the <typeparamref name="TEnum" />.
 			/// </param>
 			/// <param name="enumOut">
 			/// If this method returns true, returns
 			/// an array with the bits of a flags
 			/// enumeration contained in the given
-			/// <paramref name="enumValue"/>.
+			/// <paramref name="enumValue" />.
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
-			/// True if the <paramref name="enumValue"/>
+			/// True if the <paramref name="enumValue" />
 			/// was parsed into at least one value of the
-			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
 			public static bool TryParse<TEnum>(this int enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
@@ -599,19 +599,19 @@ namespace MiscCorLib
 			/// </typeparam>
 			/// <param name="enumValue">
 			/// A long integer representing a set of bits
-			/// of the <typeparamref name="TEnum"/>.
+			/// of the <typeparamref name="TEnum" />.
 			/// </param>
 			/// <param name="enumOut">
 			/// If this method returns true, returns
 			/// an array with the bits of a flags
 			/// enumeration contained in the given
-			/// <paramref name="enumValue"/>.
+			/// <paramref name="enumValue" />.
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
-			/// True if the <paramref name="enumValue"/>
+			/// True if the <paramref name="enumValue" />
 			/// was parsed into at least one value of the
-			/// <typeparamref name="TEnum"/>. Otherwise, false.
+			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
 			public static bool TryParse<TEnum>(this long enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
@@ -628,14 +628,14 @@ namespace MiscCorLib
 			/// The type of enumeration to parse.
 			/// </typeparam>
 			/// <param name="enumValue">
-			/// A <typeparamref name="TEnum"/> value to
+			/// A <typeparamref name="TEnum" /> value to
 			/// be parsed into its individually defined values.
 			/// </param>
 			/// <param name="enumOut">
 			/// If this method returns true, returns
 			/// an array with the bits of a flags
 			/// enumeration contained in the given
-			/// <paramref name="enumValue"/>.
+			/// <paramref name="enumValue" />.
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
@@ -672,19 +672,19 @@ namespace MiscCorLib
 		/// The type of enumeration to parse.
 		/// </typeparam>
 		/// <param name="enumValue">
-		/// A string to be converted <typeparamref name="TEnum"/>.
+		/// A string to be converted <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns
 		/// an array with the bits of a flags
 		/// enumeration contained in the given
-		/// <paramref name="enumValue"/>.
+		/// <paramref name="enumValue" />.
 		/// Otherwise, returns an empty array.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if the <paramref name="enumValue"/>
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this string enumValue, out TEnum[] enumOut)
@@ -747,19 +747,19 @@ namespace MiscCorLib
 		/// as its underlying type.
 		/// </summary>
 		/// <typeparam name="TUnderlyingType">
-		/// The underlying type of <typeparamref name="TEnum"/>,
+		/// The underlying type of <typeparamref name="TEnum" />,
 		/// or an integer type which may be converted to that type.
 		/// </typeparam>
 		/// <typeparam name="TEnum">
 		/// Generic type parameter which should be an enumeration.
 		/// </typeparam>
 		/// <param name="enumValue">
-		/// A value of type <typeparamref name="TEnum"/> to be
-		/// be converted to <typeparamref name="TUnderlyingType"/>.
+		/// A value of type <typeparamref name="TEnum" /> to be
+		/// be converted to <typeparamref name="TUnderlyingType" />.
 		/// </param>
 		/// <returns>
-		/// The <paramref name="enumValue"/> converted
-		/// to <typeparamref name="TUnderlyingType"/>.
+		/// The <paramref name="enumValue" /> converted
+		/// to <typeparamref name="TUnderlyingType" />.
 		/// </returns>
 		private static TUnderlyingType GetUnderlyingValueOfEnum<TUnderlyingType, TEnum>(TEnum enumValue)
 			where TEnum : struct, IComparable, IFormattable
@@ -801,23 +801,23 @@ namespace MiscCorLib
 		/// Generic type parameter which should be an enumeration.
 		/// </typeparam>
 		/// <typeparam name="TValue">
-		/// The underlying type of <typeparamref name="TEnum"/>,
+		/// The underlying type of <typeparamref name="TEnum" />,
 		/// or an integer type which may be converted to that type.
 		/// </typeparam>
 		/// <param name="enumValue">
 		/// An integer value which may be converted
-		/// to <typeparamref name="TEnum"/>.
+		/// to <typeparamref name="TEnum" />.
 		/// </param>
 		/// <param name="enumOut">
 		/// If this method returns true, returns an
 		/// enumeration value corresponding to the
-		/// given <paramref name="enumValue"/>.
+		/// given <paramref name="enumValue" />.
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if the <paramref name="enumValue"/>
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into at least one value of the
-		/// <typeparamref name="TEnum"/>.
+		/// <typeparamref name="TEnum" />.
 		/// Otherwise, <c>false</c>.
 		/// </returns>
 		private static bool TryParseInternal<TEnum, TValue>(TValue enumValue, out TEnum enumOut)
@@ -850,24 +850,24 @@ namespace MiscCorLib
 			/// The type of enumeration to parse.
 			/// </typeparam>
 			/// <typeparam name="TValue">
-			/// The underlying type of <typeparamref name="TEnum"/>,
+			/// The underlying type of <typeparamref name="TEnum" />,
 			/// or an integer type which may be converted to that type.
 			/// </typeparam>
 			/// <param name="enumValue">
 			/// A byte representing a set of bits of
-			/// the <typeparamref name="TEnum"/>.
+			/// the <typeparamref name="TEnum" />.
 			/// </param>
 			/// <param name="enumOut">
 			/// If this method returns true, returns
 			/// an array with the bits of a flags
 			/// enumeration contained in the given
-			/// <paramref name="enumValue"/>.
+			/// <paramref name="enumValue" />.
 			/// Otherwise, returns an empty array.
 			/// </param>
 			/// <returns>
-			/// <c>true</c> if the <paramref name="enumValue"/>
+			/// <c>true</c> if the <paramref name="enumValue" />
 			/// was parsed into at least one value of the
-			/// <typeparamref name="TEnum"/>.
+			/// <typeparamref name="TEnum" />.
 			/// Otherwise, <c>false</c>.
 			/// </returns>
 			private static bool TryParseInternal<TEnum, TValue>(TValue enumValue, out TEnum[] enumOut)
@@ -908,7 +908,7 @@ namespace MiscCorLib
 			/// The type of enumeration to parse.
 			/// </typeparam>
 			/// <param name="enumsOut">
-			/// A reference to an <see cref="ICollection{TEnum}"/>
+			/// A reference to an <see cref="ICollection{TEnum}" />
 			/// which may contain the "zero" value and others.
 			/// </param>
 			private static void RemoveNoneIfFlagsAndHasOtherValues<TEnum>(ICollection<TEnum> enumsOut)
@@ -928,21 +928,21 @@ namespace MiscCorLib
 		/// Private method used by the ToDictionary overloads.
 		/// </summary>
 		/// <typeparam name="T">
-		/// An <see cref="Enum"/> type which is the same
-		/// as the <paramref name="enumType"/> parameter.
+		/// An <see cref="Enum" /> type which is the same
+		/// as the <paramref name="enumType" /> parameter.
 		/// </typeparam>
 		/// <param name="enumType">
-		/// The type of <typeparamref name="T"/>.
+		/// The type of <typeparamref name="T" />.
 		/// </param>
 		/// <param name="value">
-		/// A value to convert to the <paramref name="enumType"/>.
+		/// A value to convert to the <paramref name="enumType" />.
 		/// </param>
 		/// <param name="name">
-		/// The name resolved for the <paramref name="value"/>.
+		/// The name resolved for the <paramref name="value" />.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="name"/> is resolved
-		/// for the <paramref name="value"/>, otherwise false.
+		/// True if the <paramref name="name" /> is resolved
+		/// for the <paramref name="value" />, otherwise false.
 		/// </returns>
 		private static bool TryParseName<T>(Type enumType, object value, out string name)
 			where T : struct, IComparable, IFormattable

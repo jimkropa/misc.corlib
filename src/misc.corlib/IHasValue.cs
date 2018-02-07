@@ -3,9 +3,9 @@
 namespace MiscCorLib
 {
 	/// <summary>
-	/// Similar to the <see cref="Nullable{T}.HasValue"/>
-	/// property of <see cref="Nullable{T}"/>, adds a
-	/// <see cref="HasValue"/> property to an object or struct.
+	/// Similar to the <see cref="Nullable{T}.HasValue" />
+	/// property of <see cref="Nullable{T}" />, adds a
+	/// <see cref="HasValue" /> property to an object or struct.
 	/// </summary>
 	public interface IHasValue
 	{

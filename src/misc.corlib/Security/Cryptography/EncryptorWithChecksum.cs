@@ -59,7 +59,7 @@ namespace MiscCorLib.Security.Cryptography
 	}
 
 	/// <summary>
-	/// Decorator of a <see cref="Encryptor{T}"/>?
+	/// Decorator of a <see cref="Encryptor{T}" />?
 	/// </summary>
 	/// <typeparam name="TEncryptor"></typeparam>
 	/// <typeparam name="THasher"></typeparam>

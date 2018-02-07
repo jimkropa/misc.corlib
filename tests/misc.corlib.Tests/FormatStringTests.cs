@@ -3,7 +3,7 @@
 namespace MiscCorLib
 {
 	/// <summary>
-	/// Automated unit tests of the <see cref="FormatString"/> extention methods.
+	/// Automated unit tests of the <see cref="FormatString" /> extention methods.
 	/// </summary>
 	public sealed class FormatStringTests
 	{

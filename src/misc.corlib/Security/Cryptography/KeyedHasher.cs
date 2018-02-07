@@ -38,20 +38,20 @@ namespace MiscCorLib.Security.Cryptography
 	}
 
 	/// <summary>
-	/// Common base class for generic <see cref="Encryptor{T}"/>
-	/// and <see cref="Decryptor{T}"/> types, with an internal
+	/// Common base class for generic <see cref="Encryptor{T}" />
+	/// and <see cref="Decryptor{T}" /> types, with an internal
 	/// abstract factory which automatically creates an instance
-	/// of a specific <see cref="SymmetricAlgorithm"/> based on
-	/// the generic type parameter <typeparamref name="T"/>.
+	/// of a specific <see cref="SymmetricAlgorithm" /> based on
+	/// the generic type parameter <typeparamref name="T" />.
 	/// </summary>
 	/// <typeparam name="T">
-	/// The type of <see cref="SymmetricAlgorithm"/>
+	/// The type of <see cref="SymmetricAlgorithm" />
 	/// to use for encryption and decryption.
 	/// </typeparam>
 	/// <remarks>
 	/// <para>
 	/// This class is optimized for memory.
-	/// Special implementation of <see cref="IDisposable"/>.
+	/// Special implementation of <see cref="IDisposable" />.
 	/// </para>
 	/// </remarks>
 	public class KeyedHasher<T> : Hasher<T>

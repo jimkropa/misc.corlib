@@ -32,7 +32,7 @@ namespace MiscCorLib.Collections
 	/// </summary>
 	/// <remarks>
 	/// A zero-based index value is accessible
-	/// via the <see cref="Index"/> property.
+	/// via the <see cref="Index" /> property.
 	/// </remarks>
 	[Serializable, DataContract]
 	public struct PageNumberAndSize
@@ -46,33 +46,33 @@ namespace MiscCorLib.Collections
 		public const int FirstPageNumber = 1;
 
 		/// <summary>
-		/// The default value for the <see cref="Size"/>
+		/// The default value for the <see cref="Size" />
 		/// of a page within a "paged" collection of items: ten.
 		/// </summary>
 		public const byte DefaultPageSize = 10;
 
 		/// <summary>
-		/// The lowest allowed value for the <see cref="Size"/>
+		/// The lowest allowed value for the <see cref="Size" />
 		/// of a page within a "paged" collection of items: one.
-		/// Zero may be used to indicate an <see cref="Unbounded"/>
+		/// Zero may be used to indicate an <see cref="Unbounded" />
 		/// value, with all items in the collection on a single page.
 		/// </summary>
 		public const byte MinimumPageSize = 1;
 
 		/// <summary>
-		/// A value of <see cref="PageNumberAndSize"/>
-		/// with its <see cref="Number"/> set to the value
-		/// of <see cref="FirstPageNumber"/> (one) and its
-		/// <see cref="Size"/> set to a default value of ten.
+		/// A value of <see cref="PageNumberAndSize" />
+		/// with its <see cref="Number" /> set to the value
+		/// of <see cref="FirstPageNumber" /> (one) and its
+		/// <see cref="Size" /> set to a default value of ten.
 		/// </summary>
 		public static readonly PageNumberAndSize Default
 			= new PageNumberAndSize(FirstPageNumber);
 
 		/// <summary>
-		/// A value of <see cref="PageNumberAndSize"/>
-		/// with its <see cref="Number"/> equal to
-		/// <see cref="FirstPageNumber"/>
-		/// and <see cref="Size"/> of zero,
+		/// A value of <see cref="PageNumberAndSize" />
+		/// with its <see cref="Number" /> equal to
+		/// <see cref="FirstPageNumber" />
+		/// and <see cref="Size" /> of zero,
 		/// to indicate no paging. This value
 		/// represents listing all items on a single
 		/// page whose size is the total number
@@ -80,13 +80,13 @@ namespace MiscCorLib.Collections
 		/// </summary>
 		/// <remarks>
 		/// There is a risk of division by zero when using this value,
-		/// because the <see cref="Size"/> will be zero.
+		/// because the <see cref="Size" /> will be zero.
 		/// </remarks>
 		public static readonly PageNumberAndSize Unbounded
 			= new PageNumberAndSize(true);
 
 		/// <summary>
-		/// A value of <see cref="PageNumberAndSize"/>
+		/// A value of <see cref="PageNumberAndSize" />
 		/// which is not valid, indicating an unspecified value.
 		/// </summary>
 		public static readonly PageNumberAndSize Empty
@@ -108,18 +108,18 @@ namespace MiscCorLib.Collections
 		/// human speech, so the first page
 		/// is "page one."  If the zero-based
 		/// index is needed, use the
-		/// <see cref="Index"/> property
+		/// <see cref="Index" /> property
 		/// or subtract one from this value.
 		/// </para>
 		/// <para>
-		/// If <see cref="IsUnbounded"/> is
+		/// If <see cref="IsUnbounded" /> is
 		/// <c>true</c>, this value will be
-		/// <see cref="FirstPageNumber"/>.
+		/// <see cref="FirstPageNumber" />.
 		/// </para>
 		/// <para>
-		/// If <see cref="HasValue"/> is
+		/// If <see cref="HasValue" /> is
 		/// <c>false</c>, this value will be
-		/// zero and <see cref="Index"/>
+		/// zero and <see cref="Index" />
 		/// will equal negative one.
 		/// </para>
 		/// </remarks>
@@ -129,12 +129,12 @@ namespace MiscCorLib.Collections
 		/// <summary>
 		/// The number of items on each page
 		/// within a "paged" collection of items,
-		/// or zero to indicate an <see cref="Unbounded"/>
+		/// or zero to indicate an <see cref="Unbounded" />
 		/// single page with all items.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// If <see cref="IsUnbounded"/> is
+		/// If <see cref="IsUnbounded" /> is
 		/// <c>true</c>, this value will be zero.
 		/// </para>
 		/// </remarks>
@@ -146,20 +146,20 @@ namespace MiscCorLib.Collections
 		#region [ Constructor Overloads ]
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
+		/// Initializes a new instance of the <see cref="PageNumberAndSize" /> struct
 		/// for a page size between 1 and 255.
 		/// </summary>
 		/// <param name="number">
 		/// A one-based ordinal position of a page
 		/// within a "paged" collection of items,
 		/// initial value of the immutable
-		/// <see cref="Number"/> field.
+		/// <see cref="Number" /> field.
 		/// </param>
 		/// <param name="size">
 		/// The number of items on each page
 		/// within a "paged" collection of items,
 		/// initial value of the immutable
-		/// <see cref="Size"/> field.
+		/// <see cref="Size" /> field.
 		/// </param>
 		public PageNumberAndSize(int number, byte size = DefaultPageSize)
 		{
@@ -177,15 +177,15 @@ namespace MiscCorLib.Collections
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndSize"/> struct
-		/// for the static using the <see cref="Unbounded"/> value, having a
-		/// <see cref="Number"/> equal to <see cref="FirstPageNumber"/>
-		/// and <see cref="Size"/> of zero.
+		/// Initializes a new instance of the <see cref="PageNumberAndSize" /> struct
+		/// for the static using the <see cref="Unbounded" /> value, having a
+		/// <see cref="Number" /> equal to <see cref="FirstPageNumber" />
+		/// and <see cref="Size" /> of zero.
 		/// </summary>
 		/// <param name="unbounded">
 		/// Always sent as <c>true</c> by the static
-		/// <see cref="Unbounded"/> initializer. Would
-		/// other wise create a value equal to <see cref="Empty"/>.
+		/// <see cref="Unbounded" /> initializer. Would
+		/// other wise create a value equal to <see cref="Empty" />.
 		/// </param>
 		private PageNumberAndSize(bool unbounded)
 		{
@@ -205,13 +205,13 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="Number"/> and <see cref="Size"/>
+		/// <see cref="Number" /> and <see cref="Size" />
 		/// values are valid.
 		/// </summary>
 		/// <remarks>
-		/// The <see cref="byte"/> type ensures that the
-		/// <see cref="Size"/> value will never be invalid.
-		/// Zero indicates <see cref="IsUnbounded"/>.
+		/// The <see cref="byte" /> type ensures that the
+		/// <see cref="Size" /> value will never be invalid.
+		/// Zero indicates <see cref="IsUnbounded" />.
 		/// </remarks>
 		////	[NonSerialized] // (this is applicable only to fields, not properties)
 		public bool HasValue
@@ -229,20 +229,20 @@ namespace MiscCorLib.Collections
 		/// <summary>
 		/// Gets the zero-based index of a page within
 		/// a "paged" collection of items, equal to the
-		/// value of <see cref="Number"/> minus one.
+		/// value of <see cref="Number" /> minus one.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// This is also the index of a
-		/// <see cref="PageNumberAndItemNumbers"/>
+		/// <see cref="PageNumberAndItemNumbers" />
 		/// value within a list such as the one returned by
-		/// <see cref="PagingInfo.AllPagesAndItemNumbers"/>.
+		/// <see cref="PagingInfo.AllPagesAndItemNumbers" />.
 		/// </para>
 		/// <para>
-		/// If <see cref="IsUnbounded"/> is <c>true</c>,
+		/// If <see cref="IsUnbounded" /> is <c>true</c>,
 		/// then this property returns a value of zero.
 		/// The "default" (and invalid) value of this property,
-		/// matching that of the <see cref="Empty"/> value,
+		/// matching that of the <see cref="Empty" /> value,
 		/// is one less than zero.
 		/// </para>
 		/// </remarks>
@@ -254,7 +254,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="Number"/> and <see cref="Size"/>
+		/// <see cref="Number" /> and <see cref="Size" />
 		/// values are set to indicate that all items
 		/// should be shown on a single page of
 		/// unbounded size.
@@ -262,7 +262,7 @@ namespace MiscCorLib.Collections
 		/// <remarks>
 		/// When this value is <c>true</c>, there
 		/// is a risk of division by zero because the
-		/// <see cref="Size"/> value is zero.
+		/// <see cref="Size" /> value is zero.
 		/// </remarks>
 		[DataMember(IsRequired = false, Order = 3)]
 		public bool IsUnbounded
@@ -276,8 +276,8 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndSize"/> value is less than
-		/// another specified <see cref="PageNumberAndSize"/> value.
+		/// <see cref="PageNumberAndSize" /> value is less than
+		/// another specified <see cref="PageNumberAndSize" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -286,8 +286,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is less than
-		/// <paramref name="right"/>; otherwise, <c>false</c>.
+		/// <c>true</c> if <paramref name="left" /> is less than
+		/// <paramref name="right" />; otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator <(PageNumberAndSize left, PageNumberAndSize right)
 		{
@@ -296,8 +296,8 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndSize"/> value is greater than
-		/// another specified <see cref="PageNumberAndSize"/> value.
+		/// <see cref="PageNumberAndSize" /> value is greater than
+		/// another specified <see cref="PageNumberAndSize" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -306,8 +306,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is greater than
-		/// <paramref name="right"/>; otherwise, <c>false</c>.
+		/// <c>true</c> if <paramref name="left" /> is greater than
+		/// <paramref name="right" />; otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator >(PageNumberAndSize left, PageNumberAndSize right)
 		{
@@ -316,9 +316,9 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndSize"/> value
+		/// <see cref="PageNumberAndSize" /> value
 		/// is less than or equal to another specified
-		/// <see cref="PageNumberAndSize"/> value.
+		/// <see cref="PageNumberAndSize" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -327,8 +327,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is
-		/// less than or equal to <paramref name="right"/>;
+		/// <c>true</c> if <paramref name="left" /> is
+		/// less than or equal to <paramref name="right" />;
 		/// otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator <=(PageNumberAndSize left, PageNumberAndSize right)
@@ -338,9 +338,9 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndSize"/> value
+		/// <see cref="PageNumberAndSize" /> value
 		/// is greater than or equal to another specified
-		/// <see cref="PageNumberAndSize"/> value.
+		/// <see cref="PageNumberAndSize" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -349,8 +349,8 @@ namespace MiscCorLib.Collections
 		/// The second value to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/> is
-		/// greater than or equal to <paramref name="right"/>;
+		/// <c>true</c> if <paramref name="left" /> is
+		/// greater than or equal to <paramref name="right" />;
 		/// otherwise, <c>false</c>.
 		/// </returns>
 		public static bool operator >=(PageNumberAndSize left, PageNumberAndSize right)
@@ -360,7 +360,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PageNumberAndSize"/>
+		/// specified <see cref="PageNumberAndSize" />
 		/// objects are equal.
 		/// </summary>
 		/// <param name="left">
@@ -370,8 +370,8 @@ namespace MiscCorLib.Collections
 		/// The second object to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/>
-		/// and <paramref name="right"/> are equal;
+		/// <c>true</c> if <paramref name="left" />
+		/// and <paramref name="right" /> are equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
 		public static bool operator ==(PageNumberAndSize left, PageNumberAndSize right)
@@ -381,7 +381,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PageNumberAndSize"/>
+		/// specified <see cref="PageNumberAndSize" />
 		/// objects are not equal.
 		/// </summary>
 		/// <param name="left">
@@ -391,8 +391,8 @@ namespace MiscCorLib.Collections
 		/// The second object to compare.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="left"/>
-		/// and <paramref name="right"/> are not equal;
+		/// <c>true</c> if <paramref name="left" />
+		/// and <paramref name="right" /> are not equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
 		public static bool operator !=(PageNumberAndSize left, PageNumberAndSize right)
@@ -420,7 +420,7 @@ namespace MiscCorLib.Collections
 		/// and a specified object are equal.
 		/// </summary>
 		/// <returns>
-		/// <c>true</c> if <paramref name="obj"/>
+		/// <c>true</c> if <paramref name="obj" />
 		/// and this instance are the same type
 		/// and represent the same value;
 		/// otherwise, <c>false</c>.
@@ -461,23 +461,23 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Compares the current value with another
-		/// <see cref="PageNumberAndSize"/> value
+		/// <see cref="PageNumberAndSize" /> value
 		/// and returns an integer that indicates whether
 		/// the current instance precedes, follows, or occurs
 		/// in the same position in the sort order
-		/// as the <paramref name="other"/> value.
+		/// as the <paramref name="other" /> value.
 		/// </summary>
 		/// <param name="other">
 		/// An object to compare with this instance.
 		/// </param>
 		/// <returns>
 		/// A value that indicates the relative order of the objects being compared,
-		/// to implement <see cref="IComparable{T}.CompareTo"/>.
+		/// to implement <see cref="IComparable{T}.CompareTo" />.
 		/// </returns>
 		/// <remarks>
 		/// In this case, the comparison is based on the
-		/// <see cref="Size"/> value multiplied by the
-		/// <see cref="Number"/> value.
+		/// <see cref="Size" /> value multiplied by the
+		/// <see cref="Number" /> value.
 		/// </remarks>
 		[Pure]
 		public int CompareTo(PageNumberAndSize other)
@@ -490,17 +490,17 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Indicates whether this value and another
-		/// specified <see cref="PageNumberAndSize"/>
+		/// specified <see cref="PageNumberAndSize" />
 		/// value are equal.
 		/// </summary>
 		/// <param name="other">
-		/// The <see cref="PageNumberAndSize"/> value
+		/// The <see cref="PageNumberAndSize" /> value
 		/// to compare with the current value.
 		/// </param>
 		/// <returns>
-		/// <c>true</c> if <paramref name="other"/> and this
-		/// value have the same <see cref="Number"/> and
-		/// <see cref="Size"/> values; otherwise, <c>false</c>.
+		/// <c>true</c> if <paramref name="other" /> and this
+		/// value have the same <see cref="Number" /> and
+		/// <see cref="Size" /> values; otherwise, <c>false</c>.
 		/// </returns>
 		[Pure]
 		public bool Equals(PageNumberAndSize other)
@@ -526,11 +526,11 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value to use for comparing
-		/// <see cref="PageNumberAndSize"/> values.
+		/// <see cref="PageNumberAndSize" /> values.
 		/// </summary>
 		/// <returns>
-		/// The value of <see cref="Size"/> multiplied
-		/// by the value of <see cref="Number"/>.
+		/// The value of <see cref="Size" /> multiplied
+		/// by the value of <see cref="Number" />.
 		/// </returns>
 		private int CreateComposite()
 		{

@@ -4,7 +4,7 @@ using Xunit;
 namespace MiscCorLib
 {
 	/// <summary>
-	/// Automated unit tests of the <see cref="ConvertEncodedString"/> extention methods.
+	/// Automated unit tests of the <see cref="ConvertEncodedString" /> extention methods.
 	/// </summary>
 	public sealed class ConvertEncodedStringTests
 	{
