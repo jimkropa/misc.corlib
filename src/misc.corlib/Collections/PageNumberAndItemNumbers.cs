@@ -1,31 +1,9 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections
-	PageNumberAndItemNumbers.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MiscCorLib.Collections
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// A simple struct representing the one-based ordinal
 	/// number of a page within a "paged" collection of items,
@@ -86,11 +64,21 @@ namespace MiscCorLib.Collections
 		internal PageNumberAndItemNumbers(
 			int pageNumber, byte pageSize, int totalItems, bool? isLastPage = null)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				pageNumber >= PageNumberAndSize.FirstPageNumber,
-				"An ordinal page number is not a zero-based index. The number must be at least one.");
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
+			if (pageNumber < PageNumberAndSize.FirstPageNumber)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(pageNumber),
+					pageNumber,
+					"An ordinal page number is not a zero-based index. The number must be at least one.");
+			}
+
+			if (totalItems < 0)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(totalItems),
+					totalItems,
+					"The number of items in the list must not be negative!");
+			}
 
 			if (pageSize >= PageNumberAndSize.MinimumPageSize && (totalItems > 0))
 			{
@@ -289,8 +277,13 @@ namespace MiscCorLib.Collections
 		{
 			// Zero as page size is acceptable,
 			// indicating a single "unbounded" page.
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
+			if (totalItems < 0)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(totalItems),
+					totalItems,
+					"The number of items in the list must not be negative!");
+			}
 
 			return PagingInfoCalculator.AllPagesAndItemNumbers(pageSize, totalItems);
 		}
@@ -377,7 +370,6 @@ namespace MiscCorLib.Collections
 		/// In this case, the comparison is based on the
 		/// <see cref="LastItemNumber" /> value.
 		/// </remarks>
-		[Pure]
 		public int CompareTo(PageNumberAndItemNumbers other)
 		{
 			return this.LastItemNumber.CompareTo(other.LastItemNumber);
@@ -398,7 +390,6 @@ namespace MiscCorLib.Collections
 		/// <see cref="FirstItemNumber" />, and <see cref="LastItemNumber" />
 		/// values; otherwise, <c>false</c>.
 		/// </returns>
-		[Pure]
 		public bool Equals(PageNumberAndItemNumbers other)
 		{
 			return (this.PageNumber == other.PageNumber)

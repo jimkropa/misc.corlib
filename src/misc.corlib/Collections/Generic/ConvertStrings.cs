@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace MiscCorLib.Collections.Generic
@@ -32,15 +31,6 @@ namespace MiscCorLib.Collections.Generic
 		/// each string to a generic <see cref="ValueType" />.
 		/// </summary>
 		public const bool DefaultThrowTypeConversionExceptions = false;
-
-		/// <summary>
-		/// This is a workaround for a problem in CodeContracts.
-		/// </summary>
-		/// <remarks>
-		/// Refer to <a href="https://github.com/Microsoft/CodeContracts/issues/339">the issue report</a>
-		/// and <a href="http://stackoverflow.com/questions/34612382/">the source of this workaround</a>.
-		/// </remarks>
-		public static readonly Predicate<string> IsNullOrWhiteSpace = string.IsNullOrWhiteSpace;
 
 		/// <summary>
 		/// Delegate contract for an optimization when
@@ -108,7 +98,6 @@ namespace MiscCorLib.Collections.Generic
 		/// <c>true</c> if <paramref name="s" /> was
 		/// converted successfully; otherwise, <c>false</c>.
 		/// </returns>
-		[Pure]
 		public static bool TryConvertFromString<T>(
 			TypeConverter converter,
 			bool throwTypeConversionExceptions,
@@ -116,12 +105,15 @@ namespace MiscCorLib.Collections.Generic
 			out T result)
 			where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(converter != null);
-			Contract.Requires<ArgumentException>(!IsNullOrWhiteSpace(s));
+			if (converter == null)
+			{
+				throw new ArgumentNullException(nameof(converter));
+			}
 
-			// This produces a compiler warning due to CodeContracts issue.
-			// See workaround above for https://github.com/Microsoft/CodeContracts/issues/339
-			////	Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(s));
+			if (string.IsNullOrWhiteSpace(s))
+			{
+				throw new ArgumentException("A non-empty string is required.", nameof(s));
+			}
 
 			result = default(T);
 
@@ -636,7 +628,10 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<string> collection,
 			string separator = ConvertDelimitedString.DefaultSeparator)
 		{
-			Contract.Requires<ArgumentException>(!IsNullOrWhiteSpace(separator));
+			if (string.IsNullOrWhiteSpace(separator))
+			{
+				throw new ArgumentException("A non-empty string is required.", nameof(separator));
+			}
 
 			// If the collection is null, return an empty string,
 			// the same as ConvertStructCollection.ToDelimitedString

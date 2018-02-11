@@ -1,31 +1,9 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	ByteArrayHashing.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Security.Cryptography;
-	using System.Text;
-
 	public static class ByteArrayHashing
 	{
 
@@ -59,7 +37,10 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] ComputeHash<T>(this byte[] bytes)
 			where T : HashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(bytes != null);
+			if (bytes == null)
+			{
+				throw new ArgumentNullException(nameof(bytes));
+			}
 
 			byte[] hashedBytes;
 
@@ -84,8 +65,15 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] ComputeHash<T>(this byte[] bytes, byte[] key)
 			where T : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(bytes != null);
-			Contract.Requires<ArgumentNullException>(key != null);
+			if (bytes == null)
+			{
+				throw new ArgumentNullException(nameof(bytes));
+			}
+
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
 
 			byte[] hashedBytes;
 
@@ -124,8 +112,15 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] ComputeHash<T>(this byte[] bytes, string key)
 			where T : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(bytes != null);
-			Contract.Requires<ArgumentNullException>(key != null);
+			if (bytes == null)
+			{
+				throw new ArgumentNullException(nameof(bytes));
+			}
+
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
 
 			return ComputeHash<T>(bytes, key, DefaultHashKeyEncoding);
 		}
@@ -136,9 +131,20 @@ namespace MiscCorLib.Security.Cryptography
 			Encoding keyEncoding)
 			where T : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(bytes != null);
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(keyEncoding != null);
+			if (bytes == null)
+			{
+				throw new ArgumentNullException(nameof(bytes));
+			}
+
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
+
+			if (keyEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(keyEncoding));
+			}
 
 			return ComputeHash<T>(bytes, keyEncoding.GetBytes(key));
 		}

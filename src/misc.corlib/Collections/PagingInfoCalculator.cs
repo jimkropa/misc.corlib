@@ -1,30 +1,8 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections
-	PagingInfoCalculator.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Collections.Generic;
 
 namespace MiscCorLib.Collections
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-
 	/// <summary>
 	/// An internal value backing the public properties
 	/// of the <see cref="PagingInfo" /> class, for
@@ -102,10 +80,20 @@ namespace MiscCorLib.Collections
 		internal PagingInfoCalculator(
 			PageNumberAndSize currentPage, int totalItems, bool includeAllPagesAndItemNumbers)
 		{
-			Contract.Requires<ArgumentException>(
-				currentPage.HasValue, "The current page must have a value. \"Unbounded\" is an acceptable value.");
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
+			if (!currentPage.HasValue)
+			{
+				throw new ArgumentException(
+					"The current page must have a value. \"Unbounded\" is an acceptable value.",
+					nameof(currentPage));
+			}
+
+			if (totalItems < 0)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(totalItems),
+					totalItems,
+					"The number of items in the list must not be negative!");
+			}
 
 			this.IncludeAllPagesAndItemNumbers = includeAllPagesAndItemNumbers;
 			this.CurrentPage = currentPage;
@@ -239,8 +227,22 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		internal static int CalculateTotalPages(byte pageSize, int totalItems)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(pageSize >= PageNumberAndSize.MinimumPageSize);
-			Contract.Requires<ArgumentOutOfRangeException>(totalItems > 0);
+			// Prevent possibility of division by zero.
+			if (pageSize < PageNumberAndSize.MinimumPageSize)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(pageSize),
+					pageSize,
+					"There must be at least one item per page or there could be division by zero!");
+			}
+
+			if (totalItems < 0)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(totalItems),
+					totalItems,
+					"The number of items in the list must not be negative!");
+			}
 
 			// This calculation is part of the calculation of total pages,
 			// which will produce an invalid value if the number of total items
@@ -281,7 +283,13 @@ namespace MiscCorLib.Collections
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
+			if (totalItems < 0)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(totalItems),
+					totalItems,
+					"The number of items in the list must not be negative!");
+			}
 
 			if ((pageSize >= PageNumberAndSize.MinimumPageSize) && (totalItems > 0))
 			{
@@ -316,7 +324,12 @@ namespace MiscCorLib.Collections
 		internal static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			PagingInfo pagingInfo)
 		{
-			Contract.Requires<ArgumentException>(pagingInfo.HasValue);
+			if (!pagingInfo.HasValue)
+			{
+				throw new ArgumentException(
+					"PagingInfo must specify a valid page size and total pages.",
+					nameof(pagingInfo));
+			}
 
 			return AllPagesAndItemNumbers(
 				pagingInfo.CurrentPage.Size, pagingInfo.TotalItems, pagingInfo.TotalPages);
@@ -349,10 +362,6 @@ namespace MiscCorLib.Collections
 		private static IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers(
 			byte pageSize, int totalItems, int totalPages)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(totalItems >= 0);
-			Contract.Requires<ArgumentOutOfRangeException>(totalPages >= 0);
-
-			// ReSharper disable once InvertIf
 			if ((pageSize >= PageNumberAndSize.MinimumPageSize)
 				&& (totalItems > 0) && (totalPages > 0))
 			{

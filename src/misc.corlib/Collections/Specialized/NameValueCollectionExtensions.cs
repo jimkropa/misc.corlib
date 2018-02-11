@@ -1,33 +1,10 @@
-#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections.Specialized
-	NameValueCollectionExtensions.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using MiscCorLib.Collections.Generic;
 
 namespace MiscCorLib.Collections.Specialized
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Collections.Specialized;
-	using System.Diagnostics.Contracts;
-
-	using MiscCorLib.Collections.Generic;
-
 	/// <summary>
 	/// A set of static methods for extracting values from
 	/// <see cref="NameValueCollection" /> objects.
@@ -55,7 +32,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool ValueExists(this NameValueCollection collection, string name)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			return collection[name] != null;
 		}
@@ -95,8 +75,15 @@ namespace MiscCorLib.Collections.Specialized
 			out T result)
 			where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-			Contract.Requires<ArgumentNullException>(tryParseDelegate != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
+
+			if (tryParseDelegate == null)
+			{
+				throw new ArgumentNullException(nameof(tryParseDelegate));
+			}
 
 			return tryParseDelegate(collection[name], out result);
 		}
@@ -149,8 +136,15 @@ namespace MiscCorLib.Collections.Specialized
 			T defaultReturn)
 			where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-			Contract.Requires<ArgumentNullException>(tryParseDelegate != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
+
+			if (tryParseDelegate == null)
+			{
+				throw new ArgumentNullException(nameof(tryParseDelegate));
+			}
 
 			T result;
 			if (!collection.TryParseValue(tryParseDelegate, name, out result))
@@ -204,8 +198,15 @@ namespace MiscCorLib.Collections.Specialized
 			string name)
 			where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-			Contract.Requires<ArgumentNullException>(tryParseDelegate != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
+
+			if (tryParseDelegate == null)
+			{
+				throw new ArgumentNullException(nameof(tryParseDelegate));
+			}
 
 			return GetValue(collection, tryParseDelegate, name, default(T));
 		}
@@ -235,7 +236,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool TryGetString(this NameValueCollection collection, string name, out string result)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			if (ValueExists(collection, name))
 			{
@@ -265,7 +269,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static string GetString(this NameValueCollection collection, string name)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			return GetString(collection, name, string.Empty);
 		}
@@ -292,7 +299,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static string GetString(this NameValueCollection collection, string name, string defaultReturn)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			string result;
 			if (!TryGetString(collection, name, out result))
@@ -333,7 +343,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static bool TryParseEnum<T>(this NameValueCollection collection, string name, out T result)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			return TryParseEnum(collection, name, false, out result);
 		}
@@ -372,7 +385,10 @@ namespace MiscCorLib.Collections.Specialized
 		public static bool TryParseEnum<T>(
 			this NameValueCollection collection, string name, bool allowMultipleFlagsBits, out T result)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			Type enumType = typeof(T);
 
@@ -459,7 +475,10 @@ namespace MiscCorLib.Collections.Specialized
 		/// </returns>
 		public static T GetEnum<T>(this NameValueCollection collection, string name) where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			return GetEnum<T>(collection, name, false);
 		}
@@ -494,7 +513,10 @@ namespace MiscCorLib.Collections.Specialized
 		public static T GetEnum<T>(this NameValueCollection collection, string name, bool allowMultipleFlagsBits)
 			where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			T result;
 			TryParseEnum(collection, name, allowMultipleFlagsBits, out result);
@@ -537,7 +559,10 @@ namespace MiscCorLib.Collections.Specialized
 			bool allowMultipleFlagsBits,
 			T defaultReturn) where T : struct
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
 
 			T result;
 			if (!TryParseEnum(collection, name, allowMultipleFlagsBits, out result))

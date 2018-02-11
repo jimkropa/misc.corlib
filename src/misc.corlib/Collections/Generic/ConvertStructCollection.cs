@@ -1,30 +1,8 @@
-#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections.Generic
-	ConvertStructCollection.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+using System;
+using System.Collections.Generic;
 
 namespace MiscCorLib.Collections.Generic
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-
 	/// <summary>
 	/// A set of static extension methods for converting generic
 	/// collections of <see cref="ValueType" /> (a.k.a. "struct" values)
@@ -123,8 +101,6 @@ namespace MiscCorLib.Collections.Generic
 			}
 
 			ICollection<string> list = new List<string>();
-
-			// ReSharper disable once LoopCanBePartlyConvertedToQuery
 			foreach (T item in collection)
 			{
 				string str = toStringMethod == null ? item.ToString() : toStringMethod(item);
@@ -145,6 +121,7 @@ namespace MiscCorLib.Collections.Generic
 
 			// T must be a non-nullable type
 			// for List.ToArray() to work.
+			// In this case, string is not.
 			////	return list.ToArray<string>();
 			
 			// So convert the old-fashioned way instead:
@@ -259,7 +236,10 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			Contract.Requires<ArgumentException>(!ConvertStrings.IsNullOrWhiteSpace(separator));
+			if (string.IsNullOrWhiteSpace(separator))
+			{
+				throw new ArgumentException("A non-empty string is required.", nameof(separator));
+			}
 
 			return collection.ToDelimitedString(
 				null, separator, removeDuplicates);
@@ -303,7 +283,10 @@ namespace MiscCorLib.Collections.Generic
 			bool removeDuplicates = DefaultRemoveDuplicates)
 			where T : struct
 		{
-			Contract.Requires<ArgumentException>(!ConvertStrings.IsNullOrWhiteSpace(separator));
+			if (string.IsNullOrWhiteSpace(separator))
+			{
+				throw new ArgumentException("A non-empty string is required.", nameof(separator));
+			}
 
 			return string.Join(
 				separator, collection.ToStringArray(toStringMethod, removeDuplicates));

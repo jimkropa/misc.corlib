@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
 namespace MiscCorLib.Collections
@@ -102,8 +101,6 @@ namespace MiscCorLib.Collections
 			int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
 			: this(PageNumberAndSize.Unbounded, totalItems, calculateAllPagesAndItemNumbers)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
 		/// <summary>
@@ -131,23 +128,13 @@ namespace MiscCorLib.Collections
 			int pageNumber, byte pageSize, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
 			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems, calculateAllPagesAndItemNumbers)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				pageNumber >= PageNumberAndSize.FirstPageNumber,
-				"An ordinal page number is not a zero-based index. The number must be at least one.");
-
-			// Beware of possible division by zero.
-			Contract.Requires<ArgumentOutOfRangeException>(
-				pageSize >= PageNumberAndSize.MinimumPageSize,
-				"There must be at least one item per page or there could be division by zero!");
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
 		/// based on a given <see cref="PageNumberAndSize" /> value.
 		/// </summary>
-		/// <param name="requestedPage">
+		/// <param name="currentPage">
 		/// The requested page <see cref="PageNumberAndSize.Number" />
 		/// and <see cref="PageNumberAndSize.Size" />.
 		/// If <see cref="PageNumberAndSize.Unbounded" /> is sent,
@@ -166,13 +153,9 @@ namespace MiscCorLib.Collections
 		/// for a paging widget which may want to use them.
 		/// </param>
 		public PagingInfo(
-			PageNumberAndSize requestedPage, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
-			: this(new PagingInfoCalculator(requestedPage, totalItems, calculateAllPagesAndItemNumbers))
+			PageNumberAndSize currentPage, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
+			: this(new PagingInfoCalculator(currentPage, totalItems, calculateAllPagesAndItemNumbers))
 		{
-			Contract.Requires<ArgumentException>(
-				requestedPage.HasValue, "The current page must have a value. \"Unbounded\" is an acceptable value.");
-			Contract.Requires<ArgumentOutOfRangeException>(
-				totalItems >= 0, "The number of items in the list must not be negative!");
 		}
 
 		/// <summary>
@@ -206,7 +189,6 @@ namespace MiscCorLib.Collections
 		/// and <see cref="TotalItems" />
 		/// values are valid.
 		/// </summary>
-		////	[NonSerialized] // (this is applicable only to fields, not properties)
 		public bool HasValue
 		{
 			get { return this.CurrentPage.HasValue && this.TotalItems >= 0; }
@@ -510,7 +492,6 @@ namespace MiscCorLib.Collections
 		/// and serialization of <see cref="PagingInfo" />.
 		/// </para>
 		/// </remarks>
-		[Pure]
 		public IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers()
 		{
 			// The value may have already been initialized...
@@ -559,12 +540,15 @@ namespace MiscCorLib.Collections
 		/// is higher than the total number of pages.
 		/// </para>
 		/// </remarks>
-		[Pure]
 		public PageNumberAndSize TurnToPage(int pageNumber)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				pageNumber >= PageNumberAndSize.FirstPageNumber,
-				"An ordinal page number is not a zero-based index. The number must be at least one.");
+			if (pageNumber < PageNumberAndSize.FirstPageNumber)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(pageNumber),
+					pageNumber,
+					"An ordinal page number is not a zero-based index. The number must be at least one.");
+			}
 
 			// Prevent a runtime exception from possible division by zero.
 			if (this.CurrentPage.HasValue)
@@ -651,7 +635,6 @@ namespace MiscCorLib.Collections
 		/// value have the same <see cref="CurrentPage" /> and
 		/// <see cref="TotalItems" /> values; otherwise, <c>false</c>.
 		/// </returns>
-		[Pure]
 		public bool Equals(PagingInfo other)
 		{
 			return this.CurrentPage.Equals(other.CurrentPage)

@@ -1,30 +1,8 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections.Generic
-	PagedList.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Collections.Generic;
 
 namespace MiscCorLib.Collections.Generic
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-
 	/// <summary>
 	/// Default implementation of <see cref="IPagedList{T}" />,
 	/// derived from the base generic <see cref="List{T}" />
@@ -81,10 +59,17 @@ namespace MiscCorLib.Collections.Generic
 		public PagedList(IEnumerable<T> collection, PagingInfo pagingInfo)
 			: base(collection)
 		{
-			Contract.Requires<ArgumentNullException>(collection != null);
-			Contract.Requires<ArgumentException>(
-				pagingInfo.CurrentPage.HasValue,
-				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
+			if (collection == null)
+			{
+				throw new ArgumentNullException(nameof(collection));
+			}
+
+			if (!pagingInfo.CurrentPage.HasValue)
+			{
+				throw new ArgumentException(
+					"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.",
+					nameof(pagingInfo));
+			}
 
 			int expectedCount = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;
 			if (this.Count != expectedCount)
@@ -114,18 +99,23 @@ namespace MiscCorLib.Collections.Generic
 		protected PagedList(int capacity, PagingInfo pagingInfo)
 			: base(capacity)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(capacity >= 0);
-			Contract.Requires<ArgumentException>(
-				pagingInfo.CurrentPage.HasValue,
-				"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.");
+			if (capacity < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity must not be negative.");
+			}
+
+			if (!pagingInfo.CurrentPage.HasValue)
+			{
+				throw new ArgumentException(
+					"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.",
+					nameof(pagingInfo));
+			}
 
 			int expectedCapacity = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;
 			if (capacity != expectedCapacity)
 			{
-				throw new ArgumentException(string.Format(
-					"The given capacity ({0}) does not match the expected number of items for the current page ({1}) based on the PagingInfo value.",
-					capacity,
-					expectedCapacity));
+				throw new ArgumentException(
+					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({expectedCapacity}) based on the PagingInfo value.");
 			}
 
 			this.pagingInfo = pagingInfo;

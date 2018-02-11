@@ -1,30 +1,8 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Collections
-	PageNumberAndSize.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MiscCorLib.Collections
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Runtime.Serialization;
-
 	/// <summary>
 	/// A simple struct representing the one-based ordinal
 	/// number of a page within a "paged" collection of items,
@@ -149,31 +127,39 @@ namespace MiscCorLib.Collections
 		/// Initializes a new instance of the <see cref="PageNumberAndSize" /> struct
 		/// for a page size between 1 and 255.
 		/// </summary>
-		/// <param name="number">
+		/// <param name="pageNumber">
 		/// A one-based ordinal position of a page
 		/// within a "paged" collection of items,
 		/// initial value of the immutable
 		/// <see cref="Number" /> field.
 		/// </param>
-		/// <param name="size">
+		/// <param name="pageSize">
 		/// The number of items on each page
 		/// within a "paged" collection of items,
 		/// initial value of the immutable
 		/// <see cref="Size" /> field.
 		/// </param>
-		public PageNumberAndSize(int number, byte size = DefaultPageSize)
+		public PageNumberAndSize(int pageNumber, byte pageSize = DefaultPageSize)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				number >= FirstPageNumber,
-				"An ordinal page number is not a zero-based index. The number must be at least one.");
+			if (pageNumber < FirstPageNumber)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(pageNumber),
+					pageNumber,
+					"An ordinal page number is not a zero-based index. The number must be at least one.");
+			}
 
-			// Beware of possible division by zero.
-			Contract.Requires<ArgumentOutOfRangeException>(
-				size >= MinimumPageSize,
-				"There must be at least one item per page or there could be division by zero!");
+			// Prevent possibility of division by zero.
+			if (pageSize < MinimumPageSize)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(pageSize),
+					pageSize,
+					"There must be at least one item per page or there could be division by zero!");
+			}
 
-			this.Number = number;
-			this.Size = size;
+			this.Number = pageNumber;
+			this.Size = pageSize;
 		}
 
 		/// <summary>
@@ -479,7 +465,6 @@ namespace MiscCorLib.Collections
 		/// <see cref="Size" /> value multiplied by the
 		/// <see cref="Number" /> value.
 		/// </remarks>
-		[Pure]
 		public int CompareTo(PageNumberAndSize other)
 		{
 			int thisComposite = this.CreateComposite();
@@ -502,7 +487,6 @@ namespace MiscCorLib.Collections
 		/// value have the same <see cref="Number" /> and
 		/// <see cref="Size" /> values; otherwise, <c>false</c>.
 		/// </returns>
-		[Pure]
 		public bool Equals(PageNumberAndSize other)
 		{
 			return (this.Number == other.Number) && (this.Size == other.Size);
