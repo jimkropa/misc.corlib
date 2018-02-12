@@ -1,31 +1,8 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib
-	ConvertByteArray.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Text;
 
 namespace MiscCorLib
 {
-	using System;
-	using System.Diagnostics.CodeAnalysis;
-	using System.Diagnostics.Contracts;
-	using System.Text;
-
 	/// <summary>
 	/// A set of static extension methods for byte arrays.
 	/// </summary>
@@ -66,7 +43,10 @@ namespace MiscCorLib
 
 		public static string ToBase64String(this byte[] inArray)
 		{
-			Contract.Requires<ArgumentNullException>(inArray != null);
+			if (inArray == null)
+			{
+				throw new ArgumentNullException(nameof(inArray));
+			}
 
 			return Convert.ToBase64String(inArray);
 		}
@@ -83,7 +63,10 @@ namespace MiscCorLib
 
 		public static string ToHexadecimalString(this byte[] inArray)
 		{
-			Contract.Requires<ArgumentNullException>(inArray != null);
+			if (inArray == null)
+			{
+				throw new ArgumentNullException(nameof(inArray));
+			}
 
 			// For performance analysis, try here:
 			// https://github.com/patridge/PerformanceStubs
@@ -119,9 +102,11 @@ namespace MiscCorLib
 		public static string ToEncodedString(
 			this byte[] inArray, ByteArrayStringEncoding encoding = DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(inArray != null);
+			if (inArray == null)
+			{
+				throw new ArgumentNullException(nameof(inArray));
+			}
 
-			// ReSharper disable once ConvertIfStatementToSwitchStatement
 			if (encoding == ByteArrayStringEncoding.Base64)
 			{
 				return inArray.ToBase64String();
@@ -152,8 +137,15 @@ namespace MiscCorLib
 
 		public static string ToText(this byte[] inArray, Encoding encoding)
 		{
-			Contract.Requires<ArgumentNullException>(inArray != null);
-			Contract.Requires<ArgumentNullException>(encoding != null);
+			if (inArray == null)
+			{
+				throw new ArgumentNullException(nameof(inArray));
+			}
+
+			if (encoding == null)
+			{
+				throw new ArgumentNullException(nameof(encoding));
+			}
 
 			// Simple double-dispatch.
 			// TODO: Loop over buffer if array is large.
@@ -171,29 +163,31 @@ namespace MiscCorLib
 			return inArray.ToText(encoding);
 		}
 
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
 		public static string ToASCII(this byte[] inArray)
 		{
-			Contract.Requires<ArgumentNullException>(inArray != null);
+			if (inArray == null)
+			{
+				throw new ArgumentNullException(nameof(inArray));
+			}
 
 			return inArray.ToText(Encoding.ASCII);
 		}
 
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
 		public static string ToASCII(this byte[] inArray, bool allowNulls)
 		{
 			return inArray.ToText(Encoding.ASCII, allowNulls);
 		}
 
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
 		public static string ToUTF8(this byte[] inArray)
 		{
-			Contract.Requires<ArgumentNullException>(inArray != null);
+			if (inArray == null)
+			{
+				throw new ArgumentNullException(nameof(inArray));
+			}
 
 			return inArray.ToText(Encoding.UTF8);
 		}
 
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
 		public static string ToUTF8(this byte[] inArray, bool allowNulls)
 		{
 			return inArray.ToText(Encoding.UTF8, allowNulls);

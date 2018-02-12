@@ -1,31 +1,9 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	EncryptorWithChecksum.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Security.Cryptography;
-	using System.Text;
-
 	// TODO: Test whether this functionality is even needed...
 	// If decryption fails, is there an exception or does it just produce nonsense?
 	public sealed class EncryptorWithChecksum : EncryptorWithChecksum<SymmetricAlgorithm, KeyedHashAlgorithm>
@@ -140,7 +118,6 @@ namespace MiscCorLib.Security.Cryptography
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
-			// ReSharper disable once InvertIf
 			if (plaintext == null)
 			{
 				checksum = null;
@@ -171,7 +148,6 @@ namespace MiscCorLib.Security.Cryptography
 			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
 			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
 
-			// ReSharper disable once InvertIf
 			if (plaintext == null)
 			{
 				checksum = null;

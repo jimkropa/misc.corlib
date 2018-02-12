@@ -90,7 +90,6 @@ namespace MiscCorLib.Collections.Generic
 			{
 				const string nullString = null;
 
-				// ReSharper disable once ExpressionIsAlwaysNull
 				int[] result1 = nullString.ToArray<int>();
 				int[] result2 = nullString.ToArray<int>(int.TryParse);
 				int[] result3 = nullString.ToArray<int>(":");
@@ -201,7 +200,6 @@ namespace MiscCorLib.Collections.Generic
 			{
 				const string nullString = null;
 
-				// ReSharper disable once ExpressionIsAlwaysNull
 				IReadOnlyList<int> result1 = nullString.ToEnumerable<int>();
 				IReadOnlyList<int> result2 = nullString.ToEnumerable<int>(int.TryParse);
 				IReadOnlyList<int> result3 = nullString.ToEnumerable<int>(":");
@@ -312,7 +310,6 @@ namespace MiscCorLib.Collections.Generic
 			{
 				const string nullString = null;
 
-				// ReSharper disable once ExpressionIsAlwaysNull
 				IList<int> result1 = nullString.ToList<int>();
 				IList<int> result2 = nullString.ToList<int>(int.TryParse);
 				IList<int> result3 = nullString.ToList<int>(":");

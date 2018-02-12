@@ -74,7 +74,6 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IEnumerable<char> nullArray = null;
 
-				// ReSharper disable once ExpressionIsAlwaysNull
 				string[] result = nullArray.ToStringArray();
 
 				Assert.Equal(0, result.Length);
@@ -136,7 +135,6 @@ namespace MiscCorLib.Collections.Generic
 			{
 				IEnumerable<char> nullArray = null;
 
-				// ReSharper disable once ExpressionIsAlwaysNull
 				string result = nullArray.ToDelimitedString();
 
 				Assert.Equal(string.Empty, result);

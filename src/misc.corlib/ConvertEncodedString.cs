@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 
 namespace MiscCorLib
 {
@@ -77,13 +76,11 @@ namespace MiscCorLib
 		{
 			Contract.Requires<ArgumentNullException>(encodedString != null);
 
-			// ReSharper disable once ConvertIfStatementToSwitchStatement
 			if (fromEncoding == ByteArrayStringEncoding.Base64)
 			{
 				return encodedString.FromBase64();
 			}
 	
-			// ReSharper disable once InvertIf
 			if (fromEncoding == ByteArrayStringEncoding.Hexadecimal)
 			{
 				return encodedString.FromHexadecimal();

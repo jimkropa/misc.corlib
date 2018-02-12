@@ -597,7 +597,6 @@ namespace MiscCorLib.Collections
 				return false;
 			}
 
-			// ReSharper disable once ConvertIfStatementToReturnStatement
 			if (obj.GetType() != this.GetType())
 			{
 				return false;

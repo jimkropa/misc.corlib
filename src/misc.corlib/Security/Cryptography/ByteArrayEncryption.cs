@@ -1,31 +1,9 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	ByteArrayEncryption.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Security.Cryptography;
-	using System.Text;
-
 	public static class ByteArrayEncryption
 	{
 		/// <summary>
@@ -39,7 +17,6 @@ namespace MiscCorLib.Security.Cryptography
 		/// </summary>
 		public static readonly Encoding DefaultKeyEncoding = Encoding.ASCII;
 
-		// ReSharper disable once InconsistentNaming
 		/// <summary>
 		/// When a string is passed to the overload of
 		/// ComputeHash
@@ -58,9 +35,20 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = Encryption.DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
+			if (plaintextBytes == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextBytes));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (salt == null)
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
 
 			byte[] encryptedBytes;
 
@@ -80,9 +68,20 @@ namespace MiscCorLib.Security.Cryptography
 			string iv)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(iv != null);
+			if (plaintextBytes == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextBytes));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (iv == null)
+			{
+				throw new ArgumentNullException(nameof(iv));
+			}
 
 			return Encrypt<T>(plaintextBytes, encryptionKey, DefaultKeyEncoding, iv, DefaultIVEncoding);
 		}
@@ -95,11 +94,30 @@ namespace MiscCorLib.Security.Cryptography
 			Encoding ivEncoding)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(keyEncoding != null);
-			Contract.Requires<ArgumentNullException>(iv != null);
-			Contract.Requires<ArgumentNullException>(ivEncoding != null);
+			if (plaintextBytes == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextBytes));
+			}
+
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
+
+			if (keyEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(keyEncoding));
+			}
+
+			if (iv == null)
+			{
+				throw new ArgumentNullException(nameof(iv));
+			}
+
+			if (ivEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(ivEncoding));
+			}
 
 			return Encrypt<T>(plaintextBytes, keyEncoding.GetBytes(key), ivEncoding.GetBytes(iv));
 		}
@@ -111,8 +129,15 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = Encryption.DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(iv != null);
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
+
+			if (iv == null)
+			{
+				throw new ArgumentNullException(nameof(iv));
+			}
 
 			byte[] decryptedBytes;
 			using (Decryptor<T> decryptor = new Decryptor<T>(key, iv, options))
@@ -126,9 +151,20 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] Decrypt<T>(this byte[] plaintextBytes, string key, string iv)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(iv != null);
+			if (plaintextBytes == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextBytes));
+			}
+
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
+
+			if (iv == null)
+			{
+				throw new ArgumentNullException(nameof(iv));
+			}
 
 			return Decrypt<T>(plaintextBytes, key, DefaultKeyEncoding, iv, DefaultIVEncoding);
 		}
@@ -136,11 +172,30 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] Decrypt<T>(this byte[] plaintextBytes, string key, Encoding keyEncoding, string iv, Encoding ivEncoding)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(plaintextBytes != null);
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(keyEncoding != null);
-			Contract.Requires<ArgumentNullException>(iv != null);
-			Contract.Requires<ArgumentNullException>(ivEncoding != null);
+			if (plaintextBytes == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextBytes));
+			}
+
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
+
+			if (keyEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(keyEncoding));
+			}
+
+			if (iv == null)
+			{
+				throw new ArgumentNullException(nameof(iv));
+			}
+
+			if (ivEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(ivEncoding));
+			}
 
 			return Decrypt<T>(plaintextBytes, keyEncoding.GetBytes(key), ivEncoding.GetBytes(iv));
 		}

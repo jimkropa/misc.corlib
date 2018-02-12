@@ -34,11 +34,9 @@ namespace MiscCorLib
 			[Fact]
 			public void Disallows_Null_Array_By_Default()
 			{
-				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
 					() => ConvertEncodedString.ToByteArray(null));
 
-				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
 					() => ConvertEncodedString.ToByteArray(null, ByteArrayStringEncoding.Hexadecimal));
 			}
@@ -62,7 +60,6 @@ namespace MiscCorLib
 			{
 				const ByteArrayStringEncoding invalidEncoding = (ByteArrayStringEncoding)17;
 
-				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
 					() => ConvertEncodedString.ToByteArray(null, invalidEncoding));
 
@@ -131,7 +128,6 @@ namespace MiscCorLib
 			[Fact]
 			public void Disallows_Null_Array_By_Default()
 			{
-				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
 					() => this.NonNullConverter(null));
 			}

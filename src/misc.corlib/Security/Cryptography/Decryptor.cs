@@ -1,30 +1,8 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	Decryptor.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Security.Cryptography;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Security.Cryptography;
-
 	/// <summary>
 	/// Encapsulation of a decryption operation
 	/// with a simple contract: A decryptor decrypts
@@ -47,9 +25,20 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (initializationVector == null)
+			{
+				throw new ArgumentNullException(nameof(initializationVector));
+			}
 		}
 	}
 
@@ -63,9 +52,20 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, false, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (initializationVector == null)
+			{
+				throw new ArgumentNullException(nameof(initializationVector));
+			}
 		}
 
 		public Decryptor(
@@ -74,8 +74,15 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(false, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (initializationVector == null)
+			{
+				throw new ArgumentNullException(nameof(initializationVector));
+			}
 		}
 
 		public byte[] Decrypt(

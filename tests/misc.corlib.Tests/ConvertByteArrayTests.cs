@@ -42,7 +42,6 @@ namespace MiscCorLib
 			[Fact]
 			public void Disallows_Null_Array_By_Default()
 			{
-				// ReSharper disable once AssignNullToNotNullAttribute
 				Assert.Throws<ArgumentNullException>(
 					() => this.NonNullConverter(null));
 			}

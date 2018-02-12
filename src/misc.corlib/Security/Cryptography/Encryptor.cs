@@ -1,31 +1,9 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	Encryptor.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Security.Cryptography;
-	using System.Text;
-
 	/// <summary>
 	/// Encapsulation of an encryption operation
 	/// with a simple contract: An encryptor encrypts
@@ -76,8 +54,15 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, out initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
 		}
 
 		internal Encryptor(
@@ -87,9 +72,20 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (initializationVector == null)
+			{
+				throw new ArgumentNullException(nameof(initializationVector));
+			}
 		}
 	}
 
@@ -118,8 +114,15 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, true, encryptionKey, null, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
 
 			// Set output parameter.
 			initializationVector = this.Algorithm.IV;
@@ -132,9 +135,20 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, true, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (initializationVector == null)
+			{
+				throw new ArgumentNullException(nameof(initializationVector));
+			}
 		}
 
 		internal Encryptor(
@@ -143,7 +157,10 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(true, encryptionKey, null, options)
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
 
 			// Set output parameter.
 			initializationVector = this.Algorithm.IV;
@@ -155,22 +172,39 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(true, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (initializationVector == null)
+			{
+				throw new ArgumentNullException(nameof(initializationVector));
+			}
 		}
 
 		#endregion
 
 		public byte[] Encrypt(byte[] plaintextBytes)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
+			if ((!this.AllowsNulls) && plaintextBytes == null)
+			{
+				throw new ArgumentNullException(
+					nameof(plaintextBytes),
+					"Requires a non-null plaintextBytes value, or set AllowsNulls=true.");
+			}
 
 			return this.Transform(plaintextBytes);
 		}
 
 		public byte[] Encrypt(string plaintext)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
+			if ((!this.AllowsNulls) && plaintext == null)
+			{
+				throw new ArgumentNullException(
+					nameof(plaintext),
+					"Requires a non-null plaintext value, or set AllowsNulls=true.");
+			}
 
 			return this.Encrypt(
 				plaintext, Encryption.DefaultTextEncoding);
@@ -180,8 +214,17 @@ namespace MiscCorLib.Security.Cryptography
 			string plaintext,
 			Encoding plaintextEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
-			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+			if ((!this.AllowsNulls) && plaintext == null)
+			{
+				throw new ArgumentNullException(
+					nameof(plaintext),
+					"Requires a non-null plaintext value, or set AllowsNulls=true.");
+			}
+
+			if (plaintextEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextEncoding));
+			}
 
 			return plaintext == null ? null
 				: this.Transform(plaintextEncoding.GetBytes(plaintext));
@@ -191,7 +234,12 @@ namespace MiscCorLib.Security.Cryptography
 			string plaintext,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
+			if ((!this.AllowsNulls) && plaintext == null)
+			{
+				throw new ArgumentNullException(
+					nameof(plaintext),
+					"Requires a non-null plaintext value, or set AllowsNulls=true.");
+			}
 
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, cipherTextEncoding);
@@ -202,8 +250,17 @@ namespace MiscCorLib.Security.Cryptography
 			Encoding plaintextEncoding,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
-			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+			if ((!this.AllowsNulls) && plaintext == null)
+			{
+				throw new ArgumentNullException(
+					nameof(plaintext),
+					"Requires a non-null plaintext value, or set AllowsNulls=true.");
+			}
+
+			if (plaintextEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextEncoding));
+			}
 
 			return plaintext == null ? null
 				: this.EncryptToString(plaintextEncoding.GetBytes(plaintext), ciphertextEncoding);
@@ -213,7 +270,12 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] plaintextBytes,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
+			if ((!this.AllowsNulls) && plaintextBytes == null)
+			{
+				throw new ArgumentNullException(
+					nameof(plaintextBytes),
+					"Requires a non-null plaintextBytes value, or set AllowsNulls=true.");
+			}
 
 			return this.Encrypt(plaintextBytes).ToEncodedString(cipherTextEncoding);
 		}

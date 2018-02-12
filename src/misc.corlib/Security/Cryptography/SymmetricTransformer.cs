@@ -1,36 +1,13 @@
-﻿#region [ license and copyright boilerplate ]
-/*
-	MiscCorLib.Security.Cryptography
-	SymmetricTransformer.cs
-
-	Copyright (c) 2016 Jim Kropa (https://github.com/jimkropa)
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-#endregion
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading;
+using MiscCorLib.Collections.Generic;
 
 namespace MiscCorLib.Security.Cryptography
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-	using System.IO;
-	using System.Linq;
-	using System.Security.Cryptography;
-	using System.Threading;
-
-	using MiscCorLib.Collections.Generic;
-
 	/// <summary>
 	/// Common base class for generic <see cref="Encryptor{T}" />
 	/// and <see cref="Decryptor{T}" /> types, with an internal
@@ -148,8 +125,15 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: this(isEncryptor, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
 
 			ValidateKeySize(algorithm, encryptionKey);
 
@@ -187,7 +171,10 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] initializationVector,
 			EncryptionOptions options)
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
 
 			this.isEncryptor = isEncryptor;
 			this.encryptionKey = encryptionKey;
@@ -284,13 +271,25 @@ namespace MiscCorLib.Security.Cryptography
 		/// <returns></returns>
 		protected byte[] Transform(byte[] originalBytes)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || originalBytes != null);
+			if ((!this.AllowsNulls) && originalBytes == null)
+			{
+				throw new ArgumentNullException(
+					nameof(originalBytes),
+					"Requires a non-null originalBytes value, or set AllowsNulls=true.");
+			}
+
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
 			if (originalBytes == null) return null;
 
 			// Declare a local variable to be the output value.
 			byte[] transformedBytes;
 
 			// Do not place a "using" around this MemoryStream.
+			// It will be disposed when the CryptoStream is disposed, below.
 			// CA2202: Do not dispose objects multiple times
 			// https://msdn.microsoft.com/en-us/library/ms182334.aspx
 			MemoryStream backingStream = null;
