@@ -44,10 +44,12 @@ namespace MiscCorLib.Security.Cryptography
 
 			byte[] hashedBytes;
 
-			// TODO: Why does this not work for empty strings?
 			// Use an abstract factory to create an instance
 			// of a specific given type of HashAlgorithm.
-			using (T hasher = HashAlgorithm.Create((typeof(T)).ToString()) as T)
+			// https://github.com/dotnet/corefx/issues/22626
+			//  OLD: T hasher = HashAlgorithm.Create((typeof(T)).ToString()) as T
+			//  NEW: (HashAlgorithm) CryptoConfig.CreateFromName(hashName)
+			using (T hasher = (HashAlgorithm) CryptoConfig.CreateFromName((typeof(T)).ToString()) as T)
 			{
 				if (hasher == null)
 				{

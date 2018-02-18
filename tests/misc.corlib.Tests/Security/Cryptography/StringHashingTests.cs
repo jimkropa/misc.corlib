@@ -26,7 +26,7 @@ namespace MiscCorLib.Security.Cryptography
 			{
 			}
 
-			[Fact(Skip="hashing empty string not supported in dotnet core?")]
+			[Fact]
 			public void ComputesKnownHashesForEmptyString()
 			{
 				Assert.Equal(EmptySHA1, string.Empty.HashToHexadecimalString<SHA1>());
@@ -59,7 +59,7 @@ namespace MiscCorLib.Security.Cryptography
 			{
 			}
 
-			[Fact(Skip="hashing empty string not supported in dotnet core?")]
+			[Fact]
 			public void ComputesKnownHashesForEmptyString()
 			{
 				Console.WriteLine(string.Empty.HashToBase64String<SHA1>());
