@@ -54,15 +54,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, out initializationVector, options)
 		{
-			if (algorithm == null)
-			{
-				throw new ArgumentNullException(nameof(algorithm));
-			}
-
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
 		}
 
 		internal Encryptor(
@@ -72,20 +63,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
-			if (algorithm == null)
-			{
-				throw new ArgumentNullException(nameof(algorithm));
-			}
-
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
-			if (initializationVector == null)
-			{
-				throw new ArgumentNullException(nameof(initializationVector));
-			}
 		}
 	}
 
@@ -114,16 +91,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, true, encryptionKey, null, options)
 		{
-			if (algorithm == null)
-			{
-				throw new ArgumentNullException(nameof(algorithm));
-			}
-
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
 			// Set output parameter.
 			initializationVector = this.Algorithm.IV;
 		}
@@ -135,20 +102,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, true, encryptionKey, initializationVector, options)
 		{
-			if (algorithm == null)
-			{
-				throw new ArgumentNullException(nameof(algorithm));
-			}
-
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
-			if (initializationVector == null)
-			{
-				throw new ArgumentNullException(nameof(initializationVector));
-			}
 		}
 
 		internal Encryptor(
@@ -157,11 +110,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(true, encryptionKey, null, options)
 		{
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
 			// Set output parameter.
 			initializationVector = this.Algorithm.IV;
 		}
@@ -172,40 +120,17 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(true, encryptionKey, initializationVector, options)
 		{
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
-			if (initializationVector == null)
-			{
-				throw new ArgumentNullException(nameof(initializationVector));
-			}
 		}
 
 		#endregion
 
 		public byte[] Encrypt(byte[] plaintextBytes)
 		{
-			if ((!this.AllowsNulls) && plaintextBytes == null)
-			{
-				throw new ArgumentNullException(
-					nameof(plaintextBytes),
-					"Requires a non-null plaintextBytes value, or set AllowsNulls=true.");
-			}
-
 			return this.Transform(plaintextBytes);
 		}
 
 		public byte[] Encrypt(string plaintext)
 		{
-			if ((!this.AllowsNulls) && plaintext == null)
-			{
-				throw new ArgumentNullException(
-					nameof(plaintext),
-					"Requires a non-null plaintext value, or set AllowsNulls=true.");
-			}
-
 			return this.Encrypt(
 				plaintext, Encryption.DefaultTextEncoding);
 		}
@@ -214,13 +139,6 @@ namespace MiscCorLib.Security.Cryptography
 			string plaintext,
 			Encoding plaintextEncoding)
 		{
-			if ((!this.AllowsNulls) && plaintext == null)
-			{
-				throw new ArgumentNullException(
-					nameof(plaintext),
-					"Requires a non-null plaintext value, or set AllowsNulls=true.");
-			}
-
 			if (plaintextEncoding == null)
 			{
 				throw new ArgumentNullException(nameof(plaintextEncoding));
@@ -234,13 +152,6 @@ namespace MiscCorLib.Security.Cryptography
 			string plaintext,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			if ((!this.AllowsNulls) && plaintext == null)
-			{
-				throw new ArgumentNullException(
-					nameof(plaintext),
-					"Requires a non-null plaintext value, or set AllowsNulls=true.");
-			}
-
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, cipherTextEncoding);
 		}
@@ -250,13 +161,6 @@ namespace MiscCorLib.Security.Cryptography
 			Encoding plaintextEncoding,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			if ((!this.AllowsNulls) && plaintext == null)
-			{
-				throw new ArgumentNullException(
-					nameof(plaintext),
-					"Requires a non-null plaintext value, or set AllowsNulls=true.");
-			}
-
 			if (plaintextEncoding == null)
 			{
 				throw new ArgumentNullException(nameof(plaintextEncoding));
@@ -270,13 +174,6 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] plaintextBytes,
 			ByteArrayStringEncoding cipherTextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			if ((!this.AllowsNulls) && plaintextBytes == null)
-			{
-				throw new ArgumentNullException(
-					nameof(plaintextBytes),
-					"Requires a non-null plaintextBytes value, or set AllowsNulls=true.");
-			}
-
 			return this.Encrypt(plaintextBytes).ToEncodedString(cipherTextEncoding);
 		}
 	}

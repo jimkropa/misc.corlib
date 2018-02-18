@@ -36,8 +36,6 @@ namespace MiscCorLib.Collections.Generic
 			/// </param>
 			public PagedList(PagingInfo pagingInfo)
 			{
-				Contract.Requires<ArgumentException>(pagingInfo.CurrentPage.HasValue);
-
 				this.pagingInfo = pagingInfo;
 			}
 		*/

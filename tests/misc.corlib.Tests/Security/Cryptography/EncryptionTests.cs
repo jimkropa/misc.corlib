@@ -41,8 +41,8 @@ namespace MiscCorLib.Security.Cryptography
 				byte[] keyFromDifferentSalt = Encryption.DeriveEncryptionKeyAndSaltFromPassword(
 					this.testPassword, KeySize, BlockSize, out var differentSalt);
 
-				Assert.Equal(salt, differentSalt);
-				Assert.Equal(originalKey, keyFromDifferentSalt);
+				Assert.NotEqual(salt, differentSalt);
+				Assert.NotEqual(originalKey, keyFromDifferentSalt);
 			}
 
 			[Fact]
@@ -54,7 +54,7 @@ namespace MiscCorLib.Security.Cryptography
 				byte[] keyFromUpperCasePassword = Encryption.DeriveEncryptionKeyFromPasswordAndSalt(
 					this.testPassword.ToUpperInvariant(), KeySize, salt);
 
-				Assert.Equal(originalKey, keyFromUpperCasePassword);
+				Assert.NotEqual(originalKey, keyFromUpperCasePassword);
 			}
 		}
 	}

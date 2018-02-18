@@ -380,7 +380,8 @@ namespace MiscCorLib.Collections.Specialized
 		/// zero if the conversion failed.
 		/// </param>
 		/// <returns>
-		/// true if the named value was converted successfully, otherwise false.
+		/// <c>true</c> if the named value was converted
+		/// successfully; otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParseEnum<T>(
 			this NameValueCollection collection, string name, bool allowMultipleFlagsBits, out T result)

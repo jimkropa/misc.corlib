@@ -10,15 +10,6 @@ namespace MiscCorLib.Security.Cryptography
 		/// </summary>
 		None = 0x0, // 0
 
-		/*
-			/// <summary>
-			/// 
-			/// </summary>
-			/// <value>
-			/// </value>
-			Default = AllowNullInput | SuppressCryptographicExceptions | SuppressDecryptionChecksumExceptions,
-		*/
-
 		/// <summary>
 		/// 
 		/// </summary>

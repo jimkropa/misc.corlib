@@ -44,13 +44,11 @@ namespace MiscCorLib.Security.Cryptography
 
 			byte[] hashedBytes;
 
+			// TODO: Why does this not work for empty strings?
 			// Use an abstract factory to create an instance
 			// of a specific given type of HashAlgorithm.
 			using (T hasher = HashAlgorithm.Create((typeof(T)).ToString()) as T)
 			{
-				// warning CC1024: CodeContracts: Contract section within try block.
-				////	Contract.Requires(hasher != null);
-
 				if (hasher == null)
 				{
 					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a cryptographic hash algorithm!"));
@@ -81,9 +79,6 @@ namespace MiscCorLib.Security.Cryptography
 			// of a specific given type of KeyedHashAlgorithm.
 			using (T hasher = KeyedHashAlgorithm.Create((typeof(T)).ToString()) as T)
 			{
-				// warning CC1024: CodeContracts: Contract section within try block.
-				////	Contract.Requires(hasher != null);
-
 				if (hasher == null)
 				{
 					throw new InvalidOperationException(string.Concat(typeof(T).FullName, " is not a keyed cryptographic hash algorithm!"));

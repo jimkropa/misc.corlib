@@ -118,8 +118,15 @@ namespace MiscCorLib.Security.Cryptography
 			bool allowNulls)
 			: this(salt, allowNulls)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
+			if (algorithm == null)
+			{
+				throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			if (salt == null)
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
 
 			this.algorithm = algorithm;
 			this.preserveAlgorithm = true;
@@ -135,7 +142,10 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] salt,
 			bool allowNulls)
 		{
-			Contract.Requires<ArgumentNullException>(salt != null);
+			if (salt == null)
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
 
 			this.salt = salt;
 			this.AllowsNulls = allowNulls;
@@ -167,11 +177,15 @@ namespace MiscCorLib.Security.Cryptography
 			}
 		}
 
-
-
 		public byte[] ComputeHash(byte[] inputStream)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || inputStream != null);
+			if ((!this.AllowsNulls) && inputStream == null)
+			{
+				throw new ArgumentNullException(
+					nameof(inputStream),
+					"Requires a non-null inputStream value, or set AllowsNulls=true.");
+			}
+
 			if (inputStream == null) return null;
 
 			// TODO: Here is where to implement looping over a buffer.
@@ -192,7 +206,7 @@ namespace MiscCorLib.Security.Cryptography
 			// TODO: First add the salt!
 			return this.algorithm.ComputeHash(inputStream);
 
-				//				// Compute the hash of the input file.
+				// Compute the hash of the input file.
 				//	byte[] hashValue = hmac.ComputeHash(inStream);
 				//	// Reset inStream to the beginning of the file.
 				//	inStream.Position = 0;

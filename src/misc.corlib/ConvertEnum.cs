@@ -310,9 +310,9 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue" />
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum" />. Otherwise, false.
+		/// <typeparamref name="TEnum" />; Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this byte enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -340,9 +340,9 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue" />
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum" />. Otherwise, false.
+		/// <typeparamref name="TEnum" />; Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this short enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -369,9 +369,9 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue" />
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum" />. Otherwise, false.
+		/// <typeparamref name="TEnum" />; Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this int enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -398,9 +398,9 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue" />
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum" />. Otherwise, false.
+		/// <typeparamref name="TEnum" />; Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this long enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -425,9 +425,9 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue" />
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum" />. Otherwise, false.
+		/// <typeparamref name="TEnum" />; Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this TEnum enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -459,9 +459,9 @@ namespace MiscCorLib
 		/// Otherwise, returns zero.
 		/// </param>
 		/// <returns>
-		/// True if the <paramref name="enumValue" />
+		/// <c>true</c> if the <paramref name="enumValue" />
 		/// was parsed into exactly one value of the
-		/// <typeparamref name="TEnum" />. Otherwise, false.
+		/// <typeparamref name="TEnum" />; Otherwise, <c>false</c>.
 		/// </returns>
 		public static bool TryParse<TEnum>(this string enumValue, out TEnum enumOut)
 			where TEnum : struct, IComparable, IFormattable
@@ -507,7 +507,7 @@ namespace MiscCorLib
 			/// was parsed into at least one value of the
 			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
-			public static bool TryParse<TEnum>(this byte enumValue, out TEnum[] enumOut)
+			public static bool TryParseFlags<TEnum>(this byte enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
 			{
 				return TryParseInternal(enumValue, out enumOut);
@@ -535,7 +535,7 @@ namespace MiscCorLib
 			/// was parsed into at least one value of the
 			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
-			public static bool TryParse<TEnum>(this short enumValue, out TEnum[] enumOut)
+			public static bool TryParseFlags<TEnum>(this short enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
 			{
 				return TryParseInternal(enumValue, out enumOut);
@@ -563,7 +563,7 @@ namespace MiscCorLib
 			/// was parsed into at least one value of the
 			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
-			public static bool TryParse<TEnum>(this int enumValue, out TEnum[] enumOut)
+			public static bool TryParseFlags<TEnum>(this int enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
 			{
 				return TryParseInternal(enumValue, out enumOut);
@@ -591,7 +591,7 @@ namespace MiscCorLib
 			/// was parsed into at least one value of the
 			/// <typeparamref name="TEnum" />. Otherwise, false.
 			/// </returns>
-			public static bool TryParse<TEnum>(this long enumValue, out TEnum[] enumOut)
+			public static bool TryParseFlags<TEnum>(this long enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
 			{
 				return TryParseInternal(enumValue, out enumOut);
@@ -619,7 +619,7 @@ namespace MiscCorLib
 			/// <returns>
 			/// Always returns true.
 			/// </returns>
-			public static bool TryParse<TEnum>(this TEnum enumValue, out TEnum[] enumOut)
+			public static bool TryParseFlags<TEnum>(this TEnum enumValue, out TEnum[] enumOut)
 				where TEnum : struct, IComparable, IFormattable
 			{
 				VerifyIsEnumType<TEnum>();

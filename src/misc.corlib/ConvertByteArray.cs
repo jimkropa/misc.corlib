@@ -206,8 +206,6 @@ namespace MiscCorLib
 			private static T CreateEncoding<T>()
 				where T : Encoding
 			{
-				Contract.Ensures(Contract.Result<T>() != null);
-
 				T encoding = Encoding.GetEncoding((typeof(T)).ToString()) as T;
 				if (encoding == null)
 				{

@@ -478,11 +478,12 @@ namespace MiscCorLib.Collections
 			public void CalculatesCorrectTotalPages()
 			{
 				Assert.Throws<ArgumentOutOfRangeException>(
-					() => PagingInfoCalculator.CalculateTotalPages(10, 0));
+					() => PagingInfoCalculator.CalculateTotalPages(10, -255));
 
 				Assert.Throws<ArgumentOutOfRangeException>(
 					() => PagingInfoCalculator.CalculateTotalPages(0, 1138));
 
+				Assert.Equal(0, PagingInfoCalculator.CalculateTotalPages(10, 0));
 				Assert.Equal(1, PagingInfoCalculator.CalculateTotalPages(10, 1));
 				Assert.Equal(1, PagingInfoCalculator.CalculateTotalPages(10, 10));
 				Assert.Equal(2, PagingInfoCalculator.CalculateTotalPages(10, 11));

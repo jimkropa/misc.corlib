@@ -25,20 +25,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, encryptionKey, initializationVector, options)
 		{
-			if (algorithm == null)
-			{
-				throw new ArgumentNullException(nameof(algorithm));
-			}
-
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
-			if (initializationVector == null)
-			{
-				throw new ArgumentNullException(nameof(initializationVector));
-			}
 		}
 	}
 
@@ -52,20 +38,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(algorithm, false, encryptionKey, initializationVector, options)
 		{
-			if (algorithm == null)
-			{
-				throw new ArgumentNullException(nameof(algorithm));
-			}
-
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
-			if (initializationVector == null)
-			{
-				throw new ArgumentNullException(nameof(initializationVector));
-			}
 		}
 
 		public Decryptor(
@@ -74,15 +46,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(false, encryptionKey, initializationVector, options)
 		{
-			if (encryptionKey == null)
-			{
-				throw new ArgumentNullException(nameof(encryptionKey));
-			}
-
-			if (initializationVector == null)
-			{
-				throw new ArgumentNullException(nameof(initializationVector));
-			}
 		}
 
 		public byte[] Decrypt(

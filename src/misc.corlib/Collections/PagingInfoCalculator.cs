@@ -248,9 +248,6 @@ namespace MiscCorLib.Collections
 			// which will produce an invalid value if the number of total items
 			// plus the page size exceeds the capacity of a 32-bit integer.
 			int extendedTotalItems = totalItems + pageSize - 1;
-
-			// CodeContracts gives a warning here, but that's
-			// expected in this extraordinary situation.
 			if (extendedTotalItems <= 0)
 			{
 				throw new OverflowException(

@@ -44,10 +44,6 @@ namespace MiscCorLib.Security.Cryptography
 			bool allowNulls)
 			: base(algorithm, salt, allowNulls)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			this.key = key;
 			this.Algorithm.Key = key;
 		}
@@ -58,9 +54,6 @@ namespace MiscCorLib.Security.Cryptography
 			bool allowNulls)
 			: base(salt, allowNulls)
 		{
-			Contract.Requires<ArgumentNullException>(key != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			this.key = key;
 		}
 

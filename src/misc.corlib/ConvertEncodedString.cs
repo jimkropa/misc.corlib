@@ -31,7 +31,10 @@ namespace MiscCorLib
 
 		public static byte[] FromBase64(this string encodedString)
 		{
-			Contract.Requires<ArgumentNullException>(encodedString != null);
+			if (encodedString == null)
+			{
+				throw new ArgumentNullException(nameof(encodedString));
+			}
 
 			return Convert.FromBase64String(encodedString);
 		}
@@ -48,7 +51,10 @@ namespace MiscCorLib
 		
 		public static byte[] FromHexadecimal(this string encodedString)
 		{
-			Contract.Requires<ArgumentNullException>(encodedString != null);
+			if (encodedString == null)
+			{
+				throw new ArgumentNullException(nameof(encodedString));
+			}
 
 			int length = encodedString.Length / 2;
 			byte[] outArray = new byte[length];
@@ -74,7 +80,10 @@ namespace MiscCorLib
 			this string encodedString,
 			ByteArrayStringEncoding fromEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(encodedString != null);
+			if (encodedString == null)
+			{
+				throw new ArgumentNullException(nameof(encodedString));
+			}
 
 			if (fromEncoding == ByteArrayStringEncoding.Base64)
 			{

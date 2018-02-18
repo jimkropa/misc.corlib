@@ -16,9 +16,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(symmetricAlgorithm, checksumHasher, encryptionKey, out initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(symmetricAlgorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
 		}
 
 		internal EncryptorWithChecksum(
@@ -29,10 +26,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options)
 			: base(symmetricAlgorithm, checksumHasher, encryptionKey, initializationVector, options)
 		{
-			Contract.Requires<ArgumentNullException>(symmetricAlgorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(initializationVector != null);
 		}
 	}
 
@@ -45,9 +38,6 @@ namespace MiscCorLib.Security.Cryptography
 		where TEncryptor: SymmetricAlgorithm
 		where THasher: KeyedHashAlgorithm
 	{
-		// This delegate really belongs to DecryptorWithChecksum...
-		//public delegate void HandleChecksumFailure()
-
 		private readonly KeyedHasher<THasher> hasher;
 
 		internal EncryptorWithChecksum(
@@ -96,8 +86,6 @@ namespace MiscCorLib.Security.Cryptography
 
 		public byte[] Encrypt(byte[] plaintextBytes, out byte[] checksum)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
-
 			checksum = this.hasher.ComputeHash(plaintextBytes);
 
 			return this.Encrypt(plaintextBytes);
@@ -105,8 +93,6 @@ namespace MiscCorLib.Security.Cryptography
 
 		public byte[] Encrypt(string plaintext, out byte[] checksum)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
-
 			return this.Encrypt(plaintext, Encryption.DefaultTextEncoding, out checksum);
 		}
 
@@ -115,8 +101,10 @@ namespace MiscCorLib.Security.Cryptography
 			Encoding plaintextEncoding,
 			out byte[] checksum)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
-			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+			if (plaintextEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextEncoding));
+			}
 
 			if (plaintext == null)
 			{
@@ -133,8 +121,6 @@ namespace MiscCorLib.Security.Cryptography
 			out string checksum,
 			ByteArrayStringEncoding cipherTextAndChecksumEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
-
 			return this.EncryptToString(
 				plaintext, Encryption.DefaultTextEncoding, out checksum, cipherTextAndChecksumEncoding);
 		}
@@ -145,8 +131,10 @@ namespace MiscCorLib.Security.Cryptography
 			out string checksum,
 			ByteArrayStringEncoding ciphertextEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintext != null);
-			Contract.Requires<ArgumentNullException>(plaintextEncoding != null);
+			if (plaintextEncoding == null)
+			{
+				throw new ArgumentNullException(nameof(plaintextEncoding));
+			}
 
 			if (plaintext == null)
 			{
@@ -164,8 +152,6 @@ namespace MiscCorLib.Security.Cryptography
 			out string checksum,
 			ByteArrayStringEncoding cipherTextAndChecksumEncoding = ConvertByteArray.DefaultStringEncoding)
 		{
-			Contract.Requires<ArgumentNullException>(this.AllowsNulls || plaintextBytes != null);
-
 			byte[] checksumBytes;
 			string encryptedString = this.Encrypt(plaintextBytes, out checksumBytes).ToEncodedString(cipherTextAndChecksumEncoding);
 

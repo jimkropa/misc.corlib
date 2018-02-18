@@ -17,10 +17,6 @@ namespace MiscCorLib.Security.Cryptography
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-
 			return new EncryptorWithChecksum(algorithm, checksumHasher, encryptionKey, out randomSalt, options);
 		}
 
@@ -31,10 +27,6 @@ namespace MiscCorLib.Security.Cryptography
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(password != null);
-
 			// In this case, use the more robustly random
 			// key derivation algorithm to create the salt,
 			// instead of the SymmetricAlgorithm.
@@ -53,10 +45,6 @@ namespace MiscCorLib.Security.Cryptography
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(password != null);
-
 			byte[] randomSaltBytes;
 			EncryptorWithChecksum encryptor = algorithm.CreateEncryptor(
 				checksumHasher, password, out randomSaltBytes, options);
@@ -77,11 +65,6 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return new EncryptorWithChecksum(algorithm, checksumHasher, encryptionKey, salt, options);
 		}
 
@@ -92,11 +75,6 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(password != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return algorithm.CreateEncryptorWithGivenSalt(
 				checksumHasher,
 				DeriveEncryptionKeyFromPasswordAndSalt(password, algorithm.KeySize, salt),
@@ -112,11 +90,6 @@ namespace MiscCorLib.Security.Cryptography
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(checksumHasher != null);
-			Contract.Requires<ArgumentNullException>(password != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return algorithm.CreateEncryptorWithGivenSalt(
 				checksumHasher, password, salt.ToByteArray(saltEncoding), options);
 		}
@@ -132,8 +105,6 @@ namespace MiscCorLib.Security.Cryptography
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-
 			return new EncryptorWithChecksum<TEncryptor, THasher>(encryptionKey, out randomSalt, options);
 		}
 
@@ -144,8 +115,6 @@ namespace MiscCorLib.Security.Cryptography
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-
 			int keySize, blockSize;
 			using (TEncryptor algorithm = SymmetricTransformer<TEncryptor>.CreateAlgorithm())
 			{
@@ -167,7 +136,10 @@ namespace MiscCorLib.Security.Cryptography
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
+			if (secretKey == null)
+			{
+				throw new ArgumentNullException(nameof(secretKey));
+			}
 
 			byte[] randomSaltBytes;
 			EncryptorWithChecksum<TEncryptor, THasher> encryptor = CreateEncryptor<TEncryptor, THasher>(
@@ -189,8 +161,15 @@ namespace MiscCorLib.Security.Cryptography
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
+			if (encryptionKey == null)
+			{
+				throw new ArgumentNullException(nameof(encryptionKey));
+			}
+
+			if (salt == null)
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
 
 			return new EncryptorWithChecksum<TEncryptor, THasher>(encryptionKey, salt, options);
 		}
@@ -202,8 +181,15 @@ namespace MiscCorLib.Security.Cryptography
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
+			if (secretKey == null)
+			{
+				throw new ArgumentNullException(nameof(secretKey));
+			}
+
+			if (salt == null)
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
 
 			int keySize;
 			using (TEncryptor algorithm = SymmetricTransformer<TEncryptor>.CreateAlgorithm())
@@ -225,8 +211,15 @@ namespace MiscCorLib.Security.Cryptography
 			where TEncryptor : SymmetricAlgorithm
 			where THasher : KeyedHashAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
+			if (secretKey == null)
+			{
+				throw new ArgumentNullException(nameof(secretKey));
+			}
+
+			if (salt == null)
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
 
 			return CreateEncryptorWithGivenSalt<TEncryptor, THasher>(secretKey, salt.ToByteArray(
 				(options & EncryptionOptions.AllowNullInput) == EncryptionOptions.AllowNullInput,

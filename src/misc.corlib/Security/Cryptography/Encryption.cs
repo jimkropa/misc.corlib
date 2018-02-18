@@ -25,7 +25,10 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] DeriveEncryptionKeyAndSaltFromPassword(
 			string password, int keySize, int saltSize, out byte[] randomSalt)
 		{
-			Contract.Requires<ArgumentNullException>(password != null);
+			if (string.IsNullOrWhiteSpace(password))
+			{
+				throw new ArgumentException(nameof(password));
+			}
 
 			byte[] encryptionKey;
 			using (Rfc2898DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, saltSize))
@@ -47,7 +50,10 @@ namespace MiscCorLib.Security.Cryptography
 		public static byte[] DeriveEncryptionKeyFromPasswordAndSalt(
 			string password, int keySize, byte[] salt)
 		{
-			Contract.Requires<ArgumentNullException>(password != null);
+			if (string.IsNullOrWhiteSpace(password))
+			{
+				throw new ArgumentException(nameof(password));
+			}
 
 			byte[] decryptionKey;
 			using (DeriveBytes keyBytes = new Rfc2898DeriveBytes(password, salt))

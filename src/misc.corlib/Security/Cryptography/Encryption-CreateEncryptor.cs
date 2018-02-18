@@ -14,9 +14,6 @@ namespace MiscCorLib.Security.Cryptography
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-
 			return new Encryptor(algorithm, encryptionKey, out randomSalt, options);
 		}
 
@@ -26,9 +23,6 @@ namespace MiscCorLib.Security.Cryptography
 			out byte[] randomSalt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-
 			// In this case, use the more robustly random
 			// key derivation algorithm to create the salt,
 			// instead of the SymmetricAlgorithm.
@@ -45,9 +39,6 @@ namespace MiscCorLib.Security.Cryptography
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-
 			byte[] randomSaltBytes;
 			Encryptor encryptor = algorithm.CreateEncryptor(secretKey, out randomSaltBytes, options);
 
@@ -66,10 +57,6 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return new Encryptor(algorithm, encryptionKey, salt, options);
 		}
 
@@ -79,10 +66,6 @@ namespace MiscCorLib.Security.Cryptography
 			byte[] salt,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return algorithm.CreateEncryptorWithGivenSalt(
 				DeriveEncryptionKeyFromPasswordAndSalt(secretKey, algorithm.KeySize, salt),
 				salt,
@@ -96,10 +79,6 @@ namespace MiscCorLib.Security.Cryptography
 			ByteArrayStringEncoding saltEncoding = ConvertByteArray.DefaultStringEncoding,
 			EncryptionOptions options = DefaultOptions)
 		{
-			Contract.Requires<ArgumentNullException>(algorithm != null);
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return algorithm.CreateEncryptorWithGivenSalt(secretKey, salt.ToByteArray(saltEncoding), options);
 		}
 
@@ -113,8 +92,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-
 			return new Encryptor<T>(encryptionKey, out randomSalt, options);
 		}
 
@@ -124,8 +101,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-
 			int keySize, blockSize;
 			using (T algorithm = SymmetricTransformer<T>.CreateAlgorithm())
 			{
@@ -146,8 +121,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-
 			byte[] randomSaltBytes;
 			Encryptor<T> encryptor = CreateEncryptor<T>(secretKey, out randomSaltBytes, options);
 
@@ -166,9 +139,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(encryptionKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return new Encryptor<T>(encryptionKey, salt, options);
 		}
 
@@ -178,9 +148,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			int keySize;
 			using (T algorithm = SymmetricTransformer<T>.CreateAlgorithm())
 			{
@@ -200,9 +167,6 @@ namespace MiscCorLib.Security.Cryptography
 			EncryptionOptions options = DefaultOptions)
 			where T : SymmetricAlgorithm
 		{
-			Contract.Requires<ArgumentNullException>(secretKey != null);
-			Contract.Requires<ArgumentNullException>(salt != null);
-
 			return CreateEncryptorWithGivenSalt<T>(secretKey, salt.ToByteArray(
 				(options & EncryptionOptions.AllowNullInput) == EncryptionOptions.AllowNullInput,
 				saltEncoding));

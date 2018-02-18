@@ -245,6 +245,11 @@ namespace MiscCorLib.Security.Cryptography
 			get { return (this.options & EncryptionOptions.SuppressCryptographicExceptions) != EncryptionOptions.SuppressCryptographicExceptions; }
 		}
 
+		/// <summary>
+		/// Indicates whether exceptions will be thown.
+		/// TODO: What is this for?
+		/// </summary>
+		/// <returns></returns>
 		public bool ThrowsDecryptionChecksumExceptions
 		{
 			get { return (this.options & EncryptionOptions.SuppressDecryptionChecksumExceptions) != EncryptionOptions.SuppressDecryptionChecksumExceptions; }
@@ -404,8 +409,6 @@ namespace MiscCorLib.Security.Cryptography
 						"Max{0}Min{1}Skip{2}", legalKeySize.MaxSize, legalKeySize.MinSize, legalKeySize.SkipSize))
 					.ToDelimitedString(", "));
 
-			////	Contract.Requires<ArgumentOutOfRangeException>(
-			////		algorithm.ValidKeySize(encryptionKeySize), message);
 			throw new TypeInitializationException(
 				"MiscCorLib.Security.Cryptography.SymmetricTransformer",
 				new ArgumentOutOfRangeException("encryptionKey", message));
@@ -430,8 +433,6 @@ namespace MiscCorLib.Security.Cryptography
 						"Max{0}Min{1}Skip{2}", legalBlockSize.MaxSize, legalBlockSize.MinSize, legalBlockSize.SkipSize))
 					.ToDelimitedString(", "));
 
-			////	Contract.Requires<ArgumentOutOfRangeException>(
-			////		algorithm.ValidBlockSize(initializationVectorSize), message);
 			throw new TypeInitializationException(
 				"MiscCorLib.Security.Cryptography.SymmetricTransformer",
 				new ArgumentOutOfRangeException("initializationVector", message));
