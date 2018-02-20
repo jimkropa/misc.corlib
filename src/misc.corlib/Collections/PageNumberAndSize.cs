@@ -370,17 +370,6 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		/// <summary>
-		/// Converts this value to its equivalent string representation.
-		/// </summary>
-		/// <returns>
-		/// The string representation of this value.
-		/// </returns>
-		public override string ToString()
-		{
-			return $"Page[Number={this.Number},Size={this.Size}]";
-		}
-
 		#region [ Public Equality Overrides for Memory Optimization ]
 
 		/// <summary>
@@ -501,5 +490,16 @@ namespace MiscCorLib.Collections
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Converts this value to its equivalent string representation.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this value.
+		/// </returns>
+		public override string ToString()
+		{
+			return $"Page[Number={this.Number},Size={this.Size}]";
+		}
 	}
 }

@@ -14,16 +14,78 @@ namespace MiscCorLib.Collections
 
 		private readonly PageNumberAndItemNumbers _pageAndItemNumbers;
 
+		/// <summary>
+		/// The current page number.
+		/// </summary>
+		[DataMember(Order = 1, EmitDefaultValue = true)]
+		public int PageNumber => _state.CurrentPage.Number;
+
+		/// <summary>
+		/// The current page size.
+		/// </summary>
+		[DataMember(Order = 2, EmitDefaultValue = true)]
+		public int PageSize => _state.CurrentPage.Number;
+
+		/// <summary>
+		/// The total number of items paged.
+		/// </summary>
+		[DataMember(Order = 3, EmitDefaultValue = true)]
+		public int TotalItems => _state.TotalItems;
+
+		/// <summary>
+		/// Gets a value indicating whether the
+		/// <see cref="Number" /> and <see cref="Size" />
+		/// values are set to indicate that all items
+		/// should be shown on a single page of
+		/// unbounded size.
+		/// </summary>
+		/// <remarks>
+		/// When this value is <c>true</c>, there
+		/// is a risk of division by zero because the
+		/// <see cref="Size" /> value is zero.
+		/// </remarks>
+		[DataMember(Order = 4, EmitDefaultValue = false)]
+		public PagingState State => this._state;
+
 		[DataMember(Order = 5, EmitDefaultValue = true)]
 		public readonly int TotalPages;
 
-		[DataMember(Order = 6, EmitDefaultValue = true)]
+		[DataMember(Order = 6, EmitDefaultValue = false)]
+		public bool IsUnbounded => this._state.CurrentPage.IsUnbounded;
+
+		[DataMember(Order = 7, EmitDefaultValue = true)]
 		public readonly int ItemCount;
 
+		[DataMember(Order = 8, EmitDefaultValue = true)]
+		public int FirstItemNumber => this._pageAndItemNumbers.FirstItemNumber;
+
 		[DataMember(Order = 9, EmitDefaultValue = true)]
-		public readonly bool IsFirstPage;
+		public int LastItemNumber => this._pageAndItemNumbers.LastItemNumber;
+
+		/// <summary>
+		/// Gets the zero-based index of an item within a "paged" collection of items,
+		/// equal to the value of <see cref="FirstItemNumber" /> minus one.
+		/// </summary>
+		/// <remarks>
+		/// If the "paged" collection is empty,
+		/// this value will be <c>-1</c>.
+		/// </remarks>
+		public int FirstItemIndex => this.FirstItemNumber - 1;
+
+		/// <summary>
+		/// Gets the zero-based index of an item within a "paged" collection of items,
+		/// equal to the value of <see cref="LastItemNumber" /> minus one.
+		/// </summary>
+		/// <remarks>
+		/// If the "paged" collection is empty,
+		/// this value will be <c>-1</c>.
+		/// </remarks>
+		public int LastItemIndex => this.LastItemNumber - 1;
 
 		[DataMember(Order = 10, EmitDefaultValue = true)]
+		public readonly bool IsFirstPage;
+
+		[DataMember(Order = 11, EmitDefaultValue = true)]
 		public readonly bool IsLastPage;
 
 		/// <summary>
@@ -68,111 +130,48 @@ namespace MiscCorLib.Collections
 				this.TotalPages = 1;
 				this.IsFirstPage = true;
 				this.IsLastPage = true;
-				this.ItemCount = pagingState.TotalItems;
 				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
+				this.ItemCount = pagingState.TotalItems;
+			}
+			else if ((pagingState.TotalItems > 0)
+				&& (pagingState.CurrentPage.Size > 0))
+			{
+				// Calculate the total pages for a fixed page size and at least one result.
+				this.TotalPages = PagingCalculator.CalculateTotalPages(
+					pagingState.CurrentPage.Size, pagingState.TotalItems);
+
+				// Handle the situation if someone turns past the last page.
+				if (pagingState.CurrentPage.Number > this.TotalPages)
+				{
+					// Reset the current page to be the number of the last possible page.
+					pagingState = new PagingState(
+						new PageNumberAndSize(this.TotalPages, pagingState.CurrentPage.Size),
+						pagingState.TotalItems);
+				}
+
+				this.IsFirstPage = pagingState.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
+				this.IsLastPage = pagingState.CurrentPage.Number == this.TotalPages;
+				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, this.IsLastPage);
+				this.ItemCount = this._pageAndItemNumbers.LastItemNumber - this._pageAndItemNumbers.FirstItemNumber + 1;
 			}
 			else
 			{
-				if ((pagingState.TotalItems > 0) && (pagingState.CurrentPage.Size > 0))
-				{
-					// Calculate the total pages for a fixed page size and at least one result.
-					this.TotalPages = PagingCalculator.CalculateTotalPages(
-						pagingState.CurrentPage.Size, pagingState.TotalItems);
+				// This is the case where the count of TotalItems is zero,
+				// so reset the page number back to the first page.
+				pagingState = new PagingState(
+					new PageNumberAndSize(PageNumberAndSize.FirstPageNumber, pagingState.CurrentPage.Size),
+					pagingState.TotalItems);
 
-					// Handle the situation if someone turns past the last page.
-					if (pagingState.CurrentPage.Number > this.TotalPages)
-					{
-						// Reset the current page to be the number of the last possible page.
-						pagingState = new PagingState(
-							new PageNumberAndSize(this.TotalPages, pagingState.CurrentPage.Size),
-							pagingState.TotalItems);
-					}
-
-					this.IsFirstPage = pagingState.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
-					this.IsLastPage = pagingState.CurrentPage.Number == this.TotalPages;
-
-					this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, this.IsLastPage);
-					this.ItemCount = this._pageAndItemNumbers.LastItemNumber - this._pageAndItemNumbers.FirstItemNumber + 1;
-				}
-				else
-				{
-					// This is the case where the count of TotalItems is zero,
-					// so reset the page number back to the first page.
-					pagingState = new PagingState(
-						new PageNumberAndSize(PageNumberAndSize.FirstPageNumber, pagingState.CurrentPage.Size),
-						pagingState.TotalItems);
-
-					// There is just one page of results, with no items.
-					this.TotalPages = 1;
-					this.IsFirstPage = true;
-					this.IsLastPage = true;
-
-					this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
-					this.ItemCount = 0;
-				}
+				// There is just one page of results, with no items.
+				this.TotalPages = 1;
+				this.IsFirstPage = true;
+				this.IsLastPage = true;
+				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
+				this.ItemCount = 0;
 			}
 
 			this._state = pagingState;
 		}
-
-		/// <summary>
-		/// The current page number.
-		/// </summary>
-		[DataMember(Order = 1, EmitDefaultValue = true)]
-		public int PageNumber => _state.CurrentPage.Number;
-
-		/// <summary>
-		/// The current page size.
-		/// </summary>
-		[DataMember(Order = 2, EmitDefaultValue = true)]
-		public int PageSize => _state.CurrentPage.Number;
-
-		/// <summary>
-		/// Gets a value indicating whether the
-		/// <see cref="Number" /> and <see cref="Size" />
-		/// values are set to indicate that all items
-		/// should be shown on a single page of
-		/// unbounded size.
-		/// </summary>
-		/// <remarks>
-		/// When this value is <c>true</c>, there
-		/// is a risk of division by zero because the
-		/// <see cref="Size" /> value is zero.
-		/// </remarks>
-		[DataMember(Order = 3, EmitDefaultValue = false)]
-		public bool IsUnbounded => _state.CurrentPage.IsUnbounded;
-
-		/// <summary>
-		/// The total number of items paged.
-		/// </summary>
-		[DataMember(Order = 4, EmitDefaultValue = true)]
-		public int TotalItems => _state.TotalItems;
-
-		[DataMember(Order = 7, EmitDefaultValue = true)]
-		public int FirstItemNumber => _pageAndItemNumbers.FirstItemNumber;
-
-		[DataMember(Order = 8, EmitDefaultValue = true)]
-		public int LastItemNumber => _pageAndItemNumbers.LastItemNumber;
-
-		/// <summary>
-		/// Gets the zero-based index of an item within a "paged" collection of items,
-		/// equal to the value of <see cref="FirstItemNumber" /> minus one.
-		/// </summary>
-		/// <remarks>
-		/// If the "paged" collection is empty,
-		/// this value will be <c>-1</c>.
-		/// </remarks>
-		public int FirstItemIndex => this.FirstItemNumber - 1;
-
-		/// <summary>
-		/// Gets the zero-based index of an item within a "paged" collection of items,
-		/// equal to the value of <see cref="LastItemNumber" /> minus one.
-		/// </summary>
-		/// <remarks>
-		/// If the "paged" collection is empty,
-		/// this value will be <c>-1</c>.
-		/// </remarks>
-		public int LastItemIndex => this.LastItemNumber - 1;
 
 		/// <summary>
 		/// Gets a value indicating whether
@@ -181,8 +180,6 @@ namespace MiscCorLib.Collections
 		/// values are valid.
 		/// </summary>
 		public bool HasValue => this._state.HasValue;
-
-		internal PagingState State => this._state;
 
 		#region [ Public Equality Overrides for Memory Optimization ]
 
@@ -227,7 +224,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ Implementation of IEquatable<PagingInfo> ]
+		#region [ Implementation of IEquatable<PagingInfo> and IEquatable<PagingState> ]
 
 		/// <summary>
 		/// Indicates whether this value and another
@@ -266,7 +263,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ Explicit Implementation of IComparable<PagingInfo> ]
+		#region [ Explicit Implementation of IComparable<PagingInfo> and IComparable<PagingState> ]
 
 		int IComparable<PagingInfo>.CompareTo(PagingInfo other)
 		{

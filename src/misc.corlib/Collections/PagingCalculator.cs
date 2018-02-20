@@ -78,14 +78,95 @@ namespace MiscCorLib.Collections
 			return extendedTotalItems / pageSize;
 		}
 
+		#region [ Public TurnToPage Method ]
+
+		public static PagingState TurnToPage(
+			this PagingInfo pagingInfo, int pageNumber)
+		{
+			return pagingInfo.State.TurnToPage(pageNumber);
+		}
+
+		public static PagingState TurnToPage(this PagingState pagingState, int pageNumber)
+		{
+			return pagingState.CurrentPage.TurnToPage(pageNumber).ToPagingState(pagingState.TotalItems);
+		}
+
+		/// <summary>
+		/// Calculates a <see cref="PageNumberAndSize" /> for an
+		/// arbitrary page <see cref="PageNumberAndSize.Number" />
+		/// using the same page <see cref="PageNumberAndSize.Size" />.
+		/// </summary>
+		/// <param name="pageNumber">
+		/// The one-based ordinal
+		/// <see cref="PageNumberAndSize.Number" />
+		/// of the page to fetch.
+		/// </param>
+		/// <returns>
+		/// A <see cref="PageNumberAndSize" /> value calculated by
+		/// using the same <see cref="PageNumberAndSize.Size" />
+		/// as the <see cref="CurrentPage" /> and the page
+		/// <see cref="PageNumberAndSize.Number" /> given
+		/// as the <paramref name="pageNumber" /> parameter.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Should this operation be closed under the set of
+		/// <see cref="PagingState" /> operations? In other words,
+		/// should this method return a new <see cref="PagingState" />
+		/// value instead of a <see cref="PageNumberAndSize" /> value?
+		/// </para>
+		/// <para>
+		/// The reason it should not is that the number of
+		/// <see cref="TotalItems" /> cannot be assumed to
+		/// remain constant between requests. That number
+		/// may have changed between the time that this
+		/// page was retrieved and the retrieval of a different
+		/// page using the return from this function.
+		/// </para>
+		/// <para>
+		/// That is the same reason for checking the maximum
+		/// allowed page number in this function.
+		/// The <see cref="PagingState" /> constructor gracefully
+		/// handles the situation in which a page number
+		/// is higher than the total number of pages.
+		/// </para>
+		/// </remarks>
+		public static PageNumberAndSize TurnToPage(this PageNumberAndSize currentPage, int pageNumber)
+		{
+			if (currentPage.HasValue)
+			{
+				// Always return the unbounded page if the current page is unbounded.
+				return currentPage.IsUnbounded ? PageNumberAndSize.Unbounded
+					: new PageNumberAndSize(pageNumber, currentPage.Size);
+			}
+
+			// Return empty if uninitialized.
+			return PageNumberAndSize.Empty;
+		}
+
+		#endregion
+
 		public static PagingInfo ToPagingInfo(this PagingState pagingState)
 		{
 			return new PagingInfo(pagingState);
 		}
 
-		public static PagingResources CalculatePagingResources(this PagingInfo pagingInfo)
+		public static PagingState ToPagingState(
+			this PageNumberAndSize currentPage, int totalItems)
+		{
+			return new PagingState(currentPage, totalItems);
+		}
+
+		public static PagingResources CalculatePagingResources(
+			this PagingInfo pagingInfo)
 		{
 			return new PagingResources(pagingInfo);
+		}
+
+		public static IEnumerable<PageNumberAndItemNumbers> CalculateAllPagesAndItemNumbers(
+			this PagingInfo pagingInfo)
+		{
+			return pagingInfo.State.CalculateAllPagesAndItemNumbers();
 		}
 
 		/// <summary>

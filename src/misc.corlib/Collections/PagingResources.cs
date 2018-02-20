@@ -64,5 +64,16 @@ namespace MiscCorLib.Collections
 
 		[DataMember(Order = 5)]
 		public readonly PageNumberAndSize LastPage;
+
+		/// <summary>
+		/// Converts this value to its equivalent string representation.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this value.
+		/// </returns>
+		public override string ToString()
+		{
+			return $"PagingResources[{this.CurrentPage}]";
+		}
 	}
 }

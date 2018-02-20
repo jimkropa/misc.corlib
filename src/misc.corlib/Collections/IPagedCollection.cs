@@ -15,8 +15,6 @@ namespace MiscCorLib.Collections
 		/// Gets the metadata about this "page" of
 		/// a longer list which spans multiple pages.
 		/// </summary>
-		PagingState PagingState { get; }
-
 		PagingInfo PagingInfo { get; }
 	}
 }

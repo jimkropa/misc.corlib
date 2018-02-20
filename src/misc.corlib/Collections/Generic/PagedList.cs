@@ -19,13 +19,6 @@ namespace MiscCorLib.Collections.Generic
 	{
 		#region [ Private ReadOnly Field and Constructor Overloads ]
 
-		/// <summary>
-		/// Private backing field for the public
-		/// <see cref="PagingState" /> property.
-		/// </summary>
-		private readonly PagingState pagingState;
-
-		[NonSerialized]
 		private readonly PagingInfo pagingInfo;
 
 		/// <summary>
@@ -50,14 +43,12 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentNullException(nameof(collection));
 			}
 
-			this.pagingInfo = new PagingInfo(pagingState);
-			if (this.Count != pagingInfo.ItemCount)
+			this.pagingInfo = pagingState.ToPagingInfo();
+			if (this.Count != this.pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
-					$"The number of items in the given collection ({this.Count}) does not match the expected number of items for the current page ({pagingInfo.ItemCount}) based on the PagingState value.");
+					$"The number of items in the given collection ({this.Count}) does not match the expected number of items for the current page ({this.pagingInfo.ItemCount}) based on the PagingState value.");
 			}
-
-			this.pagingState = pagingState;
 		}
 
 		/// <summary>
@@ -81,20 +72,15 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity must not be negative.");
 			}
 
-			this.pagingInfo = new PagingInfo(pagingState);
-			if (capacity != pagingInfo.ItemCount)
+			this.pagingInfo = pagingState.ToPagingInfo();
+			if (capacity != this.pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
-					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({pagingInfo.ItemCount}) based on the PagingInfo value.");
+					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({this.pagingInfo.ItemCount}) based on the PagingInfo value.");
 			}
-
-			this.pagingState = pagingState;
 		}
 
 		#endregion
-
-		/// <inheritdoc />
-		public PagingState PagingState => this.pagingState;
 
 		/// <inheritdoc />
 		public PagingInfo PagingInfo => this.pagingInfo;
