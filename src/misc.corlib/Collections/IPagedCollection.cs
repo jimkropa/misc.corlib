@@ -16,5 +16,7 @@ namespace MiscCorLib.Collections
 		/// a longer list which spans multiple pages.
 		/// </summary>
 		PagingState PagingState { get; }
+
+		PagingInfo PagingInfo { get; }
 	}
 }
