@@ -11,7 +11,7 @@ namespace MiscCorLib.Collections
 	/// </summary>
 	[Serializable, DataContract]
 	public struct PageNumberAndItemNumbers
-		: IEquatable<PageNumberAndItemNumbers>, IComparable<PageNumberAndItemNumbers>
+		: IEquatable<PageNumberAndItemNumbers>, IComparable<PageNumberAndItemNumbers>, IHasValue
 	{
 		#region [ Public Fields and Internal Constructor ]
 
@@ -26,22 +26,29 @@ namespace MiscCorLib.Collections
 		/// The one-based ordinal number of
 		/// this page within a "paged" collection.
 		/// </summary>
-		[DataMember(IsRequired = true, Order = 0)]
+		[DataMember(Order = 0, EmitDefaultValue = true)]
 		public readonly int PageNumber;
 
 		/// <summary>
 		/// The one-based ordinal number
 		/// of the first item on this page.
 		/// </summary>
-		[DataMember(IsRequired = true, Order = 1)]
+		[DataMember(Order = 1, EmitDefaultValue = true)]
 		public readonly int FirstItemNumber;
 
 		/// <summary>
 		/// The one-based ordinal number
 		/// of the last item on this page.
 		/// </summary>
-		[DataMember(IsRequired = true, Order = 2)]
+		[DataMember(Order = 2, EmitDefaultValue = true)]
 		public readonly int LastItemNumber;
+
+		/// <summary>
+		/// The one-based ordinal number of
+		/// this page within a "paged" collection.
+		/// </summary>
+		[DataMember(Order = 3, EmitDefaultValue = false)]
+		public readonly bool IsCurrent;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers" /> struct.
@@ -61,25 +68,40 @@ namespace MiscCorLib.Collections
 		/// value, whether to calculate if <paramref name="pageNumber" />
 		/// is the last page or to use this value.
 		/// </param>
-		internal PageNumberAndItemNumbers(
-			int pageNumber, byte pageSize, int totalItems, bool? isLastPage = null)
+		public PageNumberAndItemNumbers(
+			PagingState pagingState, bool isCurrent = false, bool? isLastPage = null)
+			: this(pagingState.CurrentPage, pagingState.TotalItems, isCurrent, isLastPage)
 		{
-			if (pageNumber < PageNumberAndSize.FirstPageNumber)
-			{
-				throw new ArgumentOutOfRangeException(
-					nameof(pageNumber),
-					pageNumber,
-					"An ordinal page number is not a zero-based index. The number must be at least one.");
-			}
+		}
 
-			if (totalItems < 0)
-			{
-				throw new ArgumentOutOfRangeException(
-					nameof(totalItems),
-					totalItems,
-					"The number of items in the list must not be negative!");
-			}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers" /> struct.
+		/// </summary>
+		/// <param name="pageNumber">
+		/// Initial value for the <see cref="PageNumber" /> field.
+		/// </param>
+		/// <param name="pageSize">
+		/// The <see cref="PageNumberAndSize.Size" />
+		/// of each page in a "paged" collection.
+		/// </param>
+		/// <param name="totalItems">
+		/// The total number of items in a "paged" collection.
+		/// </param>
+		/// <param name="isLastPage">
+		/// Optional signal for setting the <see cref="LastItemNumber" />
+		/// value, whether to calculate if <paramref name="pageNumber" />
+		/// is the last page or to use this value.
+		/// </param>
+		public PageNumberAndItemNumbers(
+			PageNumberAndSize page, int totalItems, bool isCurrent = false, bool? isLastPage = null)
+			: this(page.Number, page.Size, totalItems, isCurrent, isLastPage.HasValue
+				? isLastPage.Value : PagingCalculator.CalculateTotalPages(page.Size, totalItems) == page.Number)
+		{
+		}
 
+		internal PageNumberAndItemNumbers(
+			int pageNumber, byte pageSize, int totalItems, bool isCurrent, bool isLastPage)
+		{
 			if (pageSize >= PageNumberAndSize.MinimumPageSize && (totalItems > 0))
 			{
 				// A page of fixed size which has items.
@@ -89,8 +111,7 @@ namespace MiscCorLib.Collections
 
 				// Determine whether this is the last page,
 				// either by a parameter value or by calculation.
-				if ((isLastPage.HasValue && isLastPage.Value)
-					|| (PagingInfoCalculator.CalculateTotalPages(pageSize, totalItems) == this.PageNumber))
+				if (isLastPage)
 				{
 					// If is the last page, replace the
 					// calculated LastItemNumber with
@@ -105,21 +126,16 @@ namespace MiscCorLib.Collections
 				this.FirstItemNumber = totalItems > 0 ? 1 : 0;
 				this.LastItemNumber = totalItems;
 			}
+
+			this.IsCurrent = isCurrent;
 		}
 
 		/// <summary>
 		/// Gets a value indicating whether the
 		/// <see cref="PageNumber" /> value is valid.
 		/// </summary>
-		////	[NonSerialized] // (this is applicable only to fields, not properties)
-		public bool HasValue
-		{
-			get
-			{
-				return this.PageNumber >= PageNumberAndSize.FirstPageNumber
-					&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;
-			}
-		}
+		public bool HasValue => this.PageNumber >= PageNumberAndSize.FirstPageNumber
+			&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;
 
 		#endregion
 
@@ -253,56 +269,6 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		/// <summary>
-		/// Calculates the full set of page numbers and item
-		/// numbers from given <paramref name="pageSize" />
-		/// and <paramref name="totalItems" /> values.
-		/// </summary>
-		/// <param name="pageSize">
-		/// The <see cref="PageNumberAndSize.Size" />
-		/// of each page in a "paged" collection.
-		/// </param>
-		/// <param name="totalItems">
-		/// The total number of items in a "paged" collection.
-		/// </param>
-		/// <returns>
-		/// The full set of page numbers and item numbers.
-		/// </returns>
-		/// <remarks>
-		/// Relays to the internal <see cref="PagingInfoCalculator.AllPagesAndItemNumbers(byte,int)" />
-		/// method of <see cref="PagingInfoCalculator" />.
-		/// </remarks>
-		public static IReadOnlyList<PageNumberAndItemNumbers> Calculate(
-			byte pageSize, int totalItems)
-		{
-			// Zero as page size is acceptable,
-			// indicating a single "unbounded" page.
-			if (totalItems < 0)
-			{
-				throw new ArgumentOutOfRangeException(
-					nameof(totalItems),
-					totalItems,
-					"The number of items in the list must not be negative!");
-			}
-
-			return PagingInfoCalculator.AllPagesAndItemNumbers(pageSize, totalItems);
-		}
-
-		/// <summary>
-		/// Converts this value to its equivalent string representation.
-		/// </summary>
-		/// <returns>
-		/// The string representation of this value.
-		/// </returns>
-		public override string ToString()
-		{
-			return string.Format(
-				"Page[Number={0},FirstItemNumber={1},LastItemNumber={2}]",
-				this.PageNumber,
-				this.FirstItemNumber,
-				this.LastItemNumber);
-		}
-
 		#region [ Public Equality Overrides for Memory Optimization ]
 
 		/// <summary>
@@ -348,7 +314,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ Implementation of IComparable<PageNumberAndItemNumbers> and IEquatable<ITenantIdentifier> ]
+		#region [ Implementation of IComparable<PageNumberAndItemNumbers> and IEquatable<PageNumberAndItemNumbers> ]
 
 		/// <summary>
 		/// Compares the current value with another
@@ -413,5 +379,16 @@ namespace MiscCorLib.Collections
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Converts this value to its equivalent string representation.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this value.
+		/// </returns>
+		public override string ToString()
+		{
+			return $"Page[Number={this.PageNumber},FirstItemNumber={this.FirstItemNumber},LastItemNumber={this.LastItemNumber}]";
+		}
 	}
 }

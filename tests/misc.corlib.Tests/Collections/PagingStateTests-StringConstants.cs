@@ -1,7 +1,7 @@
 ﻿namespace MiscCorLib.Collections
 {
-	// This is a partial class. Refer to PagingInfoTests.cs for the main part.
-	public sealed partial class PagingInfoTests
+	// This is a partial class. Refer to PagingStateTests.cs for the main part.
+	public sealed partial class PagingStateTests
 	{
 		private const string Page7_Size20_Total1138 = @"{
   ""CurrentPage"": {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MiscCorLib.Collections.Generic
 {
@@ -55,7 +56,7 @@ namespace MiscCorLib.Collections.Generic
 		public static string[] ToStringArray<T>(
 			this IEnumerable<T> collection,
 			bool removeDuplicates = DefaultRemoveDuplicates)
-			where T : struct
+			where T : struct, IEquatable<T>
 		{
 			return collection.ToStringArray(null, removeDuplicates);
 		}
@@ -93,45 +94,12 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<T> collection,
 			Func<T, string> toStringMethod,
 			bool removeDuplicates = DefaultRemoveDuplicates)
-			where T : struct
+			where T : struct, IEquatable<T>
 		{
-			if (collection == null)
-			{
-				return new string[0];
-			}
-
-			ICollection<string> list = new List<string>();
-			foreach (T item in collection)
-			{
-				string str = toStringMethod == null ? item.ToString() : toStringMethod(item);
-				if (string.IsNullOrWhiteSpace(str))
-				{
-					continue;
-				}
-
-				// The base List<string> class uses "Ordinal" comparison by default,
-				// so applying the Linq method is not necessary:
-				if (removeDuplicates && list.Contains(str)) // !list.Contains(str, StringComparer.Ordinal)
-				{
-					continue;
-				}
-
-				list.Add(str);
-			}
-
-			// T must be a non-nullable type
-			// for List.ToArray() to work.
-			// In this case, string is not.
-			////	return list.ToArray<string>();
-			
-			// So convert the old-fashioned way instead:
-			// Create an array the right size...
-			string[] ary = new string[list.Count];
-
-			// ...and copy all of the values into it.
-			list.CopyTo(ary, 0);
-
-			return ary;
+			return collection.ToStrings(
+				toStringMethod == null
+					? (item => item.ToString())
+					: toStringMethod, removeDuplicates).ToArray();
 		}
 
 		#endregion
@@ -162,7 +130,7 @@ namespace MiscCorLib.Collections.Generic
 		public static string ToDelimitedString<T>(
 			this IEnumerable<T> collection,
 			bool removeDuplicates = DefaultRemoveDuplicates)
-			where T : struct
+			where T : struct, IEquatable<T>
 		{
 			return collection.ToDelimitedString(
 				ConvertDelimitedString.DefaultSeparator, removeDuplicates);
@@ -199,7 +167,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<T> collection,
 			Func<T, string> toStringMethod,
 			bool removeDuplicates = DefaultRemoveDuplicates)
-			where T : struct
+			where T : struct, IEquatable<T>
 		{
 			return collection.ToDelimitedString(
 				toStringMethod, ConvertDelimitedString.DefaultSeparator, removeDuplicates);
@@ -234,7 +202,7 @@ namespace MiscCorLib.Collections.Generic
 			this IEnumerable<T> collection,
 			string separator,
 			bool removeDuplicates = DefaultRemoveDuplicates)
-			where T : struct
+			where T : struct, IEquatable<T>
 		{
 			if (string.IsNullOrWhiteSpace(separator))
 			{
@@ -281,7 +249,7 @@ namespace MiscCorLib.Collections.Generic
 			Func<T, string> toStringMethod,
 			string separator,
 			bool removeDuplicates = DefaultRemoveDuplicates)
-			where T : struct
+			where T : struct, IEquatable<T>
 		{
 			if (string.IsNullOrWhiteSpace(separator))
 			{
@@ -289,9 +257,71 @@ namespace MiscCorLib.Collections.Generic
 			}
 
 			return string.Join(
-				separator, collection.ToStringArray(toStringMethod, removeDuplicates));
+				separator, collection.ToStrings(
+					toStringMethod == null
+						? (item => item.ToString())
+						: toStringMethod, removeDuplicates));
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Converts a generic collection of <see cref="ValueType" />
+		/// to a one-dimensional array of <see cref="string" />,
+		/// by calling the <paramref name="toStringMethod" />
+		/// delegate on each item in the source collection,
+		/// and optionally removing any duplicates.
+		/// </summary>
+		/// <param name="collection">
+		/// A generic collection of <see cref="ValueType" /> items.
+		/// </param>
+		/// <param name="toStringMethod">
+		/// A delegate function which accepts a <typeparamref name="T" />
+		/// value and returns a string. Pass this parameter if a custom
+		/// format string is needed. If not specified, uses the default
+		/// <see cref="ValueType.ToString" /> method.
+		/// </param>
+		/// <param name="removeDuplicates">
+		/// Whether to remove duplicate items in the array returned.
+		/// Parameter is optional, default value is <c>false</c>.
+		/// </param>
+		/// <typeparam name="T">
+		/// The generic type of <paramref name="collection" />,
+		/// derived from <see cref="ValueType" />.
+		/// </typeparam>
+		/// <returns>
+		/// An array of strings created by the <paramref name="toStringMethod" />,
+		/// with null or empty values omitted, and duplicates omitted unless
+		/// the <paramref name="removeDuplicates" /> value is <c>true</c>.
+		/// </returns>
+		private static IEnumerable<string> ToStrings<T>(
+			this IEnumerable<T> collection,
+			Func<T, string> toStringMethod,
+			bool removeDuplicates)
+			where T : struct, IEquatable<T>
+		{
+			if (toStringMethod == null)
+			{
+				throw new ArgumentNullException(nameof(toStringMethod));
+			}
+
+			if (collection == null)
+			{
+				return new string[0];
+			}
+
+			return (removeDuplicates
+				// To remove duplicates, it's more
+				// accurate and efficient to prefer
+				// ValueType EqualityComparer over
+				// comparing converted strings.
+				? collection.Distinct()
+				: collection).Select(
+					item => toStringMethod(item)
+				).Where(
+					// Don't bother to return empty,
+					// meaningless strings...
+					s => !string.IsNullOrWhiteSpace(s));
+		}
 	}
 }

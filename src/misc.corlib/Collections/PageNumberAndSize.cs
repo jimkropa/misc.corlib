@@ -14,7 +14,7 @@ namespace MiscCorLib.Collections
 	/// </remarks>
 	[Serializable, DataContract]
 	public struct PageNumberAndSize
-		: IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>
+		: IEquatable<PageNumberAndSize>, IComparable<PageNumberAndSize>, IHasValue
 	{
 		#region [ Constants and Static ReadOnly Fields ]
 
@@ -101,7 +101,7 @@ namespace MiscCorLib.Collections
 		/// will equal negative one.
 		/// </para>
 		/// </remarks>
-		[DataMember(IsRequired = true, Order = 0)]
+		[DataMember(IsRequired = true, Order = 1, EmitDefaultValue = true)]
 		public readonly int Number;
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace MiscCorLib.Collections
 		/// <c>true</c>, this value will be zero.
 		/// </para>
 		/// </remarks>
-		[DataMember(IsRequired = true, Order = 1)]
+		[DataMember(IsRequired = true, Order = 2, EmitDefaultValue = true)]
 		public readonly byte Size;
 
 		#endregion
@@ -199,18 +199,7 @@ namespace MiscCorLib.Collections
 		/// <see cref="Size" /> value will never be invalid.
 		/// Zero indicates <see cref="IsUnbounded" />.
 		/// </remarks>
-		////	[NonSerialized] // (this is applicable only to fields, not properties)
-		public bool HasValue
-		{
-			get
-			{
-				return this.Number >= FirstPageNumber;
-
-				// This is redundant, unless the Size
-				// field changes to a signed integer:
-				////	&& this.Size >= byte.MinValue;
-			}
-		}
+		public bool HasValue => this.Number >= FirstPageNumber;
 
 		/// <summary>
 		/// Gets the zero-based index of a page within
@@ -222,7 +211,7 @@ namespace MiscCorLib.Collections
 		/// This is also the index of a
 		/// <see cref="PageNumberAndItemNumbers" />
 		/// value within a list such as the one returned by
-		/// <see cref="PagingInfo.AllPagesAndItemNumbers" />.
+		/// <see cref="PagingState.AllPagesAndItemNumbers" />.
 		/// </para>
 		/// <para>
 		/// If <see cref="IsUnbounded" /> is <c>true</c>,
@@ -232,11 +221,7 @@ namespace MiscCorLib.Collections
 		/// is one less than zero.
 		/// </para>
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 2)]
-		public int Index
-		{
-			get { return this.Number - 1; }
-		}
+		public int Index => this.Number - 1;
 
 		/// <summary>
 		/// Gets a value indicating whether the
@@ -250,11 +235,8 @@ namespace MiscCorLib.Collections
 		/// is a risk of division by zero because the
 		/// <see cref="Size" /> value is zero.
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 3)]
-		public bool IsUnbounded
-		{
-			get { return (this.Size == byte.MinValue) && (this.Number == FirstPageNumber); }
-		}
+		[DataMember(Order = 3, EmitDefaultValue = false)]
+		public bool IsUnbounded => this.Equals(Unbounded);
 
 		#endregion
 
@@ -396,7 +378,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public override string ToString()
 		{
-			return string.Format("Page[Number={0},Size={1}]", this.Number, this.Size);
+			return $"Page[Number={this.Number},Size={this.Size}]";
 		}
 
 		#region [ Public Equality Overrides for Memory Optimization ]
@@ -466,10 +448,8 @@ namespace MiscCorLib.Collections
 		/// </remarks>
 		public int CompareTo(PageNumberAndSize other)
 		{
-			int thisComposite = this.CreateComposite();
-			int otherComposite = other.CreateComposite();
-
-			return thisComposite.CompareTo(otherComposite);
+			return this.CreateComposite().CompareTo(
+				other.CreateComposite());
 		}
 
 		/// <summary>

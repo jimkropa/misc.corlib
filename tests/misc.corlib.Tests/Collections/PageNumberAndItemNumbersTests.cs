@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -14,7 +15,8 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void Serializes_All_Properties()
 			{
-				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(4, 10, 36);
+				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(
+					new PageNumberAndSize(4, 10), 36);
 				string serializedPage = JsonConvert.SerializeObject(page);
 
 				Assert.Equal(
@@ -35,7 +37,8 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void Deserializes_From_Minimal_Specification()
 			{
-				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(8, 20, 148);
+				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(
+					new PageNumberAndSize(8, 20), 148);
 				PageNumberAndItemNumbers deserializedPage
 					= JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
 						"{\"PageNumber\":8,\"FirstItemNumber\":141,\"LastItemNumber\":148}");
@@ -88,7 +91,8 @@ namespace MiscCorLib.Collections
 			public void CaclucatesCorrectlyFromValidSizes()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pages
-					= PageNumberAndItemNumbers.Calculate(20, 119);
+					= PagingCalculator.CalculateAllPagesAndItemNumbers(
+						new PageNumberAndSize(20), 119).ToList();
 
 				Assert.NotNull(pages);
 				Assert.Equal(6, pages.Count);
@@ -115,7 +119,8 @@ namespace MiscCorLib.Collections
 			public void ReturnsOnePageForZeroItems()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesWithSize
-					= PageNumberAndItemNumbers.Calculate(20, 0);
+					= PagingCalculator.CalculateAllPagesAndItemNumbers(
+						new PageNumberAndSize(20), 0).ToList();
 
 				Assert.NotNull(zeroPagesWithSize);
 				Assert.Equal(1, zeroPagesWithSize.Count);
@@ -124,7 +129,8 @@ namespace MiscCorLib.Collections
 				Assert.Equal(0, zeroPagesWithSize[0].LastItemNumber);
 
 				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesUnbounded
-					= PageNumberAndItemNumbers.Calculate(0, 0);
+					= PagingCalculator.CalculateAllPagesAndItemNumbers(
+						PageNumberAndSize.Unbounded, 0).ToList();
 
 				Assert.NotNull(zeroPagesUnbounded);
 				Assert.Equal(1, zeroPagesUnbounded.Count);
@@ -137,20 +143,14 @@ namespace MiscCorLib.Collections
 			public void ReturnsOnePageForUnbounded()
 			{
 				IReadOnlyList<PageNumberAndItemNumbers> pagesUnbounded
-					= PageNumberAndItemNumbers.Calculate(0, 57);
+					= PagingCalculator.CalculateAllPagesAndItemNumbers(
+						PageNumberAndSize.Unbounded, 57).ToList();
 
 				Assert.NotNull(pagesUnbounded);
 				Assert.Equal(1, pagesUnbounded.Count);
 				Assert.Equal(1, pagesUnbounded[0].PageNumber);
 				Assert.Equal(1, pagesUnbounded[0].FirstItemNumber);
 				Assert.Equal(57, pagesUnbounded[0].LastItemNumber);
-			}
-
-			[Fact]
-			public void DoesNotAllowInvalidSizes()
-			{
-				Assert.Throws<ArgumentOutOfRangeException>(
-					() => PageNumberAndItemNumbers.Calculate(0, -1));
 			}
 		}
 

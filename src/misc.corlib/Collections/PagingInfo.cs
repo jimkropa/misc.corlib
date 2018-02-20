@@ -1,141 +1,41 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MiscCorLib.Collections
 {
-	/// <summary>
-	/// A simple struct with a robust set of metadata
-	/// about a page within a "paged" collection of items,
-	/// for rendering user interface widgets for moving
-	/// through pages, and optimized for simple serialization.
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// Initialize using values of the <see cref="CurrentPage" />
-	/// number and size, and the number of <see cref="TotalItems" />
-	/// in the collection. All other values, accessible as the
-	/// public read-only properties of this struct, are calculated
-	/// and held by an internal lazy-initialized value.
-	/// </para>
-	/// <para>
-	/// When serialized this value contains a wealth of information.
-	/// When sent for deserialization, this value needs only the
-	/// page number, page size, and total number of items.
-	/// </para>
-	/// </remarks>
 	[Serializable, DataContract]
-	public struct PagingInfo : IEquatable<PagingInfo>, IHasValue
+	public struct PagingInfo : IEquatable<PagingInfo>, IEquatable<PagingState>,
+		IComparable<PagingInfo>, IComparable<PagingState>, IComparable<PageNumberAndSize>, IHasValue
 	{
-		#region [ Public Constants for Default and Empty Values ]
+		public static PagingInfo Empty = new PagingInfo();
+
+		private readonly PagingState _state;
+
+		private readonly PageNumberAndItemNumbers _pageAndItemNumbers;
+
+		[DataMember(Order = 5, EmitDefaultValue = true)]
+		public readonly int TotalPages;
+
+		[DataMember(Order = 6, EmitDefaultValue = true)]
+		public readonly int ItemCount;
+
+		[DataMember(Order = 9, EmitDefaultValue = true)]
+		public readonly bool IsFirstPage;
+
+		[DataMember(Order = 10, EmitDefaultValue = true)]
+		public readonly bool IsLastPage;
 
 		/// <summary>
-		///
-		/// </summary>
-		public const bool DefaultCalculateAllPagesAndItemNumbers = false;
-
-		/// <summary>
-		/// A value of <see cref="PageNumberAndSize" />
-		/// which is not valid, indicating an unspecified value.
-		/// </summary>
-		public static readonly PagingInfo Empty = new PagingInfo();
-
-		#endregion
-
-		#region [ Immutable Fields CurrentPage and TotalItems ]
-
-		/// <summary>
-		/// The current page number and size.
-		/// </summary>
-		[DataMember(IsRequired = true, Order = 0)]
-		public readonly PageNumberAndSize CurrentPage;
-
-		/// <summary>
-		/// The total number of items paged.
-		/// </summary>
-		[DataMember(IsRequired = true, Order = 1)]
-		public readonly int TotalItems;
-
-		#endregion
-
-		#region [ Private Semaphore Fields for Calculator ]
-
-		/// <summary>
-		/// Internal semaphore for whether to initialize the
-		/// <see cref="PagingInfoCalculator.AllPages" />
-		/// property for serializing, usually <c>false</c>,
-		/// set by optional parameter to constructor.
-		/// </summary>
-		[NonSerialized]
-		private readonly bool calculateAllPagesAndItemNumbers;
-
-		/// <summary>
-		/// Backing field of the internal <see cref="Calculator" />,
-		/// also used as a semaphore indicating whether calculated
-		/// values have been initialized.
-		/// </summary>
-		[NonSerialized]
-		private readonly PagingInfoCalculator calculator;
-
-		#endregion
-
-		#region [ Constructor Overloads ]
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
-		/// for having all of the items in a collection on a single page
-		/// as large as the number of <paramref name="totalItems" />.
-		/// </summary>
-		/// <param name="totalItems">
-		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems" /> field.
-		/// </param>
-		/// <param name="calculateAllPagesAndItemNumbers">
-		/// Indicates whether to include a representation of every
-		/// page and its item numbers in the serialized version of
-		/// this <see cref="PagingInfo" />, as a list of
-		/// <see cref="PageNumberAndItemNumbers" />,
-		/// for a paging widget which may want to use them.
-		/// </param>
-		public PagingInfo(
-			int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
-			: this(PageNumberAndSize.Unbounded, totalItems, calculateAllPagesAndItemNumbers)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
-		/// for pages of a fixed size between 1 and 255.
-		/// </summary>
-		/// <param name="pageNumber">
-		/// The requested page <see cref="PageNumberAndSize.Number" />.
-		/// </param>
-		/// <param name="pageSize">
-		/// The requested page <see cref="PageNumberAndSize.Size" />.
-		/// </param>
-		/// <param name="totalItems">
-		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems" /> field.
-		/// </param>
-		/// <param name="calculateAllPagesAndItemNumbers">
-		/// Indicates whether to include a representation of every
-		/// page and its item numbers in the serialized version of
-		/// this <see cref="PagingInfo" />, as a list of
-		/// <see cref="PageNumberAndItemNumbers" />,
-		/// for a paging widget which may want to use them.
-		/// </param>
-		public PagingInfo(
-			int pageNumber, byte pageSize, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
-			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems, calculateAllPagesAndItemNumbers)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
-		/// based on a given <see cref="PageNumberAndSize" /> value.
+		/// Initializes a new instance of the <see cref="PagingCalculator" /> struct.
+		/// Invoked by the private <see cref="PagingState.Calculator" />
+		/// property of an owner <see cref="PagingState" /> value,
+		/// calculates metadata for paging UI, optionally including
+		/// a list of all pages and item numbers. For effective lazy
+		/// initialization following deserialization from bare essentials.
 		/// </summary>
 		/// <param name="currentPage">
-		/// The requested page <see cref="PageNumberAndSize.Number" />
+		/// The page <see cref="PageNumberAndSize.Number" />
 		/// and <see cref="PageNumberAndSize.Size" />.
 		/// If <see cref="PageNumberAndSize.Unbounded" /> is sent,
 		/// all of the items are returned on a single page as large
@@ -145,115 +45,114 @@ namespace MiscCorLib.Collections
 		/// The total number of items in the collection to be paged,
 		/// initial value for the immutable <see cref="TotalItems" /> field.
 		/// </param>
-		/// <param name="calculateAllPagesAndItemNumbers">
-		/// Indicates whether to include a representation of every
-		/// page and its item numbers in the serialized version of
-		/// this <see cref="PagingInfo" />, as a list of
-		/// <see cref="PageNumberAndItemNumbers" />,
-		/// for a paging widget which may want to use them.
+		/// <param name="includeAllPagesAndItemNumbers">
+		/// Whether to fill the set of <see cref="AllPages" />
+		/// including the item numbers on each page,
+		/// which may be useful for some paging UI.
+		/// Relayed back to the <see cref="PagingState" /> via the
+		/// <see cref="IncludeAllPagesAndItemNumbers" /> field,
+		/// adds the private <see cref="PagingState.AllPages" />
+		/// property to the serialization output for JSON.
 		/// </param>
-		public PagingInfo(
-			PageNumberAndSize currentPage, int totalItems, bool calculateAllPagesAndItemNumbers = DefaultCalculateAllPagesAndItemNumbers)
-			: this(new PagingInfoCalculator(currentPage, totalItems, calculateAllPagesAndItemNumbers))
+		public PagingInfo(PagingState pagingState)
 		{
+			if (!pagingState.CurrentPage.HasValue)
+			{
+				throw new ArgumentException(
+					"A valid PagingState value is required. \"Unbounded\" is an acceptable value.",
+					nameof(pagingState));
+			}
+
+			if (pagingState.CurrentPage.IsUnbounded)
+			{
+				this.TotalPages = 1;
+				this.IsFirstPage = true;
+				this.IsLastPage = true;
+				this.ItemCount = pagingState.TotalItems;
+				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
+			}
+			else
+			{
+				if ((pagingState.TotalItems > 0) && (pagingState.CurrentPage.Size > 0))
+				{
+					// Calculate the total pages for a fixed page size and at least one result.
+					this.TotalPages = PagingCalculator.CalculateTotalPages(
+						pagingState.CurrentPage.Size, pagingState.TotalItems);
+
+					// Handle the situation if someone turns past the last page.
+					if (pagingState.CurrentPage.Number > this.TotalPages)
+					{
+						// Reset the current page to be the number of the last possible page.
+						pagingState = new PagingState(
+							new PageNumberAndSize(this.TotalPages, pagingState.CurrentPage.Size),
+							pagingState.TotalItems);
+					}
+
+					this.IsFirstPage = pagingState.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
+					this.IsLastPage = pagingState.CurrentPage.Number == this.TotalPages;
+
+					this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, this.IsLastPage);
+					this.ItemCount = this._pageAndItemNumbers.LastItemNumber - this._pageAndItemNumbers.FirstItemNumber + 1;
+				}
+				else
+				{
+					// This is the case where the count of TotalItems is zero,
+					// so reset the page number back to the first page.
+					pagingState = new PagingState(
+						new PageNumberAndSize(PageNumberAndSize.FirstPageNumber, pagingState.CurrentPage.Size),
+						pagingState.TotalItems);
+
+					// There is just one page of results, with no items.
+					this.TotalPages = 1;
+					this.IsFirstPage = true;
+					this.IsLastPage = true;
+
+					this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
+					this.ItemCount = 0;
+				}
+			}
+
+			this._state = pagingState;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingInfo" /> struct
-		/// upon deserialization of another <see cref="PagingInfo" /> which
-		/// this one replaces, used for lazy initialization by the internal
-		/// <see cref="Calculator" /> property.
+		/// The current page number.
 		/// </summary>
-		/// <param name="calculator">
-		/// A <see cref="PagingInfoCalculator" /> value initialized from
-		/// the <see cref="CurrentPage" /> and <see cref="TotalItems" />
-		/// values of a <see cref="PagingInfo" /> value to be replaced
-		/// by this new instance. To understand how this works,
-		/// refer to the <see cref="Calculator" /> property.
-		/// </param>
-		private PagingInfo(PagingInfoCalculator calculator)
-		{
-			this.CurrentPage = calculator.CurrentPage;
-			this.TotalItems = calculator.TotalItems;
-			this.calculator = calculator;
-			this.calculateAllPagesAndItemNumbers = calculator.IncludeAllPagesAndItemNumbers;
-		}
-
-		#endregion
-
-		#region [ Public Read-Only Properties and Private Calculator Property ]
+		[DataMember(Order = 1, EmitDefaultValue = true)]
+		public int PageNumber => _state.CurrentPage.Number;
 
 		/// <summary>
-		/// Gets a value indicating whether
-		/// the <see cref="CurrentPage" />
-		/// and <see cref="TotalItems" />
-		/// values are valid.
+		/// The current page size.
 		/// </summary>
-		public bool HasValue
-		{
-			get { return this.CurrentPage.HasValue && this.TotalItems >= 0; }
-		}
-
-		/// <summary>
-		/// Gets the calculated value of
-		/// the total number of pages.
-		/// </summary>
-		[DataMember(IsRequired = false, Order = 2)]
-		public int TotalPages { get { return this.Calculator.TotalPages; } }
+		[DataMember(Order = 2, EmitDefaultValue = true)]
+		public int PageSize => _state.CurrentPage.Number;
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="PageNumberAndSize.Number" />
-		/// of the <see cref="CurrentPage" /> matches
-		/// <see cref="PageNumberAndSize.FirstPageNumber" />.
+		/// <see cref="Number" /> and <see cref="Size" />
+		/// values are set to indicate that all items
+		/// should be shown on a single page of
+		/// unbounded size.
 		/// </summary>
 		/// <remarks>
-		/// If <c>true</c>, <see cref="PreviousPage" />
-		/// will be <see cref="Empty" />.
+		/// When this value is <c>true</c>, there
+		/// is a risk of division by zero because the
+		/// <see cref="Size" /> value is zero.
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 3)]
-		public bool IsFirstPage { get { return this.Calculator.IsFirstPage; } }
+		[DataMember(Order = 3, EmitDefaultValue = false)]
+		public bool IsUnbounded => _state.CurrentPage.IsUnbounded;
 
 		/// <summary>
-		/// Gets a value indicating whether the
-		/// <see cref="PageNumberAndSize.Number" />
-		/// of the <see cref="CurrentPage" /> matches
-		/// the number of <see cref="TotalPages" />.
+		/// The total number of items paged.
 		/// </summary>
-		/// <remarks>
-		/// If <c>true</c>, <see cref="NextPage" />
-		/// will be <see cref="Empty" />.
-		/// </remarks>
-		[DataMember(IsRequired = false, Order = 4)]
-		public bool IsLastPage { get { return this.Calculator.IsLastPage; } }
+		[DataMember(Order = 4, EmitDefaultValue = true)]
+		public int TotalItems => _state.TotalItems;
 
-		/// <summary>
-		/// Gets the one-based ordinal number
-		/// of the first item on this page.
-		/// </summary>
-		/// <remarks>
-		/// If the "paged" collection is empty,
-		/// this value will be zero.
-		/// </remarks>
-		[DataMember(IsRequired = false, Order = 5)]
-		public int FirstItemNumber { get { return this.Calculator.FirstItemNumber; } }
+		[DataMember(Order = 7, EmitDefaultValue = true)]
+		public int FirstItemNumber => _pageAndItemNumbers.FirstItemNumber;
 
-		/// <summary>
-		/// Gets the one-based ordinal number
-		/// of the last item on this page.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// If the "paged" collection is empty,
-		/// this value will be zero.
-		/// </para>
-		/// <para>
-		/// If the paging is <see cref="PageNumberAndSize.Unbounded" />,
-		/// this value will equal <see cref="TotalItems" />.
-		/// </para>
-		/// </remarks>
-		[DataMember(IsRequired = false, Order = 6)]
-		public int LastItemNumber { get { return this.Calculator.LastItemNumber; } }
+		[DataMember(Order = 8, EmitDefaultValue = true)]
+		public int LastItemNumber => _pageAndItemNumbers.LastItemNumber;
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
@@ -261,10 +160,9 @@ namespace MiscCorLib.Collections
 		/// </summary>
 		/// <remarks>
 		/// If the "paged" collection is empty,
-		/// this value will be -1.
+		/// this value will be <c>-1</c>.
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 7)]
-		public int FirstItemIndex { get { return this.FirstItemNumber - 1; } }
+		public int FirstItemIndex => this.FirstItemNumber - 1;
 
 		/// <summary>
 		/// Gets the zero-based index of an item within a "paged" collection of items,
@@ -272,308 +170,19 @@ namespace MiscCorLib.Collections
 		/// </summary>
 		/// <remarks>
 		/// If the "paged" collection is empty,
-		/// this value will be -1.
+		/// this value will be <c>-1</c>.
 		/// </remarks>
-		[DataMember(IsRequired = false, Order = 8)]
-		public int LastItemIndex { get { return this.LastItemNumber - 1; } }
+		public int LastItemIndex => this.LastItemNumber - 1;
 
 		/// <summary>
-		/// Gets the number of items on this page.
+		/// Gets a value indicating whether
+		/// the <see cref="CurrentPage" />
+		/// and <see cref="TotalItems" />
+		/// values are valid.
 		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// If the "paged" collection is empty,
-		/// this value will be zero.
-		/// </para>
-		/// <para>
-		/// In most other cases, this value will be the same
-		/// as the <see cref="PageNumberAndSize.Size" />
-		/// of the <see cref="CurrentPage" />, but if
-		/// <see cref="IsLastPage" /> is <c>true</c>,
-		/// this value may be less than the page size.
-		/// </para>
-		/// </remarks>
-		[DataMember(IsRequired = false, Order = 9)]
-		public int ItemCount { get { return this.Calculator.ItemCount; } }
+		public bool HasValue => this._state.HasValue;
 
-		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize" />
-		/// of the next page of items.
-		/// </summary>
-		/// <remarks>
-		/// If <see cref="IsLastPage" /> is <c>true</c>
-		/// or the paging is <see cref="PageNumberAndSize.Unbounded" />
-		/// this value will be <see cref="PageNumberAndSize.Empty" />.
-		/// </remarks>
-		[DataMember(IsRequired = false, Order = 10)]
-		public PageNumberAndSize NextPage { get { return this.Calculator.NextPage; } }
-
-		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize" />
-		/// of the previous page of items.
-		/// </summary>
-		/// <remarks>
-		/// If <see cref="IsFirstPage" /> is <c>true</c>
-		/// or the paging is <see cref="PageNumberAndSize.Unbounded" />
-		/// this value will be <see cref="PageNumberAndSize.Empty" />.
-		/// </remarks>
-		[DataMember(IsRequired = false, Order = 11)]
-		public PageNumberAndSize PreviousPage { get { return this.Calculator.PreviousPage; } }
-
-		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize" />
-		/// of the first page of items.
-		/// </summary>
-		[DataMember(IsRequired = false, Order = 12)]
-		public PageNumberAndSize FirstPage { get { return this.Calculator.FirstPage; } }
-
-		/// <summary>
-		/// Gets the <see cref="PageNumberAndSize" />
-		/// of the last page of items.
-		/// </summary>
-		[DataMember(IsRequired = false, Order = 13)]
-		public PageNumberAndSize LastPage { get { return this.Calculator.LastPage; } }
-
-		/// <summary>
-		/// Gets a list of all pages and their first and last item numbers.
-		/// This may be useful for some paging UI components, and is
-		/// optionally serialized to JSON. The value may be <c>null</c>,
-		/// depending on whether <see cref="Calculator" /> was initialized with
-		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers" />.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The value of this property may be <c>null</c>,
-		/// depending on whether <see cref="Calculator" /> was initialized with
-		/// <see cref="PagingInfoCalculator.IncludeAllPagesAndItemNumbers" />.
-		/// </para>
-		/// <para>
-		/// This property could be private, but is given internal
-		/// access so that it may be used by unit tests.
-		/// </para>
-		/// </remarks>
-		[DataMember(IsRequired = false, Name = "AllPages", EmitDefaultValue = false, Order = 14)]
-		internal IReadOnlyList<PageNumberAndItemNumbers> AllPages
-		{
-			// This may return null, depending on whether
-			// Calculator was initialized with all pages.
-			get { return this.Calculator.AllPages; }
-		}
-
-		/// <summary>
-		/// Gets an internal reference to all of the values
-		/// calculated based on initial <see cref="CurrentPage" />
-		/// and <see cref="TotalItems" /> values.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This property does some clever sleight-of-hand
-		/// for the sake of optimizing serialization and deserialization.
-		/// When deserialized, only the <see cref="CurrentPage" />
-		/// and <see cref="TotalItems" /> are required, then other
-		/// values are calculated once into a "state" object.
-		/// </para>
-		/// <para>
-		/// Internally, the first access of this property
-		/// also has the effect of replacing the parent
-		/// <see cref="PagingInfo" /> value.  It's a "lazy"
-		/// initialization optimized for <see cref="ValueType" />
-		/// requiring this serialization feature.
-		/// </para>
-		/// <para>
-		/// This property backs all of the serialized public
-		/// read-only properties of <see cref="PagingInfo" />.
-		/// </para>
-		/// </remarks>
-		private PagingInfoCalculator Calculator
-		{
-			get
-			{
-				// Is initialized already?
-				if (this.calculator.CurrentPage.HasValue)
-				{
-					return this.calculator;
-				}
-
-				// If this is an empty value,
-				// return a corresponding empty
-				// and skip calculations.
-				if (!this.CurrentPage.HasValue)
-				{
-					return PagingInfoCalculator.Empty;
-				}
-
-				// Some clever sleight-of-hand for the sake
-				// of optimizing serialization and deserialization.
-				// When deserialized, only the CurrentPage and
-				// TotalItems are required, then other values
-				// are calculated once into a "state" object.
-				PagingInfoCalculator newCalculator = new PagingInfoCalculator(
-					this.CurrentPage, this.TotalItems, this.calculateAllPagesAndItemNumbers);
-
-				// Having initialized the values,
-				// replace the original PagingInfo
-				// with a fully-initialized value.
-				this = new PagingInfo(newCalculator);
-
-				return newCalculator;
-			}
-		}
-
-		#endregion
-
-		#region [ Public Static Overrides of Equality Operators ]
-
-		/// <summary>
-		/// Indicates whether the values of two
-		/// specified <see cref="PagingInfo" />
-		/// objects are equal.
-		/// </summary>
-		/// <param name="left">
-		/// The first object to compare.
-		/// </param>
-		/// <param name="right">
-		/// The second object to compare.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if <paramref name="left" />
-		/// and <paramref name="right" /> are equal;
-		/// otherwise <c>false</c>.
-		/// </returns>
-		public static bool operator ==(PagingInfo left, PagingInfo right)
-		{
-			return left.Equals(right);
-		}
-
-		/// <summary>
-		/// Indicates whether the values of two
-		/// specified <see cref="PagingInfo" />
-		/// objects are not equal.
-		/// </summary>
-		/// <param name="left">
-		/// The first object to compare.
-		/// </param>
-		/// <param name="right">
-		/// The second object to compare.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if <paramref name="left" />
-		/// and <paramref name="right" /> are not equal;
-		/// otherwise <c>false</c>.
-		/// </returns>
-		public static bool operator !=(PagingInfo left, PagingInfo right)
-		{
-			return !left.Equals(right);
-		}
-
-		#endregion
-
-		#region [ Public TurnToPage and AllPagesAndItemNumbers Methods ]
-
-		/// <summary>
-		/// Returns a list of all pages and their first and last item numbers.
-		/// This may be useful for some paging UI components.
-		/// </summary>
-		/// <returns>
-		/// A sequenced list of <see cref="PageNumberAndItemNumbers" />
-		/// values representing all of the pages of a "paged" collection
-		/// and each page's first and last item numbers.
-		/// </returns>
-		/// <remarks>
-		/// <para>
-		/// This method is marked as <see cref="PureAttribute" />
-		/// though this is not strictly true. Still, because of the
-		/// internals of this simple struct, it's okay to treat this
-		/// as a pure function.
-		/// </para>
-		/// <para>
-		/// This method could have been written as a property,
-		/// but this a clever scheme to optimize the operation
-		/// and serialization of <see cref="PagingInfo" />.
-		/// </para>
-		/// </remarks>
-		public IReadOnlyList<PageNumberAndItemNumbers> AllPagesAndItemNumbers()
-		{
-			// The value may have already been initialized...
-			return this.AllPages ?? (this.CurrentPage.HasValue
-				? PagingInfoCalculator.AllPagesAndItemNumbers(this)
-				: new PageNumberAndItemNumbers[0]);
-		}
-
-		/// <summary>
-		/// Calculates a <see cref="PageNumberAndSize" /> for an
-		/// arbitrary page <see cref="PageNumberAndSize.Number" />
-		/// using the same page <see cref="PageNumberAndSize.Size" />.
-		/// </summary>
-		/// <param name="pageNumber">
-		/// The one-based ordinal
-		/// <see cref="PageNumberAndSize.Number" />
-		/// of the page to fetch.
-		/// </param>
-		/// <returns>
-		/// A <see cref="PageNumberAndSize" /> value calculated by
-		/// using the same <see cref="PageNumberAndSize.Size" />
-		/// as the <see cref="CurrentPage" /> and the page
-		/// <see cref="PageNumberAndSize.Number" /> given
-		/// as the <paramref name="pageNumber" /> parameter.
-		/// </returns>
-		/// <remarks>
-		/// <para>
-		/// Should this operation be closed under the set of
-		/// <see cref="PagingInfo" /> operations? In other words,
-		/// should this method return a new <see cref="PagingInfo" />
-		/// value instead of a <see cref="PageNumberAndSize" /> value?
-		/// </para>
-		/// <para>
-		/// The reason it should not is that the number of
-		/// <see cref="TotalItems" /> cannot be assumed to
-		/// remain constant between requests. That number
-		/// may have changed between the time that this
-		/// page was retrieved and the retrieval of a different
-		/// page using the return from this function.
-		/// </para>
-		/// <para>
-		/// That is the same reason for checking the maximum
-		/// allowed page number in this function.
-		/// The <see cref="PagingInfo" /> constructor gracefully
-		/// handles the situation in which a page number
-		/// is higher than the total number of pages.
-		/// </para>
-		/// </remarks>
-		public PageNumberAndSize TurnToPage(int pageNumber)
-		{
-			if (pageNumber < PageNumberAndSize.FirstPageNumber)
-			{
-				throw new ArgumentOutOfRangeException(
-					nameof(pageNumber),
-					pageNumber,
-					"An ordinal page number is not a zero-based index. The number must be at least one.");
-			}
-
-			// Prevent a runtime exception from possible division by zero.
-			if (this.CurrentPage.HasValue)
-			{
-				// Always return the unbounded page if the current page is unbounded.
-				return this.CurrentPage.IsUnbounded ? PageNumberAndSize.Unbounded
-					: new PageNumberAndSize(pageNumber, this.CurrentPage.Size);
-			}
-
-			// Return empty if uninitialized.
-			return PageNumberAndSize.Empty;
-		}
-
-		#endregion
-
-		/// <summary>
-		/// Converts this value to its equivalent string representation.
-		/// </summary>
-		/// <returns>
-		/// The string representation of this value.
-		/// </returns>
-		public override string ToString()
-		{
-			return string.Format("PagingInfo[{0},TotalItems={1}]", this.CurrentPage, this.TotalItems);
-		}
+		internal PagingState State => this._state;
 
 		#region [ Public Equality Overrides for Memory Optimization ]
 
@@ -613,12 +222,12 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public override int GetHashCode()
 		{
-			return this.CurrentPage.GetHashCode() + this.TotalItems.GetHashCode();
+			return this._state.GetHashCode();
 		}
 
 		#endregion
 
-		#region [ Implementation of IEquatable<PageNumberAndSize> ]
+		#region [ Implementation of IEquatable<PagingInfo> ]
 
 		/// <summary>
 		/// Indicates whether this value and another
@@ -636,8 +245,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public bool Equals(PagingInfo other)
 		{
-			return this.CurrentPage.Equals(other.CurrentPage)
-				&& this.TotalItems == other.TotalItems;
+			return this._state.Equals(other._state);
 		}
 
 		bool IEquatable<PagingInfo>.Equals(PagingInfo other)
@@ -648,6 +256,57 @@ namespace MiscCorLib.Collections
 			return this.Equals(other);
 		}
 
+		bool IEquatable<PagingState>.Equals(PagingState other)
+		{
+			// Return the public method.
+			// Using an explicit implementation is a way
+			// to avoid accidental boxing or unboxing.
+			return this._state.Equals(other);
+		}
+
 		#endregion
+
+		#region [ Explicit Implementation of IComparable<PagingInfo> ]
+
+		int IComparable<PagingInfo>.CompareTo(PagingInfo other)
+		{
+			// TotalPages doesn't matter,
+			// for this rarely used
+			// explicit implementation.
+			return this._state.CurrentPage.CompareTo(other._state.CurrentPage);
+		}
+
+		int IComparable<PagingState>.CompareTo(PagingState other)
+		{
+			// TotalPages doesn't matter,
+			// for this rarely used
+			// explicit implementation.
+			return this._state.CurrentPage.CompareTo(other.CurrentPage);
+		}
+
+		#endregion
+
+		#region [ Explicit Implementation of IComparable<PageNumberAndSize> ]
+
+		int IComparable<PageNumberAndSize>.CompareTo(PageNumberAndSize other)
+		{
+			// TotalPages doesn't matter,
+			// for this rarely used
+			// explicit implementation.
+			return this._state.CurrentPage.CompareTo(other);
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Converts this value to its equivalent string representation.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this value.
+		/// </returns>
+		public override string ToString()
+		{
+			return $"PagingInfo[{this._state.CurrentPage},TotalItems={this._state.TotalItems}]";
+		}
 	}
 }

@@ -6,7 +6,7 @@ namespace MiscCorLib.Collections.Generic
 	/// <summary>
 	/// Default implementation of <see cref="IPagedList{T}" />,
 	/// derived from the base generic <see cref="List{T}" />
-	/// and adding the <see cref="PagingInfo" /> property.
+	/// and adding the <see cref="PagingState" /> property.
 	/// A collection of elements that can be accessed by index,
 	/// and which are grouped onto one "page" in a longer list
 	/// of items which is broken into multiple pages.
@@ -21,24 +21,12 @@ namespace MiscCorLib.Collections.Generic
 
 		/// <summary>
 		/// Private backing field for the public
-		/// <see cref="PagingInfo" /> property.
+		/// <see cref="PagingState" /> property.
 		/// </summary>
-		private readonly PagingInfo pagingInfo;
+		private readonly PagingState pagingState;
 
-		/*
-			/// <summary>
-			/// Initializes a new instance of the <see cref="PagedList{T}" /> class
-			/// that contains elements copied from the specified collection and has
-			/// sufficient capacity to accommodate the number of elements copied.
-			/// </summary>
-			/// <param name="pagingInfo">
-			/// Metadata about this "page" of a longer list which spans multiple pages.
-			/// </param>
-			public PagedList(PagingInfo pagingInfo)
-			{
-				this.pagingInfo = pagingInfo;
-			}
-		*/
+		[NonSerialized]
+		private readonly PagingInfo pagingInfo;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagedList{T}" /> class
@@ -48,13 +36,13 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="collection">
 		/// The collection whose elements are copied to the new list.
 		/// </param>
-		/// <param name="pagingInfo">
+		/// <param name="pagingState">
 		/// Metadata about this "page" of a longer list which spans multiple pages.
 		/// </param>
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="collection" /> is null.
 		/// </exception>
-		public PagedList(IEnumerable<T> collection, PagingInfo pagingInfo)
+		public PagedList(IEnumerable<T> collection, PagingState pagingState)
 			: base(collection)
 		{
 			if (collection == null)
@@ -62,23 +50,14 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentNullException(nameof(collection));
 			}
 
-			if (!pagingInfo.CurrentPage.HasValue)
+			this.pagingInfo = new PagingInfo(pagingState);
+			if (this.Count != pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
-					"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.",
-					nameof(pagingInfo));
+					$"The number of items in the given collection ({this.Count}) does not match the expected number of items for the current page ({pagingInfo.ItemCount}) based on the PagingState value.");
 			}
 
-			int expectedCount = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;
-			if (this.Count != expectedCount)
-			{
-				throw new ArgumentException(string.Format(
-					"The number of items in the given collection ({0}) does not match the expected number of items for the current page ({1}) based on the PagingInfo value.",
-					this.Count,
-					expectedCount));
-			}
-
-			this.pagingInfo = pagingInfo;
+			this.pagingState = pagingState;
 		}
 
 		/// <summary>
@@ -88,13 +67,13 @@ namespace MiscCorLib.Collections.Generic
 		/// <param name="capacity">
 		/// The number of elements that the new list can initially store.
 		/// </param>
-		/// <param name="pagingInfo">
+		/// <param name="pagingState">
 		/// Metadata about this "page" of a longer list which spans multiple pages.
 		/// </param>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// <paramref name="capacity" /> is less than zero.
 		/// </exception>
-		protected PagedList(int capacity, PagingInfo pagingInfo)
+		protected PagedList(int capacity, PagingState pagingState)
 			: base(capacity)
 		{
 			if (capacity < 0)
@@ -102,24 +81,20 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity must not be negative.");
 			}
 
-			if (!pagingInfo.CurrentPage.HasValue)
+			this.pagingInfo = new PagingInfo(pagingState);
+			if (capacity != pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
-					"A valid PagingInfo value is required. \"Unbounded\" is an acceptable value for its CurrentPage.",
-					nameof(pagingInfo));
+					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({pagingInfo.ItemCount}) based on the PagingInfo value.");
 			}
 
-			int expectedCapacity = pagingInfo.LastItemNumber - pagingInfo.FirstItemNumber + 1;
-			if (capacity != expectedCapacity)
-			{
-				throw new ArgumentException(
-					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({expectedCapacity}) based on the PagingInfo value.");
-			}
-
-			this.pagingInfo = pagingInfo;
+			this.pagingState = pagingState;
 		}
 
 		#endregion
+
+		/// <inheritdoc />
+		public PagingState PagingState => this.pagingState;
 
 		/// <inheritdoc />
 		public PagingInfo PagingInfo => this.pagingInfo;

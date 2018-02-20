@@ -11,7 +11,7 @@ namespace MiscCorLib.Collections.Generic
 	/// </summary>
 	public sealed class ConvertDelimitedStringTests
 	{
-		private const string SampleIntegersString = "7,3, 9, 3,  5";
+		private const string SampleIntegersString = " 7,3, 9,, 3,  5 ";
 		private const string PartlyInvalidIntsString = "8, whatever,2,,6,   , 2,4";
 
 		public sealed class ToArray

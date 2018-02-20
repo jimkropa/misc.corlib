@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace MiscCorLib.Collections
@@ -9,7 +10,13 @@ namespace MiscCorLib.Collections
 		public sealed class DefaultValue
 		{
 			private const int TestTotalItems = 1138;
-			private readonly PagingInfo defaultPagingInfo = new PagingInfo(PageNumberAndSize.Default, TestTotalItems);
+			private readonly PagingState defaultPagingState = new PagingState(PageNumberAndSize.Default, TestTotalItems);
+			private readonly PagingInfo defaultPagingInfo;
+
+			public DefaultValue()
+			{
+				defaultPagingInfo = new PagingInfo(defaultPagingState);
+			}
 
 			[Fact]
 			public void HasValidItemNumbers()
@@ -33,7 +40,6 @@ namespace MiscCorLib.Collections
 				Assert.InRange(this.defaultPagingInfo.FirstPage.Size, 1, byte.MaxValue);
 				Assert.InRange(this.defaultPagingInfo.LastPage.Size, 1, byte.MaxValue);
 
-				Assert.Null(this.defaultPagingInfo.AllPages);
 				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.ItemCount);
 				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.CurrentPage.Size);
 				Assert.Equal(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.FirstPage.Size);
@@ -53,7 +59,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasFullSetOfAllPages()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfo.AllPagesAndItemNumbers();
+				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingState.CalculateAllPagesAndItemNumbers().ToList();
 
 				Assert.Equal(114, pages.Count);
 				Assert.Equal(
@@ -87,7 +93,8 @@ namespace MiscCorLib.Collections
 		public sealed class DefaultValueOnLastPage
 		{
 			private const int TestTotalItems = 1138;
-			private readonly PagingInfo defaultPagingInfoLastPage = new PagingInfo(250, 10, TestTotalItems);
+			private readonly PagingInfo defaultPagingInfoLastPage = new PagingInfo(
+				new PagingState(250, 10, TestTotalItems));
 
 			[Fact]
 			public void HasValidItemNumbers()
@@ -108,7 +115,6 @@ namespace MiscCorLib.Collections
 				Assert.InRange(this.defaultPagingInfoLastPage.FirstPage.Size, 1, byte.MaxValue);
 				Assert.InRange(this.defaultPagingInfoLastPage.LastPage.Size, 1, byte.MaxValue);
 
-				Assert.Null(this.defaultPagingInfoLastPage.AllPages);
 				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.ItemCount);
 				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.CurrentPage.Size);
 				Assert.Equal(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.FirstPage.Size);
@@ -478,16 +484,16 @@ namespace MiscCorLib.Collections
 			public void CalculatesCorrectTotalPages()
 			{
 				Assert.Throws<ArgumentOutOfRangeException>(
-					() => PagingInfoCalculator.CalculateTotalPages(10, -255));
+					() => PagingCalculator.TotalPages(10, -255));
 
 				Assert.Throws<ArgumentOutOfRangeException>(
-					() => PagingInfoCalculator.CalculateTotalPages(0, 1138));
+					() => PagingCalculator.TotalPages(0, 1138));
 
-				Assert.Equal(0, PagingInfoCalculator.CalculateTotalPages(10, 0));
-				Assert.Equal(1, PagingInfoCalculator.CalculateTotalPages(10, 1));
-				Assert.Equal(1, PagingInfoCalculator.CalculateTotalPages(10, 10));
-				Assert.Equal(2, PagingInfoCalculator.CalculateTotalPages(10, 11));
-				Assert.Equal(2, PagingInfoCalculator.CalculateTotalPages(10, 20));
+				Assert.Equal(0, PagingCalculator.TotalPages(10, 0));
+				Assert.Equal(1, PagingCalculator.TotalPages(10, 1));
+				Assert.Equal(1, PagingCalculator.TotalPages(10, 10));
+				Assert.Equal(2, PagingCalculator.TotalPages(10, 11));
+				Assert.Equal(2, PagingCalculator.TotalPages(10, 20));
 			}
 		}
 
@@ -511,14 +517,14 @@ namespace MiscCorLib.Collections
 				PagingInfo empty2 = PagingInfo.Empty;
 
 				AssertEquality(empty1, empty2);
-				AssertInequality(this.samplePagingInfo, PagingInfo.Empty);
+				AssertInequality(this.samplePagingInfo, PagingState.Empty);
 			}
 
 			[Fact]
 			public void IsTrueWhenDeserialized()
 			{
-				PagingInfo deserializedPagingInfo
-					= Newtonsoft.Json.JsonConvert.DeserializeObject<PagingInfo>(
+				PagingState deserializedPagingInfo
+					= Newtonsoft.Json.JsonConvert.DeserializeObject<PagingState>(
 						DeserializeMinimal_Page7_Size20_Total1138);
 
 				AssertEquality(this.samplePagingInfo, deserializedPagingInfo);
@@ -527,7 +533,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void IsTrueWhenHasAllPages()
 			{
-				PagingInfo samePagingInfo = new PagingInfo(7, 20, 1138, true);
+				PagingState samePagingInfo = new PagingState(7, 20, 1138, true);
 
 				AssertEquality(this.samplePagingInfo, samePagingInfo);
 			}
@@ -535,7 +541,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void IsFalseWhenDifferentPageNumber()
 			{
-				PagingInfo differentPageNumber = new PagingInfo(8, 20, 1138);
+				PagingState differentPageNumber = new PagingState(8, 20, 1138);
 
 				AssertInequality(samplePagingInfo, differentPageNumber);
 			}
@@ -543,14 +549,14 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void IsFalseWhenDifferentPageSize()
 			{
-				PagingInfo differentPageSize = new PagingInfo(7, 19, 1138);
+				PagingState differentPageSize = new PagingState(7, 19, 1138);
 
 				AssertInequality(samplePagingInfo, differentPageSize);
 			}
 
 			public void IsFalseWhenDifferentTotalItems()
 			{
-				PagingInfo differentTotalItems = new PagingInfo(7, 20, 1137);
+				PagingState differentTotalItems = new PagingState(7, 20, 1137);
 
 				AssertInequality(samplePagingInfo, differentTotalItems);
 			}
@@ -561,7 +567,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void DefaultCaseReusesSize()
 			{
-				PagingInfo validPagingInfo = new PagingInfo(3, 10, 57);
+				PagingState validPagingInfo = new PagingState(3, 10, 57);
 				PageNumberAndSize newPage = validPagingInfo.TurnToPage(2);
 
 				Assert.Equal(2, newPage.Number);
@@ -572,7 +578,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void AllowsTurningPastLastPage()
 			{
-				PagingInfo validPagingInfo = new PagingInfo(3, 10, 57);
+				PagingState validPagingInfo = new PagingState(3, 10, 57);
 				PageNumberAndSize newPage = validPagingInfo.TurnToPage(8);
 
 				Assert.Equal(8, newPage.Number);
@@ -583,7 +589,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void ReturnsUnboundedFromUnbounded()
 			{
-				PagingInfo unboundedPagingInfo = new PagingInfo(PageNumberAndSize.Unbounded, 57);
+				PagingState unboundedPagingInfo = new PagingState(PageNumberAndSize.Unbounded, 57);
 				PageNumberAndSize newPage = unboundedPagingInfo.TurnToPage(8);
 
 				Assert.Equal(1, newPage.Number);
@@ -594,50 +600,10 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void ReturnsEmptyFromEmpty()
 			{
-				PageNumberAndSize newPage = PagingInfo.Empty.TurnToPage(6);
+				PageNumberAndSize newPage = PagingState.Empty.TurnToPage(6);
 
 				PageNumberAndSizeTests.AssertIsEmpty(newPage);
 			}
-		}
-
-		#region [ Internal Static Test Assertion Methods ]
-
-		internal static void AssertEquality(PagingInfo expected, PagingInfo actual)
-		{
-			Assert.True(expected == actual);
-			Assert.False(expected != actual);
-			Assert.True(expected.Equals(actual));
-			Assert.Equal(expected, actual);
-
-			Assert.True(actual == expected);
-			Assert.False(actual != expected);
-			Assert.True(actual.Equals(expected));
-			Assert.Equal(actual, expected);
-
-			Assert.True(expected.CurrentPage.Equals(actual.CurrentPage));
-			Assert.True(actual.CurrentPage.Equals(expected.CurrentPage));
-			Assert.True(expected.CurrentPage == actual.CurrentPage);
-			Assert.True(actual.CurrentPage == expected.CurrentPage);
-			Assert.False(expected.CurrentPage != actual.CurrentPage);
-			Assert.False(actual.CurrentPage != expected.CurrentPage);
-
-			Assert.Equal(expected.CurrentPage, actual.CurrentPage);
-			Assert.Equal(expected.CurrentPage.Number, actual.CurrentPage.Number);
-			Assert.Equal(expected.CurrentPage.Size, actual.CurrentPage.Size);
-			Assert.Equal(expected.TotalItems, actual.TotalItems);
-		}
-
-		internal static void AssertInequality(PagingInfo expected, PagingInfo actual)
-		{
-			Assert.False(expected == actual);
-			Assert.True(expected != actual);
-			Assert.False(expected.Equals(actual));
-			Assert.NotEqual(expected, actual);
-
-			Assert.False(actual == expected);
-			Assert.True(actual != expected);
-			Assert.False(actual.Equals(expected));
-			Assert.NotEqual(actual, expected);
 		}
 
 		internal static void AssertIsFirstPage(PagingInfo firstPageInfo)
@@ -670,7 +636,5 @@ namespace MiscCorLib.Collections
 			PageNumberAndSizeTests.AssertEquality(
 				lastPageInfo.LastPage, lastPageInfo.CurrentPage);
 		}
-
-		#endregion
 	}
 }
