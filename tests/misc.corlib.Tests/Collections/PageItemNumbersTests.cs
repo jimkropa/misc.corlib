@@ -8,7 +8,7 @@ namespace MiscCorLib.Collections
 {
 	// TODO: Test ToString
 	// TODO: Test IComparable
-	public sealed class PageNumberAndItemNumbersTests
+	public sealed class PageItemNumbersTests
 	{
 		public sealed class JsonNetSerialization
 		{

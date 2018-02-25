@@ -80,13 +80,21 @@ namespace MiscCorLib.Collections
 
 		#region [ Public TurnToPage Method ]
 
+		/// <summary>
+		/// Calculates new <see cref="PagingState" />
+		/// from current page and 
+		/// </summary>
+		/// <param name="pagingInfo"></param>
+		/// <param name="pageNumber"></param>
+		/// <returns></returns>
 		public static PagingState TurnToPage(
 			this PagingInfo pagingInfo, int pageNumber)
 		{
 			return pagingInfo.State.TurnToPage(pageNumber);
 		}
 
-		public static PagingState TurnToPage(this PagingState pagingState, int pageNumber)
+		public static PagingState TurnToPage(
+			this PagingState pagingState, int pageNumber)
 		{
 			return pagingState.CurrentPage.TurnToPage(pageNumber).ToPagingState(pagingState.TotalItems);
 		}
@@ -94,7 +102,7 @@ namespace MiscCorLib.Collections
 		/// <summary>
 		/// Calculates a <see cref="PageNumberAndSize" /> for an
 		/// arbitrary page <see cref="PageNumberAndSize.Number" />
-		/// using the same page <see cref="PageNumberAndSize.Size" />.
+		/// with the same <see cref="PageNumberAndSize.Size" /> of page.
 		/// </summary>
 		/// <param name="pageNumber">
 		/// The one-based ordinal
@@ -131,22 +139,24 @@ namespace MiscCorLib.Collections
 		/// is higher than the total number of pages.
 		/// </para>
 		/// </remarks>
-		public static PageNumberAndSize TurnToPage(this PageNumberAndSize currentPage, int pageNumber)
+		public static PageNumberAndSize TurnToPage(
+			this PageNumberAndSize currentPage, int pageNumber)
 		{
-			if (currentPage.HasValue)
+			if (!currentPage.HasValue)
 			{
-				// Always return the unbounded page if the current page is unbounded.
-				return currentPage.IsUnbounded ? PageNumberAndSize.Unbounded
-					: new PageNumberAndSize(pageNumber, currentPage.Size);
+				// Return empty if uninitialized.
+				return PageNumberAndSize.Empty;
 			}
 
-			// Return empty if uninitialized.
-			return PageNumberAndSize.Empty;
+			// Always return the unbounded page if the current page is unbounded.
+			return currentPage.IsUnbounded ? PageNumberAndSize.Unbounded
+				: new PageNumberAndSize(pageNumber, currentPage.Size);
 		}
 
 		#endregion
 
-		public static PagingInfo ToPagingInfo(this PagingState pagingState)
+		public static PagingInfo ToPagingInfo(
+			this PagingState pagingState)
 		{
 			return new PagingInfo(pagingState);
 		}
@@ -166,6 +176,7 @@ namespace MiscCorLib.Collections
 		public static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			this PagingInfo pagingInfo)
 		{
+			// Relay to overload with main implementation:
 			return pagingInfo.State.CalculateAllPagesAndItemNumbers();
 		}
 

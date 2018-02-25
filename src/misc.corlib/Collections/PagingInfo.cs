@@ -8,11 +8,36 @@ namespace MiscCorLib.Collections
 	public struct PagingInfo : IEquatable<PagingInfo>, IEquatable<PagingState>,
 		IComparable<PagingInfo>, IComparable<PagingState>, IComparable<PageNumberAndSize>, IHasValue
 	{
+		/// <summary>
+		/// An empty, default value.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="PagingInfo" /> value whose
+		/// internal <see cref="PagingState" />'s
+		/// <see cref="PagingState.HasValue" />
+		/// is <c>false</c>.
+		/// </returns>
 		public static PagingInfo Empty = new PagingInfo();
 
+		/// <summary>
+		/// A nonempty <see cref="PagingState" />
+		/// used to calculate other values which
+		/// describe a paged list.
+		/// </summary>
+		/// <remarks>
+		/// This is the only given field.
+		/// All of the other fields are calculated.
+		/// Some public properties relay from
+		/// private calculated fields.
+		/// </remarks>
 		private readonly PagingState _state;
 
-		private readonly PageItemNumbers _pageAndItemNumbers;
+		/// <summary>
+		/// Internal calculated field containing
+		/// the values of the <see cref="FirstItemNumber" />
+		/// and <see cref="LastItemNumber" /> properties.
+		/// </summary>
+		private readonly PageItemNumbers _pageAndItemNumbers; // This is a calculated field.
 
 		/// <summary>
 		/// The current page number.
@@ -47,14 +72,19 @@ namespace MiscCorLib.Collections
 		[DataMember(Order = 4, EmitDefaultValue = false)]
 		public PagingState State => this._state;
 
+		/// <summary>
+		/// Count of total pages in a paged list,
+		/// calculated based on the current page number
+		/// and total number of items on the list.
+		/// </summary>
 		[DataMember(Order = 5, EmitDefaultValue = true)]
-		public readonly int TotalPages;
+		public readonly int TotalPages; // This is a calculated field.
 
 		[DataMember(Order = 6, EmitDefaultValue = false)]
 		public bool IsUnbounded => this._state.CurrentPage.IsUnbounded;
 
 		[DataMember(Order = 7, EmitDefaultValue = true)]
-		public readonly int ItemCount;
+		public readonly int ItemCount; // This is a calculated field.
 
 		[DataMember(Order = 8, EmitDefaultValue = true)]
 		public int FirstItemNumber => this._pageAndItemNumbers.FirstItemNumber;
@@ -120,6 +150,7 @@ namespace MiscCorLib.Collections
 		{
 			if (!pagingState.CurrentPage.HasValue)
 			{
+				// Throw an exception, don't return empty.
 				throw new ArgumentException(
 					"A valid PagingState value is required. \"Unbounded\" is an acceptable value.",
 					nameof(pagingState));
@@ -267,17 +298,11 @@ namespace MiscCorLib.Collections
 
 		int IComparable<PagingInfo>.CompareTo(PagingInfo other)
 		{
-			// TotalPages doesn't matter,
-			// for this rarely used
-			// explicit implementation.
 			return this._state.CurrentPage.CompareTo(other._state.CurrentPage);
 		}
 
 		int IComparable<PagingState>.CompareTo(PagingState other)
 		{
-			// TotalPages doesn't matter,
-			// for this rarely used
-			// explicit implementation.
 			return this._state.CurrentPage.CompareTo(other.CurrentPage);
 		}
 
@@ -287,9 +312,6 @@ namespace MiscCorLib.Collections
 
 		int IComparable<PageNumberAndSize>.CompareTo(PageNumberAndSize other)
 		{
-			// TotalPages doesn't matter,
-			// for this rarely used
-			// explicit implementation.
 			return this._state.CurrentPage.CompareTo(other);
 		}
 
@@ -303,7 +325,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public override string ToString()
 		{
-			return $"PagingInfo[{this._state.CurrentPage},TotalItems={this._state.TotalItems}]";
+			return $"PagingInfo[{this._state},TotalPages={this.TotalPages},ItemNumbers={this.FirstItemNumber}-{this.LastItemNumber}]";
 		}
 	}
 }

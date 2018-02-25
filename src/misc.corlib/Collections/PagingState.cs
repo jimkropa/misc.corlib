@@ -126,68 +126,6 @@ namespace MiscCorLib.Collections
 		/// </summary>
 		public bool HasValue => this.CurrentPage.HasValue && this.TotalItems >= 0;
 
-/*
-		/// <summary>
-		/// Gets an internal reference to all of the values
-		/// calculated based on initial <see cref="CurrentPage" />
-		/// and <see cref="TotalItems" /> values.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This property does some clever sleight-of-hand
-		/// for the sake of optimizing serialization and deserialization.
-		/// When deserialized, only the <see cref="CurrentPage" />
-		/// and <see cref="TotalItems" /> are required, then other
-		/// values are calculated once into a "state" object.
-		/// </para>
-		/// <para>
-		/// Internally, the first access of this property
-		/// also has the effect of replacing the parent
-		/// <see cref="PagingState" /> value.  It's a "lazy"
-		/// initialization optimized for <see cref="ValueType" />
-		/// requiring this serialization feature.
-		/// </para>
-		/// <para>
-		/// This property backs all of the serialized public
-		/// read-only properties of <see cref="PagingState" />.
-		/// </para>
-		/// </remarks>
-		private PagingInfoCalculator Calculator
-		{
-			get
-			{
-				// Is initialized already?
-				if (this.calculator.CurrentPage.HasValue)
-				{
-					return this.calculator;
-				}
-
-				// If this is an empty value,
-				// return a corresponding empty
-				// and skip calculations.
-				if (!this.CurrentPage.HasValue)
-				{
-					return PagingInfoCalculator.Empty;
-				}
-
-				// Some clever sleight-of-hand for the sake
-				// of optimizing serialization and deserialization.
-				// When deserialized, only the CurrentPage and
-				// TotalItems are required, then other values
-				// are calculated once into a "state" object.
-				PagingInfoCalculator newCalculator = new PagingInfoCalculator(
-					this.CurrentPage, this.TotalItems, this.calculateAllPagesAndItemNumbers);
-
-				// Having initialized the values,
-				// replace the original PagingInfo
-				// with a fully-initialized value.
-				this = new PagingState(newCalculator);
-
-				return newCalculator;
-			}
-		}
-*/
-
 		#region [ Public Static Overrides of Equality Operators ]
 
 		/// <summary>

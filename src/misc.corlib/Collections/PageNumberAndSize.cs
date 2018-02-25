@@ -124,20 +124,20 @@ namespace MiscCorLib.Collections
 		#region [ Constructor Overloads ]
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndSize" /> struct
+		/// Initializes a new instance of the
+		/// <see cref="PageNumberAndSize" /> struct
 		/// for a page size between 1 and 255.
 		/// </summary>
 		/// <param name="pageNumber">
-		/// A one-based ordinal position of a page
+		/// The one-based ordinal position of a page
 		/// within a "paged" collection of items,
-		/// initial value of the immutable
+		/// is the initial value of the immutable
 		/// <see cref="Number" /> field.
 		/// </param>
 		/// <param name="pageSize">
 		/// The number of items on each page
 		/// within a "paged" collection of items,
-		/// initial value of the immutable
-		/// <see cref="Size" /> field.
+		/// initializes the <see cref="Size" /> field.
 		/// </param>
 		public PageNumberAndSize(int pageNumber, byte pageSize = DefaultPageSize)
 		{
