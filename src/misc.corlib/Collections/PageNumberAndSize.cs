@@ -209,7 +209,7 @@ namespace MiscCorLib.Collections
 		/// <remarks>
 		/// <para>
 		/// This is also the index of a
-		/// <see cref="PageNumberAndItemNumbers" />
+		/// <see cref="PageItemNumbers" />
 		/// value within a list such as the one returned by
 		/// <see cref="PagingState.AllPagesAndItemNumbers" />.
 		/// </para>

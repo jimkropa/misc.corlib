@@ -15,7 +15,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void Serializes_All_Properties()
 			{
-				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(
+				PageItemNumbers page = new PageItemNumbers(
 					new PageNumberAndSize(4, 10), 36);
 				string serializedPage = JsonConvert.SerializeObject(page);
 
@@ -27,7 +27,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void Serializes_Empty_Value()
 			{
-				string serializedPage = JsonConvert.SerializeObject(PageNumberAndItemNumbers.Empty);
+				string serializedPage = JsonConvert.SerializeObject(PageItemNumbers.Empty);
 
 				Assert.Equal(
 					"{\"PageNumber\":0,\"FirstItemNumber\":0,\"LastItemNumber\":0}",
@@ -37,10 +37,10 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void Deserializes_From_Minimal_Specification()
 			{
-				PageNumberAndItemNumbers page = new PageNumberAndItemNumbers(
+				PageItemNumbers page = new PageItemNumbers(
 					new PageNumberAndSize(8, 20), 148);
-				PageNumberAndItemNumbers deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+				PageItemNumbers deserializedPage
+					= JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"PageNumber\":8,\"FirstItemNumber\":141,\"LastItemNumber\":148}");
 
 				AssertEquality(page, deserializedPage);
@@ -49,20 +49,20 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void Deserializes_As_Invalid_From_Negative_Numbers()
 			{
-				PageNumberAndItemNumbers deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+				PageItemNumbers deserializedPage
+					= JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"PageNumber\":-7,\"FirstItemNumber\":20,\"LastItemNumber\":148}");
 
 				Assert.False(deserializedPage.HasValue);
 
 				deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+					= JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"PageNumber\":7,\"FirstItemNumber\":-20,\"LastItemNumber\":148}");
 
 				Assert.False(deserializedPage.HasValue);
 
 				deserializedPage
-					= JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+					= JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"PageNumber\":7,\"FirstItemNumber\":20,\"LastItemNumber\":-148}");
 
 				Assert.False(deserializedPage.HasValue);
@@ -72,15 +72,15 @@ namespace MiscCorLib.Collections
 			public void Does_Not_Deserialize_From_Omitted_Numbers()
 			{
 				Assert.Throws<JsonSerializationException>(
-					() => JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+					() => JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"FirstItemNumber\":20,\"LastItemNumber\":148}"));
 
 				Assert.Throws<JsonSerializationException>(
-					() => JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+					() => JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"PageNumber\":7,\"LastItemNumber\":148}"));
 
 				Assert.Throws<JsonSerializationException>(
-					() => JsonConvert.DeserializeObject<PageNumberAndItemNumbers>(
+					() => JsonConvert.DeserializeObject<PageItemNumbers>(
 						"{\"PageNumber\":7,\"FirstItemNumber\":20}"));
 			}
 		}
@@ -90,7 +90,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void CaclucatesCorrectlyFromValidSizes()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages
+				IReadOnlyList<PageItemNumbers> pages
 					= PagingCalculator.CalculateAllPagesAndItemNumbers(
 						new PageNumberAndSize(20), 119).ToList();
 
@@ -103,7 +103,7 @@ namespace MiscCorLib.Collections
 				{
 					int firstItemNumber = lastItemNumber + 1;
 					int pageIndex = i - 1;
-					PageNumberAndItemNumbers page = pages[pageIndex];
+					PageItemNumbers page = pages[pageIndex];
 
 					Assert.Equal(i, page.PageNumber);
 					Assert.Equal(firstItemNumber, page.FirstItemNumber);
@@ -118,7 +118,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void ReturnsOnePageForZeroItems()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesWithSize
+				IReadOnlyList<PageItemNumbers> zeroPagesWithSize
 					= PagingCalculator.CalculateAllPagesAndItemNumbers(
 						new PageNumberAndSize(20), 0).ToList();
 
@@ -128,7 +128,7 @@ namespace MiscCorLib.Collections
 				Assert.Equal(0, zeroPagesWithSize[0].FirstItemNumber);
 				Assert.Equal(0, zeroPagesWithSize[0].LastItemNumber);
 
-				IReadOnlyList<PageNumberAndItemNumbers> zeroPagesUnbounded
+				IReadOnlyList<PageItemNumbers> zeroPagesUnbounded
 					= PagingCalculator.CalculateAllPagesAndItemNumbers(
 						PageNumberAndSize.Unbounded, 0).ToList();
 
@@ -142,7 +142,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void ReturnsOnePageForUnbounded()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pagesUnbounded
+				IReadOnlyList<PageItemNumbers> pagesUnbounded
 					= PagingCalculator.CalculateAllPagesAndItemNumbers(
 						PageNumberAndSize.Unbounded, 57).ToList();
 
@@ -157,7 +157,7 @@ namespace MiscCorLib.Collections
 		#region [ Internal Static Test Assertion Methods ]
 
 		internal static void AssertEquality(
-			PageNumberAndItemNumbers expected, PageNumberAndItemNumbers actual)
+			PageItemNumbers expected, PageItemNumbers actual)
 		{
 			Assert.True(expected == actual);
 			Assert.False(expected != actual);
@@ -175,7 +175,7 @@ namespace MiscCorLib.Collections
 			Assert.Equal(expected.HasValue, actual.HasValue);
 		}
 
-		internal static void AssertIsEmpty(PageNumberAndItemNumbers page)
+		internal static void AssertIsEmpty(PageItemNumbers page)
 		{
 			Assert.False(page.HasValue);
 			Assert.Equal(0, page.PageNumber);

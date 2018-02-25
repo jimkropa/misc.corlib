@@ -12,7 +12,7 @@ namespace MiscCorLib.Collections
 
 		private readonly PagingState _state;
 
-		private readonly PageNumberAndItemNumbers _pageAndItemNumbers;
+		private readonly PageItemNumbers _pageAndItemNumbers;
 
 		/// <summary>
 		/// The current page number.
@@ -130,7 +130,7 @@ namespace MiscCorLib.Collections
 				this.TotalPages = 1;
 				this.IsFirstPage = true;
 				this.IsLastPage = true;
-				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
+				this._pageAndItemNumbers = new PageItemNumbers(pagingState, true);
 				this.ItemCount = pagingState.TotalItems;
 			}
 			else if ((pagingState.TotalItems > 0)
@@ -151,7 +151,7 @@ namespace MiscCorLib.Collections
 
 				this.IsFirstPage = pagingState.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
 				this.IsLastPage = pagingState.CurrentPage.Number == this.TotalPages;
-				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, this.IsLastPage);
+				this._pageAndItemNumbers = new PageItemNumbers(pagingState, this.IsLastPage);
 				this.ItemCount = this._pageAndItemNumbers.LastItemNumber - this._pageAndItemNumbers.FirstItemNumber + 1;
 			}
 			else
@@ -166,7 +166,7 @@ namespace MiscCorLib.Collections
 				this.TotalPages = 1;
 				this.IsFirstPage = true;
 				this.IsLastPage = true;
-				this._pageAndItemNumbers = new PageNumberAndItemNumbers(pagingState, true);
+				this._pageAndItemNumbers = new PageItemNumbers(pagingState, true);
 				this.ItemCount = 0;
 			}
 

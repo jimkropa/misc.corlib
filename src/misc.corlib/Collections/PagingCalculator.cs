@@ -163,7 +163,7 @@ namespace MiscCorLib.Collections
 			return new PagingResources(pagingInfo);
 		}
 
-		public static IEnumerable<PageNumberAndItemNumbers> CalculateAllPagesAndItemNumbers(
+		public static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			this PagingInfo pagingInfo)
 		{
 			return pagingInfo.State.CalculateAllPagesAndItemNumbers();
@@ -183,19 +183,19 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// The full set of page numbers and item numbers.
 		/// </returns>
-		public static IEnumerable<PageNumberAndItemNumbers> CalculateAllPagesAndItemNumbers(
+		public static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			this PagingState pagingState)
 		{
 			return pagingState.CurrentPage.HasValue
 				? PagingCalculator.CalculateAllPagesAndItemNumbers(pagingState.CurrentPage, pagingState.TotalItems)
-				: new PageNumberAndItemNumbers[0];
+				: new PageItemNumbers[0];
 		}
 
 		/// <summary>
 		/// Calculates the full set of page numbers and item numbers
 		/// from parameters relayed by the public static
-		/// <see cref="PageNumberAndItemNumbers.Calculate" />
-		/// method of <see cref="PageNumberAndItemNumbers" />.
+		/// <see cref="PageItemNumbers.Calculate" />
+		/// method of <see cref="PageItemNumbers" />.
 		/// </summary>
 		/// <param name="pageSize">
 		/// The <see cref="PageNumberAndSize.Size" />
@@ -207,7 +207,7 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// The full set of page numbers and item numbers.
 		/// </returns>
-		private static IEnumerable<PageNumberAndItemNumbers> CalculateAllPagesAndItemNumbers(
+		private static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			PageNumberAndSize currentPage, int totalItems)
 		{
 			if ((currentPage.Size >= PageNumberAndSize.MinimumPageSize)
@@ -216,7 +216,7 @@ namespace MiscCorLib.Collections
 				int totalPages = CalculateTotalPages(currentPage.Size, totalItems);
 				for (int pageNumber = PageNumberAndSize.FirstPageNumber; pageNumber <= totalPages; pageNumber++)
 				{
-					yield return new PageNumberAndItemNumbers(
+					yield return new PageItemNumbers(
 						pageNumber,
 						currentPage.Size,
 						totalItems,
@@ -229,7 +229,7 @@ namespace MiscCorLib.Collections
 			// is unbounded, return a list with a single item,
 			// representing the empty (totalItems == 0)
 			// or unbounded (pageSize == 0) page.
-			yield return new PageNumberAndItemNumbers(
+			yield return new PageItemNumbers(
 				currentPage, totalItems, true, true);
 		}
 	}

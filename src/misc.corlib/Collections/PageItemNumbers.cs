@@ -10,8 +10,8 @@ namespace MiscCorLib.Collections
 	/// and the first and last ordinal numbers of items on the page.
 	/// </summary>
 	[Serializable, DataContract]
-	public struct PageNumberAndItemNumbers
-		: IEquatable<PageNumberAndItemNumbers>, IComparable<PageNumberAndItemNumbers>, IHasValue
+	public struct PageItemNumbers
+		: IEquatable<PageItemNumbers>, IComparable<PageItemNumbers>, IHasValue
 	{
 		#region [ Public Fields and Internal Constructor ]
 
@@ -19,8 +19,8 @@ namespace MiscCorLib.Collections
 		/// A value of <see cref="PageNumberAndSize" />
 		/// which is not valid, indicating an unspecified value.
 		/// </summary>
-		public static readonly PageNumberAndItemNumbers Empty
-			= new PageNumberAndItemNumbers();
+		public static readonly PageItemNumbers Empty
+			= new PageItemNumbers();
 		
 		/// <summary>
 		/// The one-based ordinal number of
@@ -51,7 +51,7 @@ namespace MiscCorLib.Collections
 		public readonly bool IsCurrent;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers" /> struct.
+		/// Initializes a new instance of the <see cref="PageItemNumbers" /> struct.
 		/// </summary>
 		/// <param name="pageNumber">
 		/// Initial value for the <see cref="PageNumber" /> field.
@@ -68,14 +68,14 @@ namespace MiscCorLib.Collections
 		/// value, whether to calculate if <paramref name="pageNumber" />
 		/// is the last page or to use this value.
 		/// </param>
-		public PageNumberAndItemNumbers(
+		public PageItemNumbers(
 			PagingState pagingState, bool isCurrent = false, bool? isLastPage = null)
 			: this(pagingState.CurrentPage, pagingState.TotalItems, isCurrent, isLastPage)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PageNumberAndItemNumbers" /> struct.
+		/// Initializes a new instance of the <see cref="PageItemNumbers" /> struct.
 		/// </summary>
 		/// <param name="pageNumber">
 		/// Initial value for the <see cref="PageNumber" /> field.
@@ -92,14 +92,14 @@ namespace MiscCorLib.Collections
 		/// value, whether to calculate if <paramref name="pageNumber" />
 		/// is the last page or to use this value.
 		/// </param>
-		public PageNumberAndItemNumbers(
+		public PageItemNumbers(
 			PageNumberAndSize page, int totalItems, bool isCurrent = false, bool? isLastPage = null)
 			: this(page.Number, page.Size, totalItems, isCurrent, isLastPage.HasValue
 				? isLastPage.Value : PagingCalculator.CalculateTotalPages(page.Size, totalItems) == page.Number)
 		{
 		}
 
-		internal PageNumberAndItemNumbers(
+		internal PageItemNumbers(
 			int pageNumber, byte pageSize, int totalItems, bool isCurrent, bool isLastPage)
 		{
 			if (pageSize >= PageNumberAndSize.MinimumPageSize && (totalItems > 0))
@@ -143,8 +143,8 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers" /> value is less than
-		/// another specified <see cref="PageNumberAndItemNumbers" /> value.
+		/// <see cref="PageItemNumbers" /> value is less than
+		/// another specified <see cref="PageItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -156,15 +156,15 @@ namespace MiscCorLib.Collections
 		/// <c>true</c> if <paramref name="left" /> is less than
 		/// <paramref name="right" />; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool operator <(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
+		public static bool operator <(PageItemNumbers left, PageItemNumbers right)
 		{
 			return left.LastItemNumber < right.LastItemNumber;
 		}
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers" /> value is greater than
-		/// another specified <see cref="PageNumberAndItemNumbers" /> value.
+		/// <see cref="PageItemNumbers" /> value is greater than
+		/// another specified <see cref="PageItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -176,16 +176,16 @@ namespace MiscCorLib.Collections
 		/// <c>true</c> if <paramref name="left" /> is greater than
 		/// <paramref name="right" />; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool operator >(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
+		public static bool operator >(PageItemNumbers left, PageItemNumbers right)
 		{
 			return left.LastItemNumber > right.LastItemNumber;
 		}
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers" /> value
+		/// <see cref="PageItemNumbers" /> value
 		/// is less than or equal to another specified
-		/// <see cref="PageNumberAndItemNumbers" /> value.
+		/// <see cref="PageItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -198,16 +198,16 @@ namespace MiscCorLib.Collections
 		/// less than or equal to <paramref name="right" />;
 		/// otherwise, <c>false</c>.
 		/// </returns>
-		public static bool operator <=(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
+		public static bool operator <=(PageItemNumbers left, PageItemNumbers right)
 		{
 			return left.LastItemNumber <= right.LastItemNumber;
 		}
 
 		/// <summary>
 		/// Returns a value that indicates whether a specified
-		/// <see cref="PageNumberAndItemNumbers" /> value
+		/// <see cref="PageItemNumbers" /> value
 		/// is greater than or equal to another specified
-		/// <see cref="PageNumberAndItemNumbers" /> value.
+		/// <see cref="PageItemNumbers" /> value.
 		/// </summary>
 		/// <param name="left">
 		/// The first value to compare.
@@ -220,14 +220,14 @@ namespace MiscCorLib.Collections
 		/// greater than or equal to <paramref name="right" />;
 		/// otherwise, <c>false</c>.
 		/// </returns>
-		public static bool operator >=(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
+		public static bool operator >=(PageItemNumbers left, PageItemNumbers right)
 		{
 			return left.LastItemNumber >= right.LastItemNumber;
 		}
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PageNumberAndItemNumbers" />
+		/// specified <see cref="PageItemNumbers" />
 		/// objects are equal.
 		/// </summary>
 		/// <param name="left">
@@ -241,14 +241,14 @@ namespace MiscCorLib.Collections
 		/// and <paramref name="right" /> are equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
-		public static bool operator ==(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
+		public static bool operator ==(PageItemNumbers left, PageItemNumbers right)
 		{
 			return left.Equals(right);
 		}
 
 		/// <summary>
 		/// Indicates whether the values of two
-		/// specified <see cref="PageNumberAndItemNumbers" />
+		/// specified <see cref="PageItemNumbers" />
 		/// objects are not equal.
 		/// </summary>
 		/// <param name="left">
@@ -262,7 +262,7 @@ namespace MiscCorLib.Collections
 		/// and <paramref name="right" /> are not equal;
 		/// otherwise <c>false</c>.
 		/// </returns>
-		public static bool operator !=(PageNumberAndItemNumbers left, PageNumberAndItemNumbers right)
+		public static bool operator !=(PageItemNumbers left, PageItemNumbers right)
 		{
 			return !left.Equals(right);
 		}
@@ -296,7 +296,7 @@ namespace MiscCorLib.Collections
 				return false;
 			}
 
-			return this.Equals((PageNumberAndItemNumbers)obj);
+			return this.Equals((PageItemNumbers)obj);
 		}
 
 		/// <summary>
@@ -318,7 +318,7 @@ namespace MiscCorLib.Collections
 
 		/// <summary>
 		/// Compares the current value with another
-		/// <see cref="PageNumberAndItemNumbers" /> value
+		/// <see cref="PageItemNumbers" /> value
 		/// and returns an integer that indicates whether
 		/// the current instance precedes, follows, or occurs
 		/// in the same position in the sort order
@@ -335,18 +335,18 @@ namespace MiscCorLib.Collections
 		/// In this case, the comparison is based on the
 		/// <see cref="LastItemNumber" /> value.
 		/// </remarks>
-		public int CompareTo(PageNumberAndItemNumbers other)
+		public int CompareTo(PageItemNumbers other)
 		{
 			return this.LastItemNumber.CompareTo(other.LastItemNumber);
 		}
 
 		/// <summary>
 		/// Indicates whether this value and another
-		/// specified <see cref="PageNumberAndItemNumbers" />
+		/// specified <see cref="PageItemNumbers" />
 		/// value are equal.
 		/// </summary>
 		/// <param name="other">
-		/// The <see cref="PageNumberAndItemNumbers" /> value
+		/// The <see cref="PageItemNumbers" /> value
 		/// to compare with the current value.
 		/// </param>
 		/// <returns>
@@ -355,14 +355,14 @@ namespace MiscCorLib.Collections
 		/// <see cref="FirstItemNumber" />, and <see cref="LastItemNumber" />
 		/// values; otherwise, <c>false</c>.
 		/// </returns>
-		public bool Equals(PageNumberAndItemNumbers other)
+		public bool Equals(PageItemNumbers other)
 		{
 			return (this.PageNumber == other.PageNumber)
 				&& (this.FirstItemNumber == other.FirstItemNumber)
 				&& (this.LastItemNumber == other.LastItemNumber);
 		}
 
-		int IComparable<PageNumberAndItemNumbers>.CompareTo(PageNumberAndItemNumbers other)
+		int IComparable<PageItemNumbers>.CompareTo(PageItemNumbers other)
 		{
 			// Return the public method.
 			// Using an explicit implementation is a way
@@ -370,7 +370,7 @@ namespace MiscCorLib.Collections
 			return this.CompareTo(other);
 		}
 
-		bool IEquatable<PageNumberAndItemNumbers>.Equals(PageNumberAndItemNumbers other)
+		bool IEquatable<PageItemNumbers>.Equals(PageItemNumbers other)
 		{
 			// Return the public method.
 			// Using an explicit implementation is a way

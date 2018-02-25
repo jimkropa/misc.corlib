@@ -59,7 +59,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasFullSetOfAllPages()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingState.CalculateAllPagesAndItemNumbers().ToList();
+				IReadOnlyList<PageItemNumbers> pages = this.defaultPagingState.CalculateAllPagesAndItemNumbers().ToList();
 
 				Assert.Equal(114, pages.Count);
 				Assert.Equal(
@@ -71,7 +71,7 @@ namespace MiscCorLib.Collections
 				{
 					int firstItemNumber = lastItemNumber + 1;
 					int pageIndex = i - 1;
-					PageNumberAndItemNumbers page = pages[pageIndex];
+					PageItemNumbers page = pages[pageIndex];
 
 					Assert.Equal(i, page.PageNumber);
 					Assert.Equal(firstItemNumber, page.FirstItemNumber);
@@ -134,7 +134,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasFullSetOfAllPages()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfoLastPage.AllPagesAndItemNumbers();
+				IReadOnlyList<PageItemNumbers> pages = this.defaultPagingInfoLastPage.AllPagesAndItemNumbers();
 
 				Assert.Equal(114, pages.Count);
 				Assert.Equal(
@@ -146,7 +146,7 @@ namespace MiscCorLib.Collections
 				{
 					int firstItemNumber = lastItemNumber + 1;
 					int pageIndex = i - 1;
-					PageNumberAndItemNumbers page = pages[pageIndex];
+					PageItemNumbers page = pages[pageIndex];
 
 					Assert.Equal(i, page.PageNumber);
 					Assert.Equal(firstItemNumber, page.FirstItemNumber);
@@ -217,7 +217,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasOneEmptyPage()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.defaultPagingInfo.AllPagesAndItemNumbers();
+				IReadOnlyList<PageItemNumbers> pages = this.defaultPagingInfo.AllPagesAndItemNumbers();
 
 				Assert.Equal(1, pages.Count);
 				Assert.Equal(0, pages[0].FirstItemNumber);
@@ -279,7 +279,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasNoPages()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.emptyPagingInfo.AllPagesAndItemNumbers();
+				IReadOnlyList<PageItemNumbers> pages = this.emptyPagingInfo.AllPagesAndItemNumbers();
 
 				Assert.Equal(0, pages.Count);
 			}
@@ -343,7 +343,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasOneHugePage()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.unboundedPagingInfo.AllPagesAndItemNumbers();
+				IReadOnlyList<PageItemNumbers> pages = this.unboundedPagingInfo.AllPagesAndItemNumbers();
 
 				Assert.Equal(1, pages.Count);
 				Assert.Equal(1, pages[0].FirstItemNumber);
@@ -410,7 +410,7 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void HasOneEmptyPage()
 			{
-				IReadOnlyList<PageNumberAndItemNumbers> pages = this.unboundedPagingInfo.AllPagesAndItemNumbers();
+				IReadOnlyList<PageItemNumbers> pages = this.unboundedPagingInfo.AllPagesAndItemNumbers();
 
 				Assert.Equal(1, pages.Count);
 				Assert.Equal(0, pages[0].FirstItemNumber);
