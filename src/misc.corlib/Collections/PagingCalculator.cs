@@ -81,22 +81,45 @@ namespace MiscCorLib.Collections
 		#region [ Public TurnToPage Method ]
 
 		/// <summary>
-		/// Calculates new <see cref="PagingState" />
-		/// from current page and 
+		/// Calculates a new <see cref="PagingState" /> for
+		/// an arbitrary page paged list's current page, assuming that the
+		/// total number of items has not changed since
+		/// the .
 		/// </summary>
 		/// <param name="pagingInfo"></param>
 		/// <param name="pageNumber"></param>
+		/// <param name="totalPages"></param>
 		/// <returns></returns>
-		public static PagingState TurnToPage(
+		public static PagingInfo TurnToPage(
 			this PagingInfo pagingInfo, int pageNumber)
 		{
-			return pagingInfo.State.TurnToPage(pageNumber);
+			return pagingInfo.TurnToPage(pageNumber, pagingInfo.TotalItems);
 		}
 
-		public static PagingState TurnToPage(
+		/// <summary>
+		/// Calculates a new <see cref="PagingState" /> for
+		/// a paged list's current page and total number of items.
+		/// </summary>
+		/// <param name="pagingInfo"></param>
+		/// <param name="pageNumber"></param>
+		/// <param name="totalPages"></param>
+		/// <returns></returns>
+		public static PagingInfo TurnToPage(
+			this PagingInfo pagingInfo, int pageNumber, int totalItems)
+		{
+			return pagingInfo.State.TurnToPage(pageNumber, totalItems);
+		}
+
+		public static PagingInfo TurnToPage(
 			this PagingState pagingState, int pageNumber)
 		{
-			return pagingState.CurrentPage.TurnToPage(pageNumber).ToPagingState(pagingState.TotalItems);
+			return pagingState.TurnToPage(pageNumber, pagingState.TotalItems);
+		}
+
+		public static PagingInfo TurnToPage(
+			this PagingState pagingState, int pageNumber, int totalItems)
+		{
+			return pagingState.CurrentPage.TurnToPage(pageNumber).ToPagingInfo(totalItems);
 		}
 
 		/// <summary>
@@ -116,29 +139,6 @@ namespace MiscCorLib.Collections
 		/// <see cref="PageNumberAndSize.Number" /> given
 		/// as the <paramref name="pageNumber" /> parameter.
 		/// </returns>
-		/// <remarks>
-		/// <para>
-		/// Should this operation be closed under the set of
-		/// <see cref="PagingState" /> operations? In other words,
-		/// should this method return a new <see cref="PagingState" />
-		/// value instead of a <see cref="PageNumberAndSize" /> value?
-		/// </para>
-		/// <para>
-		/// The reason it should not is that the number of
-		/// <see cref="TotalItems" /> cannot be assumed to
-		/// remain constant between requests. That number
-		/// may have changed between the time that this
-		/// page was retrieved and the retrieval of a different
-		/// page using the return from this function.
-		/// </para>
-		/// <para>
-		/// That is the same reason for checking the maximum
-		/// allowed page number in this function.
-		/// The <see cref="PagingState" /> constructor gracefully
-		/// handles the situation in which a page number
-		/// is higher than the total number of pages.
-		/// </para>
-		/// </remarks>
 		public static PageNumberAndSize TurnToPage(
 			this PageNumberAndSize currentPage, int pageNumber)
 		{
@@ -148,23 +148,20 @@ namespace MiscCorLib.Collections
 				return PageNumberAndSize.Empty;
 			}
 
-			// Always return the unbounded page if the current page is unbounded.
+			// Return the unbounded page if the current page is unbounded.
 			return currentPage.IsUnbounded ? PageNumberAndSize.Unbounded
+				// Otherwise, use the current page size
+				// and the given page number.
 				: new PageNumberAndSize(pageNumber, currentPage.Size);
 		}
 
 		#endregion
 
-		public static PagingInfo ToPagingInfo(
-			this PagingState pagingState)
-		{
-			return new PagingInfo(pagingState);
-		}
-
-		public static PagingState ToPagingState(
+		internal static PagingInfo ToPagingInfo(
 			this PageNumberAndSize currentPage, int totalItems)
 		{
-			return new PagingState(currentPage, totalItems);
+			return new PagingInfo(
+				new PagingState(currentPage, totalItems));
 		}
 
 		public static PagingResources CalculatePagingResources(
@@ -194,7 +191,7 @@ namespace MiscCorLib.Collections
 		/// <returns>
 		/// The full set of page numbers and item numbers.
 		/// </returns>
-		public static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
+		internal static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			this PagingState pagingState)
 		{
 			return pagingState.CurrentPage.HasValue

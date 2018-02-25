@@ -19,7 +19,7 @@ namespace MiscCorLib.Collections.Generic
 	{
 		#region [ Private ReadOnly Field and Constructor Overloads ]
 
-		private readonly PagingInfo pagingInfo;
+		private readonly PagingInfo _pagingInfo;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagedList{T}" /> class
@@ -35,7 +35,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="collection" /> is null.
 		/// </exception>
-		public PagedList(IEnumerable<T> collection, PagingState pagingState)
+		public PagedList(IEnumerable<T> collection, PagingInfo pagingInfo)
 			: base(collection)
 		{
 			if (collection == null)
@@ -43,12 +43,14 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentNullException(nameof(collection));
 			}
 
-			this.pagingInfo = pagingState.ToPagingInfo();
-			if (this.Count != this.pagingInfo.ItemCount)
+			if (this.Count != pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
-					$"The number of items in the given collection ({this.Count}) does not match the expected number of items for the current page ({this.pagingInfo.ItemCount}) based on the PagingState value.");
+					$"The number of items in the given collection ({this.Count}) does not match the expected number of items for the current page ({pagingInfo.ItemCount}) based on the PagingState value.",
+					nameof(pagingInfo));
 			}
+
+			this._pagingInfo = pagingInfo;
 		}
 
 		/// <summary>
@@ -64,7 +66,7 @@ namespace MiscCorLib.Collections.Generic
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// <paramref name="capacity" /> is less than zero.
 		/// </exception>
-		protected PagedList(int capacity, PagingState pagingState)
+		protected PagedList(int capacity, PagingInfo pagingInfo)
 			: base(capacity)
 		{
 			if (capacity < 0)
@@ -72,17 +74,19 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity must not be negative.");
 			}
 
-			this.pagingInfo = pagingState.ToPagingInfo();
-			if (capacity != this.pagingInfo.ItemCount)
+			if (capacity != pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
-					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({this.pagingInfo.ItemCount}) based on the PagingInfo value.");
+					$"The given capacity ({capacity}) does not match the expected number of items for the current page ({pagingInfo.ItemCount}) based on the PagingInfo value.",
+					nameof(pagingInfo));
 			}
+
+			this._pagingInfo = pagingInfo;
 		}
 
 		#endregion
 
 		/// <inheritdoc />
-		public PagingInfo PagingInfo => this.pagingInfo;
+		public PagingInfo PagingInfo => this._pagingInfo;
 	}
 }

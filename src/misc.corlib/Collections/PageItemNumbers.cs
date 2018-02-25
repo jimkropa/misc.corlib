@@ -30,25 +30,25 @@ namespace MiscCorLib.Collections
 		public readonly int PageNumber;
 
 		/// <summary>
+		/// This is <em>only</em> for serialization
+		/// and logic, not for sorting or equality.
+		/// </summary>
+		[DataMember(Order = 1, EmitDefaultValue = false)]
+		public readonly bool IsCurrentPage;
+
+		/// <summary>
 		/// The one-based ordinal number
 		/// of the first item on this page.
 		/// </summary>
-		[DataMember(Order = 1, EmitDefaultValue = true)]
+		[DataMember(Order = 2, EmitDefaultValue = true)]
 		public readonly int FirstItemNumber;
 
 		/// <summary>
 		/// The one-based ordinal number
 		/// of the last item on this page.
 		/// </summary>
-		[DataMember(Order = 2, EmitDefaultValue = true)]
+		[DataMember(Order = 3, EmitDefaultValue = true)]
 		public readonly int LastItemNumber;
-
-		/// <summary>
-		/// The one-based ordinal number of
-		/// this page within a "paged" collection.
-		/// </summary>
-		[DataMember(Order = 3, EmitDefaultValue = false)]
-		public readonly bool IsCurrent;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PageItemNumbers" /> struct.
@@ -68,7 +68,7 @@ namespace MiscCorLib.Collections
 		/// value, whether to calculate if <paramref name="pageNumber" />
 		/// is the last page or to use this value.
 		/// </param>
-		public PageItemNumbers(
+		internal PageItemNumbers(
 			PagingState pagingState, bool isCurrent = false, bool? isLastPage = null)
 			: this(pagingState.CurrentPage, pagingState.TotalItems, isCurrent, isLastPage)
 		{
@@ -92,7 +92,7 @@ namespace MiscCorLib.Collections
 		/// value, whether to calculate if <paramref name="pageNumber" />
 		/// is the last page or to use this value.
 		/// </param>
-		public PageItemNumbers(
+		internal PageItemNumbers(
 			PageNumberAndSize page, int totalItems, bool isCurrent = false, bool? isLastPage = null)
 			: this(page.Number, page.Size, totalItems, isCurrent, isLastPage.HasValue
 				? isLastPage.Value : PagingCalculator.CalculateTotalPages(page.Size, totalItems) == page.Number)
@@ -127,7 +127,7 @@ namespace MiscCorLib.Collections
 				this.LastItemNumber = totalItems;
 			}
 
-			this.IsCurrent = isCurrent;
+			this.IsCurrentPage = isCurrent;
 		}
 
 		/// <summary>

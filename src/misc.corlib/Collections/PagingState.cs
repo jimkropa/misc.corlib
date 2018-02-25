@@ -53,41 +53,7 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		#region [ Constructor Overloads ]
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingState" /> struct
-		/// for having all of the items in a collection on a single page
-		/// as large as the number of <paramref name="totalItems" />.
-		/// </summary>
-		/// <param name="totalItems">
-		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems" /> field.
-		/// </param>
-		public PagingState(int totalItems)
-			: this(PageNumberAndSize.Unbounded, totalItems)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a <see cref="PagingState" /> value
-		/// for pages of a given size between 1 and 255.
-		/// </summary>
-		/// <param name="pageNumber">
-		/// The requested page <see cref="PageNumberAndSize.Number" />.
-		/// </param>
-		/// <param name="pageSize">
-		/// The requested page <see cref="PageNumberAndSize.Size" />.
-		/// </param>
-		/// <param name="totalItems">
-		/// The total number of items in the collection to be paged,
-		/// initial value for the immutable <see cref="TotalItems" /> field.
-		/// </param>
-		public PagingState(
-			int pageNumber, byte pageSize, int totalItems)
-			: this(new PageNumberAndSize(pageNumber, pageSize), totalItems)
-		{
-		}
+		#region [ Internal Constructor ]
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagingState" /> struct
@@ -95,7 +61,13 @@ namespace MiscCorLib.Collections
 		/// this one replaces, used for lazy initialization by the internal
 		/// <see cref="Calculator" /> property.
 		/// </summary>
-		public PagingState(PageNumberAndSize currentPage, int totalItems)
+		/// <remarks>
+		/// Constructor is internal to avoid possibly creating an invalid state
+		/// where the current page is impossible for a given number of items.
+		/// Internally, this type should be used only to create a
+		/// <see cref="PagingInfo" /> value, 
+		/// </remarks>
+		internal PagingState(PageNumberAndSize currentPage, int totalItems)
 		{
 			if (!currentPage.HasValue)
 			{

@@ -146,13 +146,13 @@ namespace MiscCorLib.Collections
 		/// adds the private <see cref="PagingState.AllPages" />
 		/// property to the serialization output for JSON.
 		/// </param>
-		public PagingInfo(PagingState pagingState)
+		internal PagingInfo(PagingState pagingState)
 		{
-			if (!pagingState.CurrentPage.HasValue)
+			if (!pagingState.HasValue)
 			{
 				// Throw an exception, don't return empty.
 				throw new ArgumentException(
-					"A valid PagingState value is required. \"Unbounded\" is an acceptable value.",
+					"A valid PagingState value is required.",
 					nameof(pagingState));
 			}
 
