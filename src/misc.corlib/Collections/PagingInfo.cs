@@ -119,7 +119,7 @@ namespace MiscCorLib.Collections
 		public readonly bool IsLastPage;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PagingCalculator" /> struct.
+		/// Initializes a new instance of the <see cref="Paging" /> struct.
 		/// Invoked by the private <see cref="PagingState.Calculator" />
 		/// property of an owner <see cref="PagingState" /> value,
 		/// calculates metadata for paging UI, optionally including
@@ -168,7 +168,7 @@ namespace MiscCorLib.Collections
 				&& (pagingState.CurrentPage.Size > 0))
 			{
 				// Calculate the total pages for a fixed page size and at least one result.
-				this.TotalPages = PagingCalculator.CalculateTotalPages(
+				this.TotalPages = Paging.CalculateTotalPages(
 					pagingState.CurrentPage.Size, pagingState.TotalItems);
 
 				// Handle the situation if someone turns past the last page.

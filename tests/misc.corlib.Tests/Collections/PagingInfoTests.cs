@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Xunit;
 
 namespace MiscCorLib.Collections
@@ -22,7 +23,7 @@ namespace MiscCorLib.Collections
 			public void HasValidItemNumbers()
 			{
 				Assert.Equal(1, this.defaultPagingInfo.FirstItemNumber);
-				Assert.Equal(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.LastItemNumber);
+				Assert.Equal(this.defaultPagingInfo.State.CurrentPage.Size, this.defaultPagingInfo.LastItemNumber);
 
 				Assert.Equal(this.defaultPagingInfo.FirstItemNumber - 1, this.defaultPagingInfo.FirstItemIndex);
 				Assert.Equal(this.defaultPagingInfo.LastItemNumber - 1, this.defaultPagingInfo.LastItemIndex);
@@ -33,33 +34,33 @@ namespace MiscCorLib.Collections
 			{
 				AssertIsFirstPage(this.defaultPagingInfo);
 
-				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.CurrentPage);
-				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.FirstPage);
+				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.State.CurrentPage);
+				PageNumberAndSizeTests.AssertIsFirstPage(this.defaultPagingInfo.State.FirstPage);
 
-				Assert.InRange(this.defaultPagingInfo.CurrentPage.Size, 1, byte.MaxValue);
-				Assert.InRange(this.defaultPagingInfo.FirstPage.Size, 1, byte.MaxValue);
-				Assert.InRange(this.defaultPagingInfo.LastPage.Size, 1, byte.MaxValue);
+				Assert.InRange(this.defaultPagingInfo.State.CurrentPage.Size, 1, byte.MaxValue);
+				Assert.InRange(this.defaultPagingInfo.State.FirstPage.Size, 1, byte.MaxValue);
+				Assert.InRange(this.defaultPagingInfo.State.LastPage.Size, 1, byte.MaxValue);
 
 				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.ItemCount);
-				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.CurrentPage.Size);
-				Assert.Equal(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.FirstPage.Size);
-				Assert.Equal(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.LastPage.Size);
-				Assert.Equal(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.ItemCount);
+				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.State.CurrentPage.Size);
+				Assert.Equal(this.defaultPagingInfo.State.CurrentPage.Size, this.defaultPagingInfo.State.FirstPage.Size);
+				Assert.Equal(this.defaultPagingInfo.State.CurrentPage.Size, this.defaultPagingInfo.State.LastPage.Size);
+				Assert.Equal(this.defaultPagingInfo.State.CurrentPage.Size, this.defaultPagingInfo.ItemCount);
 			}
 
 			[Fact]
 			public void HasValidNextPageAndEmptyPreviousPage()
 			{
-				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfo.PreviousPage);
+				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfo.State.PreviousPage);
 
-				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.CurrentPage.Size);
-				Assert.Equal(this.defaultPagingInfo.CurrentPage.Size, this.defaultPagingInfo.NextPage.Size);
+				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfo.State.CurrentPage.Size);
+				Assert.Equal(this.defaultPagingInfo.State.CurrentPage.Size, this.defaultPagingInfo.State.NextPage.Size);
 			}
 
 			[Fact]
 			public void HasFullSetOfAllPages()
 			{
-				IReadOnlyList<PageItemNumbers> pages = this.defaultPagingState.CalculateAllPagesAndItemNumbers().ToList();
+				IReadOnlyList<PageItemNumbers> pages = new PagingInfo(this.defaultPagingState).CalculateAllPagesAndItemNumbers().ToList();
 
 				Assert.Equal(114, pages.Count);
 				Assert.Equal(
@@ -93,8 +94,8 @@ namespace MiscCorLib.Collections
 		public sealed class DefaultValueOnLastPage
 		{
 			private const int TestTotalItems = 1138;
-			private readonly PagingInfo defaultPagingInfoLastPage = new PagingInfo(
-				new PagingState(250, 10, TestTotalItems));
+			private readonly PagingInfo defaultPagingInfoLastPage
+				= new PageNumberAndSize(250, 10).WithTotalItems(TestTotalItems);
 
 			[Fact]
 			public void HasValidItemNumbers()
@@ -111,15 +112,15 @@ namespace MiscCorLib.Collections
 			{
 				AssertIsLastPage(this.defaultPagingInfoLastPage);
 
-				Assert.InRange(this.defaultPagingInfoLastPage.CurrentPage.Size, 1, byte.MaxValue);
-				Assert.InRange(this.defaultPagingInfoLastPage.FirstPage.Size, 1, byte.MaxValue);
-				Assert.InRange(this.defaultPagingInfoLastPage.LastPage.Size, 1, byte.MaxValue);
+				Assert.InRange(this.defaultPagingInfoLastPage.State.CurrentPage.Size, 1, byte.MaxValue);
+				Assert.InRange(this.defaultPagingInfoLastPage.State.FirstPage.Size, 1, byte.MaxValue);
+				Assert.InRange(this.defaultPagingInfoLastPage.State.LastPage.Size, 1, byte.MaxValue);
 
 				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.ItemCount);
-				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.CurrentPage.Size);
-				Assert.Equal(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.FirstPage.Size);
-				Assert.Equal(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.LastPage.Size);
-				Assert.Equal(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.ItemCount);
+				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.State.CurrentPage.Size);
+				Assert.Equal(this.defaultPagingInfoLastPage.State.CurrentPage.Size, this.defaultPagingInfoLastPage.State.FirstPage.Size);
+				Assert.Equal(this.defaultPagingInfoLastPage.State.CurrentPage.Size, this.defaultPagingInfoLastPage.State.LastPage.Size);
+				Assert.Equal(this.defaultPagingInfoLastPage.State.CurrentPage.Size, this.defaultPagingInfoLastPage.ItemCount);
 			}
 
 			[Fact]
@@ -127,8 +128,8 @@ namespace MiscCorLib.Collections
 			{
 				PageNumberAndSizeTests.AssertIsEmpty(this.defaultPagingInfoLastPage.NextPage);
 
-				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.CurrentPage.Size);
-				Assert.Equal(this.defaultPagingInfoLastPage.CurrentPage.Size, this.defaultPagingInfoLastPage.PreviousPage.Size);
+				Assert.Equal(PageNumberAndSize.DefaultPageSize, this.defaultPagingInfoLastPage.State.CurrentPage.Size);
+				Assert.Equal(this.defaultPagingInfoLastPage.State.CurrentPage.Size, this.defaultPagingInfoLastPage.PreviousPage.Size);
 			}
 
 			[Fact]
@@ -189,8 +190,8 @@ namespace MiscCorLib.Collections
 				AssertIsFirstPage(this.defaultPagingInfo);
 				AssertIsLastPage(this.defaultPagingInfo);
 
-				Assert.Equal(20, this.defaultPagingInfo.CurrentPage.Size);
-				Assert.Equal(20, this.defaultPagingInfo.FirstPage.Size);
+				Assert.Equal(20, this.defaultPagingInfo.State.CurrentPage.Size);
+				Assert.Equal(20, this.defaultPagingInfo.State.FirstPage.Size);
 				Assert.Equal(this.defaultPagingInfo.TotalItems, this.defaultPagingInfo.ItemCount);
 				Assert.Null(this.defaultPagingInfo.AllPages);
 				Assert.True(this.defaultPagingInfo.IsFirstPage);
@@ -428,54 +429,15 @@ namespace MiscCorLib.Collections
 
 		public sealed class Calculator
 		{
-			private readonly PagingInfo readonlyPagingInfo = new PagingInfo();
-
-			[Fact]
-			public void DoesNotDisruptReadOnlyReference()
-			{
-				Assert.Null(this.readonlyPagingInfo.AllPages);
-
-				System.Reflection.PropertyInfo privateProperty
-					= this.readonlyPagingInfo.GetType().GetProperty("Calculator",
-						System.Reflection.BindingFlags.NonPublic
-						| System.Reflection.BindingFlags.Instance);
-
-				privateProperty.GetMethod.Invoke(this.readonlyPagingInfo, null);
-
-				Assert.True(PagingInfo.Empty.Equals(this.readonlyPagingInfo));
-			}
-
-			[Fact]
-			public void DoesNotDisruptDeserializedReference()
-			{
-				PagingInfo deserializedPagingInfo
-					= Newtonsoft.Json.JsonConvert.DeserializeObject<PagingInfo>(
-						DeserializeMinimal_Page7_Size20_Total1138);
-
-				Assert.Null(deserializedPagingInfo.AllPages);
-
-				Assert.Equal(7, deserializedPagingInfo.CurrentPage.Number);
-				Assert.Equal(20, deserializedPagingInfo.CurrentPage.Size);
-				Assert.Equal(1138, deserializedPagingInfo.TotalItems);
-
-				Assert.Equal(57, deserializedPagingInfo.TotalPages);
-
-				Assert.Null(deserializedPagingInfo.AllPages);
-
-				Assert.Equal(7, deserializedPagingInfo.CurrentPage.Number);
-				Assert.Equal(20, deserializedPagingInfo.CurrentPage.Size);
-				Assert.Equal(1138, deserializedPagingInfo.TotalItems);
-
-				Assert.False(deserializedPagingInfo.IsFirstPage);
-				Assert.False(deserializedPagingInfo.IsLastPage);
-			}
-
 			[Fact]
 			public void MovesToLastPageWhenTurningPast()
 			{
-				PagingInfo pagingInfo = new PagingInfo(27, 20, 39);
+				// Try to get to the 27th page
+				// when there are only 39 items
+				// in pages of 20...
+				PagingInfo pagingInfo = new PageNumberAndSize(27, 20).WithTotalItems(39);
 
-				Assert.Equal(2, pagingInfo.CurrentPage.Number);
+				pagingInfo.State.CurrentPage.Number.Should().Be(2, "turning past the last page of a paged list should return to the last page of the list");
 
 				AssertIsLastPage(pagingInfo);
 			}
@@ -484,28 +446,29 @@ namespace MiscCorLib.Collections
 			public void CalculatesCorrectTotalPages()
 			{
 				Assert.Throws<ArgumentOutOfRangeException>(
-					() => PagingCalculator.TotalPages(10, -255));
+					() => Paging.CalculateTotalPages(10, -255));
 
 				Assert.Throws<ArgumentOutOfRangeException>(
-					() => PagingCalculator.TotalPages(0, 1138));
+					() => Paging.CalculateTotalPages(0, 1138));
 
-				Assert.Equal(0, PagingCalculator.TotalPages(10, 0));
-				Assert.Equal(1, PagingCalculator.TotalPages(10, 1));
-				Assert.Equal(1, PagingCalculator.TotalPages(10, 10));
-				Assert.Equal(2, PagingCalculator.TotalPages(10, 11));
-				Assert.Equal(2, PagingCalculator.TotalPages(10, 20));
+				Assert.Equal(0, Paging.CalculateTotalPages(10, 0));
+				Assert.Equal(1, Paging.CalculateTotalPages(10, 1));
+				Assert.Equal(1, Paging.CalculateTotalPages(10, 10));
+				Assert.Equal(2, Paging.CalculateTotalPages(10, 11));
+				Assert.Equal(2, Paging.CalculateTotalPages(10, 20));
 			}
 		}
 
 		public sealed class Equality
 		{
-			private readonly PagingInfo samplePagingInfo = new PagingInfo(
-				new PageNumberAndSize(7, 20), 1138);
+			private readonly PagingInfo samplePagingInfo
+				= new PageNumberAndSize(7, 20).WithTotalItems(1138);
 
 			[Fact]
 			public void IsTrueWhenSame()
 			{
-				PagingInfo samePagingInfo = new PagingInfo(7, 20, 1138);
+				PagingInfo samePagingInfo
+					= new PageNumberAndSize(7, 20).WithTotalItems(1138);
 
 				AssertEquality(this.samplePagingInfo, samePagingInfo);
 			}
@@ -589,11 +552,11 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void ReturnsUnboundedFromUnbounded()
 			{
-				PagingState unboundedPagingInfo = new PagingState(PageNumberAndSize.Unbounded, 57);
-				PageNumberAndSize newPage = unboundedPagingInfo.TurnToPage(8);
+				PagingInfo unboundedPagingInfo = PageNumberAndSize.Unbounded.WithTotalItems(57);
+				PagingInfo newPage = unboundedPagingInfo.TurnToPage(8);
 
-				Assert.Equal(1, newPage.Number);
-				Assert.Equal(0, newPage.Size);
+				Assert.Equal(1, newPage.PageNumber);
+				Assert.Equal(0, newPage.PageSize);
 				Assert.True(newPage.IsUnbounded);
 			}
 
@@ -610,10 +573,10 @@ namespace MiscCorLib.Collections
 		{
 			PageNumberAndSizeTests.AssertIsFirstPage(firstPageInfo.CurrentPage);
 
-			Assert.Equal(0, firstPageInfo.CurrentPage.Index);
+			Assert.Equal(0, firstPageInfo.State.CurrentPage.Index);
 			Assert.Equal(
 				PageNumberAndSize.FirstPageNumber,
-				firstPageInfo.CurrentPage.Number);
+				firstPageInfo.State.CurrentPage.Number);
 
 			Assert.True(firstPageInfo.HasValue);
 			Assert.False(firstPageInfo.PreviousPage.HasValue);
@@ -623,18 +586,15 @@ namespace MiscCorLib.Collections
 				firstPageInfo.FirstPage, firstPageInfo.CurrentPage);
 		}
 
-		internal static void AssertIsLastPage(PagingInfo lastPageInfo)
+		internal static void AssertIsLastPage(PagingInfo currentPageInfo)
 		{
-			Assert.Equal(
-				lastPageInfo.LastPage.Number,
-				lastPageInfo.CurrentPage.Number);
+			currentPageInfo.IsLastPage.Should().BeTrue("the last page of a paged list should indicate so");
 
-			Assert.True(lastPageInfo.HasValue);
-			Assert.False(lastPageInfo.NextPage.HasValue);
-			Assert.True(lastPageInfo.IsLastPage);
+			PagingInfo lastPageInfo = currentPageInfo.TurnToPage(currentPageInfo.TotalPages);
+			currentPageInfo.PageNumber.Should().Be(lastPageInfo.PageNumber, "the last page's PageNumber should be the same as the TotalPages");
 
 			PageNumberAndSizeTests.AssertEquality(
-				lastPageInfo.LastPage, lastPageInfo.CurrentPage);
+				lastPageInfo.State.CurrentPage, lastPageInfo.State.CurrentPage);
 		}
 	}
 }

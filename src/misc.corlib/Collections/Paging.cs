@@ -14,11 +14,11 @@ namespace MiscCorLib.Collections
 	/// <para>
 	/// To understand how this works, refer to the
 	/// <see cref="PagingState.Calculator" /> property
-	/// and the <see cref="PagingState(PagingCalculator)" />
+	/// and the <see cref="PagingState(Paging)" />
 	/// constructor.
 	/// </para>
 	/// </remarks>
-	public static class PagingCalculator
+	public static class Paging
 	{
 		/// <summary>
 		/// Calculates the total number of pages in
@@ -119,7 +119,7 @@ namespace MiscCorLib.Collections
 		public static PagingInfo TurnToPage(
 			this PagingState pagingState, int pageNumber, int totalItems)
 		{
-			return pagingState.CurrentPage.TurnToPage(pageNumber).ToPagingInfo(totalItems);
+			return pagingState.CurrentPage.TurnToPage(pageNumber).WithTotalItems(totalItems);
 		}
 
 		/// <summary>
@@ -157,7 +157,36 @@ namespace MiscCorLib.Collections
 
 		#endregion
 
-		internal static PagingInfo ToPagingInfo(
+		public static PageNumberAndSize UnboundedSinglePage => PageNumberAndSize.Unbounded;
+
+		public static PageNumberAndSize OnPage(int pageNumber, byte pageSize)
+		{
+			return new PageNumberAndSize(pageNumber, pageSize);
+		}
+
+		public static PageNumberAndSize OnPage(int pageNumber)
+		{
+			return new PageNumberAndSize(pageNumber);
+		}
+
+		public static PageNumberAndSize ItemsPerPage(byte pageSize)
+		{
+			return new PageNumberAndSize(PageNumberAndSize.FirstPageNumber, pageSize);
+		}
+
+		public static PageNumberAndSize OnPage(
+			this PageNumberAndSize currentPage, byte pageSize)
+		{
+			return new PageNumberAndSize(currentPage.Number, pageSize);
+		}
+
+		public static PageNumberAndSize ItemsPerPage(
+			this PageNumberAndSize currentPage, byte pageSize)
+		{
+			return new PageNumberAndSize(currentPage.Number, pageSize);
+		}
+
+		public static PagingInfo WithTotalItems(
 			this PageNumberAndSize currentPage, int totalItems)
 		{
 			return new PagingInfo(
@@ -175,6 +204,12 @@ namespace MiscCorLib.Collections
 		{
 			// Relay to overload with main implementation:
 			return pagingInfo.State.CalculateAllPagesAndItemNumbers();
+		}
+
+		public static IReadOnlyDictionary<PageNumberAndSize,PageItemNumbers> CalculateAllPageResources(
+			this PagingInfo pagingInfo)
+		{
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -195,7 +230,7 @@ namespace MiscCorLib.Collections
 			this PagingState pagingState)
 		{
 			return pagingState.CurrentPage.HasValue
-				? PagingCalculator.CalculateAllPagesAndItemNumbers(pagingState.CurrentPage, pagingState.TotalItems)
+				? Paging.CalculateAllPagesAndItemNumbers(pagingState.CurrentPage, pagingState.TotalItems)
 				: new PageItemNumbers[0];
 		}
 

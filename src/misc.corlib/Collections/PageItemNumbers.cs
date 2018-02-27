@@ -95,7 +95,7 @@ namespace MiscCorLib.Collections
 		internal PageItemNumbers(
 			PageNumberAndSize page, int totalItems, bool isCurrent = false, bool? isLastPage = null)
 			: this(page.Number, page.Size, totalItems, isCurrent, isLastPage.HasValue
-				? isLastPage.Value : PagingCalculator.CalculateTotalPages(page.Size, totalItems) == page.Number)
+				? isLastPage.Value : Paging.CalculateTotalPages(page.Size, totalItems) == page.Number)
 		{
 		}
 

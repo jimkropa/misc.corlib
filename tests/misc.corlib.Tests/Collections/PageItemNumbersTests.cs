@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -90,13 +91,21 @@ namespace MiscCorLib.Collections
 			[Fact]
 			public void CaclucatesCorrectlyFromValidSizes()
 			{
-				IReadOnlyList<PageItemNumbers> pages
-					= PagingCalculator.CalculateAllPagesAndItemNumbers(
-						new PageNumberAndSize(20), 119).ToList();
+				// Use a known valid example.
+				const int PageNumber = 20;
+				const int PageSize = 10;
+				const int TotalItems = 119;
+				const int ExpectedPageCount = 6;
 
-				Assert.NotNull(pages);
-				Assert.Equal(6, pages.Count);
-				Assert.Equal(119, pages[pages.Count - 1].LastItemNumber);
+				IReadOnlyList<PageItemNumbers> pages
+					= Paging.OnPage(PageNumber, PageSize)
+						.WithTotalItems(TotalItems)
+						.CalculateAllPagesAndItemNumbers()
+						.ToList();
+
+				pages.Should().NotBeNull();
+				pages.Count.Should().Be(ExpectedPageCount, $"{TotalItems} TotalItems divided by PageSize of {PageSize} ought to have yielded {ExpectedPageCount} pages");
+				pages[pages.Count - 1].LastItemNumber.Should().Be(TotalItems, "the ItemNumber of the last item on the last page of a paged list should be the same as the number of TotalItems on the list");
 
 				int lastItemNumber = 0;
 				for (int i = PageNumberAndSize.FirstPageNumber; i <= pages.Count; i++)
@@ -105,22 +114,24 @@ namespace MiscCorLib.Collections
 					int pageIndex = i - 1;
 					PageItemNumbers page = pages[pageIndex];
 
-					Assert.Equal(i, page.PageNumber);
-					Assert.Equal(firstItemNumber, page.FirstItemNumber);
+					page.PageNumber.Should().Be(i, "PageNumbers should count up by one");
+					page.FirstItemNumber.Should().Be(firstItemNumber, "the first ItemNumber on each page should be one more than the last ItemNumber on the previous page");
 
 					lastItemNumber = page.LastItemNumber;
 				}
 
-				Assert.Equal(119, lastItemNumber);
-				Assert.True(pages[0].HasValue);
+				lastItemNumber.Should().Be(TotalItems, "the ItemNumber of the last item on the last page of a paged list should be the same as the number of TotalItems on the list");
+				pages.Select(p => p.HasValue).Should().AllBeEquivalentTo(true, "all of the calculated page and item numbers should be valid");
 			}
 
 			[Fact]
 			public void ReturnsOnePageForZeroItems()
 			{
 				IReadOnlyList<PageItemNumbers> zeroPagesWithSize
-					= PagingCalculator.CalculateAllPagesAndItemNumbers(
-						new PageNumberAndSize(20), 0).ToList();
+					= Paging.OnPage(20)
+						.WithTotalItems(0)
+						.CalculateAllPagesAndItemNumbers()
+						.ToList();
 
 				Assert.NotNull(zeroPagesWithSize);
 				Assert.Equal(1, zeroPagesWithSize.Count);
@@ -129,8 +140,10 @@ namespace MiscCorLib.Collections
 				Assert.Equal(0, zeroPagesWithSize[0].LastItemNumber);
 
 				IReadOnlyList<PageItemNumbers> zeroPagesUnbounded
-					= PagingCalculator.CalculateAllPagesAndItemNumbers(
-						PageNumberAndSize.Unbounded, 0).ToList();
+					= Paging.UnboundedSinglePage
+						.WithTotalItems(0)
+						.CalculateAllPagesAndItemNumbers()
+						.ToList();
 
 				Assert.NotNull(zeroPagesUnbounded);
 				Assert.Equal(1, zeroPagesUnbounded.Count);
@@ -143,8 +156,10 @@ namespace MiscCorLib.Collections
 			public void ReturnsOnePageForUnbounded()
 			{
 				IReadOnlyList<PageItemNumbers> pagesUnbounded
-					= PagingCalculator.CalculateAllPagesAndItemNumbers(
-						PageNumberAndSize.Unbounded, 57).ToList();
+					= Paging.UnboundedSinglePage
+						.WithTotalItems(57)
+						.CalculateAllPagesAndItemNumbers()
+						.ToList();
 
 				Assert.NotNull(pagesUnbounded);
 				Assert.Equal(1, pagesUnbounded.Count);
