@@ -5,8 +5,10 @@ using System.Runtime.Serialization;
 namespace MiscCorLib.Collections.Paged
 {
 	[Serializable, DataContract]
-	public struct PagingResources
+	public struct PagingResources : IHasValue
 	{
+		public static PagingResources Empty = new PagingResources();
+
 		public PagingResources(PagingInfo pagingInfo)
 		{
 			this.CurrentPage = pagingInfo.State.CurrentPage;
@@ -49,6 +51,12 @@ namespace MiscCorLib.Collections.Paged
 				this.LastPage = this.CurrentPage;
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether the
+		/// <see cref="PageItemNumbers" /> value is valid.
+		/// </summary>
+		public bool HasValue => this.CurrentPage.HasValue;
 
 		[DataMember(Order = 1)]
 		public readonly PageNumberAndSize FirstPage;

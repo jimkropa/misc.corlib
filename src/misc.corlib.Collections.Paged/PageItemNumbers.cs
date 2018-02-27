@@ -132,7 +132,7 @@ namespace MiscCorLib.Collections.Paged
 
 		/// <summary>
 		/// Gets a value indicating whether the
-		/// <see cref="PageNumber" /> value is valid.
+		/// <see cref="PageItemNumbers" /> value is valid.
 		/// </summary>
 		public bool HasValue => this.PageNumber >= PageNumberAndSize.FirstPageNumber
 			&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;

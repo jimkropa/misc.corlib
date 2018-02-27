@@ -113,10 +113,10 @@ namespace MiscCorLib.Collections.Paged
 		public int LastItemIndex => this.LastItemNumber - 1;
 
 		[DataMember(Order = 10, EmitDefaultValue = true)]
-		public readonly bool IsFirstPage;
+		public bool IsFirstPage => this.State.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
 
 		[DataMember(Order = 11, EmitDefaultValue = true)]
-		public readonly bool IsLastPage;
+		public bool IsLastPage => this.State.CurrentPage.Number == this.TotalPages && this.TotalPages > 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Paging" /> struct.
@@ -159,8 +159,6 @@ namespace MiscCorLib.Collections.Paged
 			if (pagingState.CurrentPage.IsUnbounded)
 			{
 				this.TotalPages = 1;
-				this.IsFirstPage = true;
-				this.IsLastPage = true;
 				this._pageAndItemNumbers = new PageItemNumbers(pagingState, true);
 				this.ItemCount = pagingState.TotalItems;
 			}
@@ -180,9 +178,7 @@ namespace MiscCorLib.Collections.Paged
 						pagingState.TotalItems);
 				}
 
-				this.IsFirstPage = pagingState.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
-				this.IsLastPage = pagingState.CurrentPage.Number == this.TotalPages;
-				this._pageAndItemNumbers = new PageItemNumbers(pagingState, this.IsLastPage);
+				this._pageAndItemNumbers = new PageItemNumbers(pagingState, pagingState.CurrentPage.Number == this.TotalPages);
 				this.ItemCount = this._pageAndItemNumbers.LastItemNumber - this._pageAndItemNumbers.FirstItemNumber + 1;
 			}
 			else
@@ -195,8 +191,6 @@ namespace MiscCorLib.Collections.Paged
 
 				// There is just one page of results, with no items.
 				this.TotalPages = 1;
-				this.IsFirstPage = true;
-				this.IsLastPage = true;
 				this._pageAndItemNumbers = new PageItemNumbers(pagingState, true);
 				this.ItemCount = 0;
 			}
