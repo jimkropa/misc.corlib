@@ -18,9 +18,4 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
-<!--
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\misc.corlib\misc.corlib.csproj" />
-  </ItemGroup>
--->
 </Project>
