@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Xunit;
 
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Paged
 {
 	// TODO: Test ToString
 	// TODO: Test IComparable

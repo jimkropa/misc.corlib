@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Paged
 {
 	[Serializable, DataContract]
 	public struct PagingResources
@@ -73,7 +73,7 @@ namespace MiscCorLib.Collections
 		/// </returns>
 		public override string ToString()
 		{
-			return $"PagingResources[{this.CurrentPage}]";
+			return $"PagingResources[CurrentPage={this.CurrentPage}]";
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Paged
 {
 	/// <summary>
 	/// A simple struct representing the one-based ordinal

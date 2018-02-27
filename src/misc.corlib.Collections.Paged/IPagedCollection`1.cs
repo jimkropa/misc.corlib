@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace MiscCorLib.Collections.Generic
+namespace MiscCorLib.Collections.Paged
 {
 	/// <summary>
 	/// Represents a read-only collection of elements
@@ -15,7 +15,7 @@ namespace MiscCorLib.Collections.Generic
 	/// <typeparam name="T">
 	/// The type of elements in the paged read-only list.
 	/// </typeparam>
-	public interface IPagedList<out T> : IReadOnlyList<T>, IPagedCollection
+	public interface IPagedCollection<out T> : IPagedCollection
 	{
 	}
 }

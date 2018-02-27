@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Paged
 {
 	[Serializable, DataContract]
 	public struct PagingInfo : IEquatable<PagingInfo>, IEquatable<PagingState>,

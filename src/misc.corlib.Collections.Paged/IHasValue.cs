@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MiscCorLib
+namespace MiscCorLib.Collections.Paged
 {
 	/// <summary>
 	/// Similar to the <see cref="Nullable{T}.HasValue" />

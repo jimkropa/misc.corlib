@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Paged
 {
 	/// <summary>
 	/// Contract for one "page" in a longer list of items
@@ -15,6 +15,6 @@ namespace MiscCorLib.Collections
 		/// Gets the metadata about this "page" of
 		/// a longer list which spans multiple pages.
 		/// </summary>
-		PagingInfo PagingInfo { get; }
+		PagingInfo Paging { get; }
 	}
 }

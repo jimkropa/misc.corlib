@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MiscCorLib.Collections
+namespace MiscCorLib.Collections.Paged
 {
 	/// <summary>
 	/// An internal value backing the public properties
@@ -199,17 +199,17 @@ namespace MiscCorLib.Collections
 			return new PagingResources(pagingInfo);
 		}
 
+		public static IReadOnlyDictionary<PageNumberAndSize,PageItemNumbers> CalculateAllPageResources(
+			this PagingInfo pagingInfo)
+		{
+			throw new NotImplementedException();
+		}
+
 		public static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			this PagingInfo pagingInfo)
 		{
 			// Relay to overload with main implementation:
 			return pagingInfo.State.CalculateAllPagesAndItemNumbers();
-		}
-
-		public static IReadOnlyDictionary<PageNumberAndSize,PageItemNumbers> CalculateAllPageResources(
-			this PagingInfo pagingInfo)
-		{
-			throw new NotImplementedException();
 		}
 
 		/// <summary>

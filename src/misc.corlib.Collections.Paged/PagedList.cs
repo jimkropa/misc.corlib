@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MiscCorLib.Collections.Generic
+namespace MiscCorLib.Collections.Paged
 {
 	/// <summary>
 	/// Default implementation of <see cref="IPagedList{T}" />,
@@ -43,6 +43,7 @@ namespace MiscCorLib.Collections.Generic
 				throw new ArgumentNullException(nameof(collection));
 			}
 
+			// Base constructor has set the Count property.
 			if (this.Count != pagingInfo.ItemCount)
 			{
 				throw new ArgumentException(
@@ -87,6 +88,6 @@ namespace MiscCorLib.Collections.Generic
 		#endregion
 
 		/// <inheritdoc />
-		public PagingInfo PagingInfo => this._pagingInfo;
+		public PagingInfo Paging => this._pagingInfo;
 	}
 }

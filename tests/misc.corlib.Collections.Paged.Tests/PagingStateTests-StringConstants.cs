@@ -1,4 +1,4 @@
-﻿namespace MiscCorLib.Collections
+﻿namespace MiscCorLib.Collections.Paged
 {
 	// This is a partial class. Refer to PagingStateTests.cs for the main part.
 	public sealed partial class PagingStateTests
