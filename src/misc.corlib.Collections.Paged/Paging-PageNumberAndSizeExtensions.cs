@@ -15,6 +15,11 @@ namespace MiscCorLib.Collections.Paged
 		public static PagingInfo WithTotalItems(
 			this PageNumberAndSize currentPage, int totalItems)
 		{
+			if (!currentPage.HasValue)
+			{
+				return PagingInfo.Empty;
+			}
+
 			// Always calculate PagingInfo to
 			// ensure a valid page number for the
 			// given page size and total items.
@@ -27,10 +32,18 @@ namespace MiscCorLib.Collections.Paged
 		/// returns a copy with the same page number
 		/// and a specified number of items per page.
 		/// </summary>
+		/// <remarks>
+		/// Works from <see cref="PageNumberAndSize.Empty" />,
+		/// starts on page one.
+		/// </remarks>
 		public static PageNumberAndSize ItemsPerPage(
 			this PageNumberAndSize currentPage, byte pageSize)
 		{
-			return new PageNumberAndSize(currentPage.Number, pageSize);
+			return new PageNumberAndSize(
+				currentPage.Number > 0
+					? currentPage.Number
+					: PageNumberAndSize.PageOne,
+				pageSize);
 		}
 
 		/// <summary>
@@ -38,10 +51,18 @@ namespace MiscCorLib.Collections.Paged
 		/// returns a copy with the same page size
 		/// and a specified page number.
 		/// </summary>
+		/// <remarks>
+		/// Works from <see cref="PageNumberAndSize.Empty" />,
+		/// assuming <see cref="PageNumberAndSize.DefaultPageSize" />.
+		/// </remarks>
 		public static PageNumberAndSize OnPage(
 			this PageNumberAndSize currentPage, int pageNumber)
 		{
-			return new PageNumberAndSize(pageNumber, currentPage.Size);
+			return new PageNumberAndSize(
+				pageNumber,
+				currentPage.Size > 0
+					? currentPage.Size
+					: PageNumberAndSize.DefaultPageSize);
 		}
 	}
 }

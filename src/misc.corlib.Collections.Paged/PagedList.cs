@@ -54,6 +54,28 @@ namespace MiscCorLib.Collections.Paged
 			this._pagingInfo = pagingInfo;
 		}
 
+		public PagedList(IEnumerable<T> collection, int totalItems)
+			: this(collection, Paged.Paging.UnboundedSinglePage, totalItems)
+		{
+		}
+
+		public PagedList(IEnumerable<T> collection, PageNumberAndSize currentPage, int totalItems)
+			: this(collection, currentPage.HasValue
+								? currentPage.WithTotalItems(totalItems)
+								: Paged.Paging.UnboundedSinglePage.WithTotalItems(totalItems))
+		{
+		}
+
+		public PagedList(IEnumerable<T> collection, int pageNumber, byte pageSize, int totalItems)
+			: this(collection, new PageNumberAndSize(pageNumber, pageSize), totalItems)
+		{
+		}
+
+		public PagedList(IEnumerable<T> collection, int pageNumber, int totalItems)
+			: this(collection, pageNumber, PageNumberAndSize.DefaultPageSize, totalItems)
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagedList{T}" /> class
 		/// that is empty and has the specified initial capacity.
@@ -86,6 +108,28 @@ namespace MiscCorLib.Collections.Paged
 		}
 
 		#endregion
+
+		public PagedList(int capacity, int totalItems)
+			: this(capacity, Paged.Paging.UnboundedSinglePage, totalItems)
+		{
+		}
+
+		public PagedList(int capacity, PageNumberAndSize currentPage, int totalItems)
+			: this(capacity, currentPage.HasValue
+								? currentPage.WithTotalItems(totalItems)
+								: Paged.Paging.UnboundedSinglePage.WithTotalItems(totalItems))
+		{
+		}
+
+		public PagedList(int capacity, int pageNumber, byte pageSize, int totalItems)
+			: this(capacity, new PageNumberAndSize(pageNumber, pageSize), totalItems)
+		{
+		}
+
+		public PagedList(int capacity, int pageNumber, int totalItems)
+			: this(capacity, pageNumber, PageNumberAndSize.DefaultPageSize, totalItems)
+		{
+		}
 
 		/// <inheritdoc />
 		public PagingInfo Paging => this._pagingInfo;

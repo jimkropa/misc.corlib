@@ -11,6 +11,13 @@ namespace MiscCorLib.Collections.Paged
 
 		public PagingResources(PagingInfo pagingInfo)
 		{
+			if (!pagingInfo.HasValue)
+			{
+				throw new ArgumentException(
+					"The paging metadata must have a value.",
+					nameof(pagingInfo));
+			}
+
 			this.CurrentPage = pagingInfo.State.CurrentPage;
 
 			if ((pagingInfo.TotalItems > 0) && (pagingInfo.PageSize > 0))

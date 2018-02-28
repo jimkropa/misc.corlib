@@ -4,7 +4,9 @@ using System.Collections.Generic;
 namespace MiscCorLib.Collections.Paged
 {
 	// Find documentation in main partial class: Paging.cs
-	// This part contains extension methods for PageNumberAndSize values.
+	//
+	// This part contains calculators of item numbers
+	// and resources to move through a paged list.
 	public static partial class Paging
 	{
 		/// <summary>
@@ -68,12 +70,22 @@ namespace MiscCorLib.Collections.Paged
 		public static PagingResources CalculatePagingResources(
 			this PagingInfo pagingInfo)
 		{
+			if (!pagingInfo.HasValue)
+			{
+				return PagingResources.Empty;
+			}
+
 			return new PagingResources(pagingInfo);
 		}
 
 		public static IReadOnlyDictionary<PageNumberAndSize,PageItemNumbers> CalculateAllPageResources(
 			this PagingInfo pagingInfo)
 		{
+			if (!pagingInfo.HasValue)
+			{
+				return new Dictionary<PageNumberAndSize,PageItemNumbers>();
+			}
+
 			throw new NotImplementedException();
 		}
 
@@ -125,8 +137,7 @@ namespace MiscCorLib.Collections.Paged
 		private static IEnumerable<PageItemNumbers> CalculateAllPagesAndItemNumbers(
 			PageNumberAndSize currentPage, int totalItems)
 		{
-			if ((currentPage.Size >= PageNumberAndSize.MinimumPageSize)
-				&& (totalItems > 0))
+			if (currentPage.Size >= PageNumberAndSize.MinimumPageSize && totalItems > 0)
 			{
 				int totalPages = CalculateTotalPages(currentPage.Size, totalItems);
 				for (int pageNumber = PageNumberAndSize.PageOne; pageNumber <= totalPages; pageNumber++)
@@ -135,8 +146,8 @@ namespace MiscCorLib.Collections.Paged
 						pageNumber,
 						currentPage.Size,
 						totalItems,
-						pageNumber == totalPages,
-						pageNumber == currentPage.Number);
+						pageNumber == currentPage.Number,
+						pageNumber == totalPages);
 				}
 			}
 
@@ -145,7 +156,7 @@ namespace MiscCorLib.Collections.Paged
 			// representing the empty (totalItems == 0)
 			// or unbounded (pageSize == 0) page.
 			yield return new PageItemNumbers(
-				currentPage, totalItems, true, true);
+				currentPage, totalItems, totalItems > 0, true);
 		}
 	}
 }

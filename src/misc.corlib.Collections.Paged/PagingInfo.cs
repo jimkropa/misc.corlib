@@ -49,7 +49,7 @@ namespace MiscCorLib.Collections.Paged
 		/// The current page size.
 		/// </summary>
 		[DataMember(Order = 2, EmitDefaultValue = true)]
-		public int PageSize => _state.CurrentPage.Number;
+		public byte PageSize => _state.CurrentPage.Size;
 
 		/// <summary>
 		/// The total number of items paged.

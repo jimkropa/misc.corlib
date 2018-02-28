@@ -15,15 +15,12 @@ namespace MiscCorLib.Collections.Paged
 	/// <see cref="PageNumberAndSize" />
 	/// and <see cref="PagingInfo" /> values.
 	/// </para>
-	/// <para>
-	/// Also includes static methods
-	/// </para>
 	/// </remarks>
 	public static partial class Paging
 	{
-		// This files has static methods
+		// This file has static methods
 		// to begin a paging expression:
-		// Paging.OnPage(3).ItemsPerPage(20).
+		// Paging.OnPage(31).ItemsPerPage(20).WithTotalItems(1138) => returns PagingInfo
 
 		public static PageNumberAndSize UnboundedSinglePage => PageNumberAndSize.Unbounded;
 

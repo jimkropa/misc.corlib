@@ -8,45 +8,30 @@ namespace MiscCorLib.Collections.Paged
 	public static partial class Paging
 	{
 		/// <summary>
-		/// Calculates a new <see cref="PagingState" /> for
-		/// an arbitrary page paged list's current page, assuming that the
-		/// total number of items has not changed since
-		/// the .
+		/// Calculates a new <see cref="PagingInfo" /> for
+		/// an arbitrary page on a paged list, optionally assuming
+		/// the same total number of items on the list.
 		/// </summary>
-		/// <param name="pagingInfo"></param>
-		/// <param name="pageNumber"></param>
-		/// <param name="totalPages"></param>
-		/// <returns></returns>
 		public static PagingInfo TurnToPage(
-			this PagingInfo pagingInfo, int pageNumber)
-		{
-			return pagingInfo.TurnToPage(pageNumber, pagingInfo.TotalItems);
-		}
-
-		/// <summary>
-		/// Calculates a new <see cref="PagingState" /> for
-		/// a paged list's current page and total number of items.
-		/// </summary>
-		/// <param name="pagingInfo"></param>
-		/// <param name="pageNumber"></param>
-		/// <param name="totalPages"></param>
-		/// <returns></returns>
-		public static PagingInfo TurnToPage(
-			this PagingInfo pagingInfo, int pageNumber, int totalItems)
+			this PagingInfo pagingInfo, int pageNumber, int? totalItems = null)
 		{
 			return pagingInfo.State.TurnToPage(pageNumber, totalItems);
 		}
 
+		/// <summary>
+		/// Calculates a new <see cref="PagingInfo" /> for
+		/// an arbitrary page on a paged list, optionally assuming
+		/// the same total number of items on the list.
+		/// </summary>
 		public static PagingInfo TurnToPage(
-			this PagingState pagingState, int pageNumber)
+			this PagingState pagingState, int pageNumber, int? totalItems = null)
 		{
-			return pagingState.TurnToPage(pageNumber, pagingState.TotalItems);
-		}
+			if (!pagingState.HasValue)
+			{
+				return PagingInfo.Empty;
+			}
 
-		public static PagingInfo TurnToPage(
-			this PagingState pagingState, int pageNumber, int totalItems)
-		{
-			return pagingState.CurrentPage.TurnToPage(pageNumber).WithTotalItems(totalItems);
+			return pagingState.CurrentPage.TurnToPage(pageNumber).WithTotalItems(totalItems ?? pagingState.TotalItems);
 		}
 
 		/// <summary>
@@ -71,7 +56,6 @@ namespace MiscCorLib.Collections.Paged
 		{
 			if (!currentPage.HasValue)
 			{
-				// Return empty if uninitialized.
 				return PageNumberAndSize.Empty;
 			}
 

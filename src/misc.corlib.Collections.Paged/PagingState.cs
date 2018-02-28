@@ -25,19 +25,15 @@ namespace MiscCorLib.Collections.Paged
 	/// </para>
 	/// </remarks>
 	[Serializable, DataContract]
-	public struct PagingState : IEquatable<PagingState>, IComparable<PagingState>, IComparable<PageNumberAndSize>, IHasValue
+	public struct PagingState
+		: IEquatable<PagingState>, IComparable<PagingState>,
+			IComparable<PageNumberAndSize>, IHasValue
 	{
-		#region [ Public Constants for Default and Empty Values ]
-
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize" />
 		/// which is not valid, indicating an unspecified value.
 		/// </summary>
 		public static readonly PagingState Empty = new PagingState();
-
-		#endregion
-
-		#region [ Immutable Fields CurrentPage and TotalItems ]
 
 		/// <summary>
 		/// The current page number and size.
@@ -50,10 +46,6 @@ namespace MiscCorLib.Collections.Paged
 		/// </summary>
 		[DataMember(IsRequired = true, Order = 1)]
 		public readonly int TotalItems;
-
-		#endregion
-
-		#region [ Internal Constructor ]
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PagingState" /> struct
@@ -87,16 +79,6 @@ namespace MiscCorLib.Collections.Paged
 			this.CurrentPage = currentPage;
 			this.TotalItems = totalItems;
 		}
-
-		#endregion
-
-		/// <summary>
-		/// Gets a value indicating whether
-		/// the <see cref="CurrentPage" />
-		/// and <see cref="TotalItems" />
-		/// values are valid.
-		/// </summary>
-		public bool HasValue => this.CurrentPage.HasValue && this.TotalItems >= 0;
 
 		#region [ Public Static Overrides of Equality Operators ]
 
@@ -242,6 +224,14 @@ namespace MiscCorLib.Collections.Paged
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets a value indicating whether
+		/// the <see cref="CurrentPage" />
+		/// and <see cref="TotalItems" />
+		/// values are valid.
+		/// </summary>
+		public bool HasValue => this.CurrentPage.HasValue && this.TotalItems >= 0;
 
 		/// <summary>
 		/// Converts this value to its equivalent string representation.

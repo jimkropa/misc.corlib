@@ -10,36 +10,30 @@ namespace MiscCorLib.Collections.Paged
 		/// <summary>
 		/// From a given <see cref="PagingInfo" />,
 		/// returns a copy with the same page number and size,
-		/// and a specified number of items on the list.
+		/// and a specified number of total items on the list.
 		/// </summary>
 		public static PagingInfo WithTotalItems(
-			this PagingInfo currentPage, int totalItems)
+			this PagingInfo pagingInfo, int totalItems)
 		{
-			return new PagingInfo(
-				new PagingState(currentPage.State.CurrentPage, totalItems));
+			return pagingInfo.IsUnbounded
+					? PageNumberAndSize.Unbounded.WithTotalItems(totalItems)
+					: OnPage(pagingInfo.PageNumber > 0
+							? pagingInfo.PageNumber
+							: PageNumberAndSize.PageOne,
+						pagingInfo.PageSize).WithTotalItems(totalItems);
 		}
 
 		/// <summary>
 		/// From a given <see cref="PagingInfo" />,
-		/// returns a copy with the same page number
-		/// and a specified number of items per page.
+		/// returns the first page of a paged list with the
+		/// given number of items per page, optionally assuming
+		/// the same total number of items on the list.
 		/// </summary>
 		public static PagingInfo WithItemsPerPage(
-			this PagingInfo currentPage, byte pageSize)
+			this PagingInfo pagingInfo, byte pageSize, int? totalItems = null)
 		{
-			return currentPage.WithItemsPerPage(pageSize, currentPage.TotalItems);
-		}
-
-		/// <summary>
-		/// From a given <see cref="PagingInfo" />,
-		/// returns a copy with the same page number
-		/// and a specified number of items per page.
-		/// </summary>
-		public static PagingInfo WithItemsPerPage(
-			this PagingInfo currentPage, byte pageSize, int totalItems)
-		{
-			return new PagingInfo(
-				new PagingState(currentPage.State.CurrentPage.ItemsPerPage(pageSize), totalItems));
+			return OnPage(PageNumberAndSize.PageOne, pageSize)
+					.WithTotalItems(totalItems ?? pagingInfo.TotalItems);
 		}
 	}
 }
