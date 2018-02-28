@@ -68,7 +68,7 @@ namespace MiscCorLib.Collections.Paged
 					pages[pages.Count - 1].LastItemNumber);
 
 				int lastItemNumber = 0;
-				for (int i = PageNumberAndSize.FirstPageNumber; i <= pages.Count; i++)
+				for (int i = PageNumberAndSize.PageOne; i <= pages.Count; i++)
 				{
 					int firstItemNumber = lastItemNumber + 1;
 					int pageIndex = i - 1;
@@ -143,7 +143,7 @@ namespace MiscCorLib.Collections.Paged
 					pages[pages.Count - 1].LastItemNumber);
 
 				int lastItemNumber = 0;
-				for (int i = PageNumberAndSize.FirstPageNumber; i <= pages.Count; i++)
+				for (int i = PageNumberAndSize.PageOne; i <= pages.Count; i++)
 				{
 					int firstItemNumber = lastItemNumber + 1;
 					int pageIndex = i - 1;
@@ -223,7 +223,7 @@ namespace MiscCorLib.Collections.Paged
 				Assert.Equal(1, pages.Count);
 				Assert.Equal(0, pages[0].FirstItemNumber);
 				Assert.Equal(0, pages[0].LastItemNumber);
-				Assert.Equal(PageNumberAndSize.FirstPageNumber, pages[0].PageNumber);
+				Assert.Equal(PageNumberAndSize.PageOne, pages[0].PageNumber);
 				Assert.True(pages[0].HasValue);
 			}
 
@@ -349,7 +349,7 @@ namespace MiscCorLib.Collections.Paged
 				Assert.Equal(1, pages.Count);
 				Assert.Equal(1, pages[0].FirstItemNumber);
 				Assert.Equal(this.unboundedPagingInfo.TotalItems, pages[0].LastItemNumber);
-				Assert.Equal(PageNumberAndSize.FirstPageNumber, pages[0].PageNumber);
+				Assert.Equal(PageNumberAndSize.PageOne, pages[0].PageNumber);
 				Assert.True(pages[0].HasValue);
 			}
 
@@ -416,7 +416,7 @@ namespace MiscCorLib.Collections.Paged
 				Assert.Equal(1, pages.Count);
 				Assert.Equal(0, pages[0].FirstItemNumber);
 				Assert.Equal(0, pages[0].LastItemNumber);
-				Assert.Equal(PageNumberAndSize.FirstPageNumber, pages[0].PageNumber);
+				Assert.Equal(PageNumberAndSize.PageOne, pages[0].PageNumber);
 				Assert.True(pages[0].HasValue);
 			}
 
@@ -575,7 +575,7 @@ namespace MiscCorLib.Collections.Paged
 
 			Assert.Equal(0, firstPageInfo.State.CurrentPage.Index);
 			Assert.Equal(
-				PageNumberAndSize.FirstPageNumber,
+				PageNumberAndSize.PageOne,
 				firstPageInfo.State.CurrentPage.Number);
 
 			Assert.True(firstPageInfo.HasValue);

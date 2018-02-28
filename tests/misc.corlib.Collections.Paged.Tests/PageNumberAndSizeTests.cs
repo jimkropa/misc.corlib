@@ -133,7 +133,7 @@ namespace MiscCorLib.Collections.Paged
 		{
 			Assert.True(firstPage.HasValue);
 			Assert.InRange(firstPage.Size, byte.MinValue, byte.MaxValue);
-			Assert.Equal(PageNumberAndSize.FirstPageNumber, firstPage.Number);
+			Assert.Equal(PageNumberAndSize.PageOne, firstPage.Number);
 			Assert.Equal(0, firstPage.Index);
 		}
 

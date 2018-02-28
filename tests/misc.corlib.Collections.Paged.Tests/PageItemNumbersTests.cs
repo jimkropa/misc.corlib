@@ -108,7 +108,7 @@ namespace MiscCorLib.Collections.Paged
 				pages[pages.Count - 1].LastItemNumber.Should().Be(TotalItems, "the ItemNumber of the last item on the last page of a paged list should be the same as the number of TotalItems on the list");
 
 				int lastItemNumber = 0;
-				for (int i = PageNumberAndSize.FirstPageNumber; i <= pages.Count; i++)
+				for (int i = PageNumberAndSize.PageOne; i <= pages.Count; i++)
 				{
 					int firstItemNumber = lastItemNumber + 1;
 					int pageIndex = i - 1;

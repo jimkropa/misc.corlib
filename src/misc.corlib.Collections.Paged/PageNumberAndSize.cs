@@ -21,7 +21,7 @@ namespace MiscCorLib.Collections.Paged
 		/// <summary>
 		/// The lowest allowed value of a one-based ordinal number: one.
 		/// </summary>
-		public const int FirstPageNumber = 1;
+		public const int PageOne = 1;
 
 		/// <summary>
 		/// The default value for the <see cref="Size" />
@@ -40,16 +40,16 @@ namespace MiscCorLib.Collections.Paged
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize" />
 		/// with its <see cref="Number" /> set to the value
-		/// of <see cref="FirstPageNumber" /> (one) and its
+		/// of <see cref="PageOne" /> (one) and its
 		/// <see cref="Size" /> set to a default value of ten.
 		/// </summary>
 		public static readonly PageNumberAndSize Default
-			= new PageNumberAndSize(FirstPageNumber);
+			= new PageNumberAndSize(PageOne);
 
 		/// <summary>
 		/// A value of <see cref="PageNumberAndSize" />
 		/// with its <see cref="Number" /> equal to
-		/// <see cref="FirstPageNumber" />
+		/// <see cref="PageOne" />
 		/// and <see cref="Size" /> of zero,
 		/// to indicate no paging. This value
 		/// represents listing all items on a single
@@ -92,7 +92,7 @@ namespace MiscCorLib.Collections.Paged
 		/// <para>
 		/// If <see cref="IsUnbounded" /> is
 		/// <c>true</c>, this value will be
-		/// <see cref="FirstPageNumber" />.
+		/// <see cref="PageOne" />.
 		/// </para>
 		/// <para>
 		/// If <see cref="HasValue" /> is
@@ -141,7 +141,7 @@ namespace MiscCorLib.Collections.Paged
 		/// </param>
 		public PageNumberAndSize(int pageNumber, byte pageSize = DefaultPageSize)
 		{
-			if (pageNumber < FirstPageNumber)
+			if (pageNumber < PageOne)
 			{
 				throw new ArgumentOutOfRangeException(
 					nameof(pageNumber),
@@ -165,7 +165,7 @@ namespace MiscCorLib.Collections.Paged
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PageNumberAndSize" /> struct
 		/// for the static using the <see cref="Unbounded" /> value, having a
-		/// <see cref="Number" /> equal to <see cref="FirstPageNumber" />
+		/// <see cref="Number" /> equal to <see cref="PageOne" />
 		/// and <see cref="Size" /> of zero.
 		/// </summary>
 		/// <param name="unbounded">
@@ -182,7 +182,7 @@ namespace MiscCorLib.Collections.Paged
 			// If the "unbounded" parameter is false,
 			// then this constructor creates the same
 			// as the default constructor.
-			this.Number = unbounded ? FirstPageNumber : default(int);
+			this.Number = unbounded ? PageOne : default(int);
 		}
 
 		#endregion
@@ -199,7 +199,7 @@ namespace MiscCorLib.Collections.Paged
 		/// <see cref="Size" /> value will never be invalid.
 		/// Zero indicates <see cref="IsUnbounded" />.
 		/// </remarks>
-		public bool HasValue => this.Number >= FirstPageNumber;
+		public bool HasValue => this.Number >= PageOne;
 
 		/// <summary>
 		/// Gets the zero-based index of a page within

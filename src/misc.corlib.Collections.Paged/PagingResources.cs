@@ -23,7 +23,7 @@ namespace MiscCorLib.Collections.Paged
 				else
 				{
 					this.FirstPage = new PageNumberAndSize(
-						PageNumberAndSize.FirstPageNumber, this.CurrentPage.Size);
+						PageNumberAndSize.PageOne, this.CurrentPage.Size);
 
 					this.PreviousPage = new PageNumberAndSize(
 						this.CurrentPage.Number - 1, this.CurrentPage.Size);

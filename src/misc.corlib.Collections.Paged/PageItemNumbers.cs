@@ -122,7 +122,7 @@ namespace MiscCorLib.Collections.Paged
 			else
 			{
 				// An unbounded or empty page.
-				this.PageNumber = PageNumberAndSize.FirstPageNumber;
+				this.PageNumber = PageNumberAndSize.PageOne;
 				this.FirstItemNumber = totalItems > 0 ? 1 : 0;
 				this.LastItemNumber = totalItems;
 			}
@@ -134,7 +134,7 @@ namespace MiscCorLib.Collections.Paged
 		/// Gets a value indicating whether the
 		/// <see cref="PageItemNumbers" /> value is valid.
 		/// </summary>
-		public bool HasValue => this.PageNumber >= PageNumberAndSize.FirstPageNumber
+		public bool HasValue => this.PageNumber >= PageNumberAndSize.PageOne
 			&& this.FirstItemNumber >= 0 && this.LastItemNumber >= 0;
 
 		#endregion

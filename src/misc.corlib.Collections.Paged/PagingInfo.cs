@@ -78,13 +78,13 @@ namespace MiscCorLib.Collections.Paged
 		/// and total number of items on the list.
 		/// </summary>
 		[DataMember(Order = 5, EmitDefaultValue = true)]
-		public readonly int TotalPages; // This is a calculated field.
+		public readonly int TotalPages; // This value is calculated in the constructor.
 
 		[DataMember(Order = 6, EmitDefaultValue = false)]
 		public bool IsUnbounded => this._state.CurrentPage.IsUnbounded;
 
 		[DataMember(Order = 7, EmitDefaultValue = true)]
-		public readonly int ItemCount; // This is a calculated field.
+		public readonly int ItemCount; // This value is calculated in the constructor.
 
 		[DataMember(Order = 8, EmitDefaultValue = true)]
 		public int FirstItemNumber => this._pageAndItemNumbers.FirstItemNumber;
@@ -113,7 +113,7 @@ namespace MiscCorLib.Collections.Paged
 		public int LastItemIndex => this.LastItemNumber - 1;
 
 		[DataMember(Order = 10, EmitDefaultValue = true)]
-		public bool IsFirstPage => this.State.CurrentPage.Number == PageNumberAndSize.FirstPageNumber;
+		public bool IsFirstPage => this.State.CurrentPage.Number == PageNumberAndSize.PageOne;
 
 		[DataMember(Order = 11, EmitDefaultValue = true)]
 		public bool IsLastPage => this.State.CurrentPage.Number == this.TotalPages && this.TotalPages > 0;
@@ -186,7 +186,7 @@ namespace MiscCorLib.Collections.Paged
 				// This is the case where the count of TotalItems is zero,
 				// so reset the page number back to the first page.
 				pagingState = new PagingState(
-					new PageNumberAndSize(PageNumberAndSize.FirstPageNumber, pagingState.CurrentPage.Size),
+					new PageNumberAndSize(PageNumberAndSize.PageOne, pagingState.CurrentPage.Size),
 					pagingState.TotalItems);
 
 				// There is just one page of results, with no items.
