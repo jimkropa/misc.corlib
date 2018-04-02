@@ -153,10 +153,10 @@ namespace MiscCorLib.Collections.Paged
 
 			// If the paged collection contains no items or
 			// is unbounded, return a list with a single item,
-			// representing the empty (totalItems == 0)
-			// or unbounded (pageSize == 0) page.
+			// representing the empty (pageNumber == 0)
+			// or unbounded (pageNumber == 1) page.
 			yield return new PageItemNumbers(
-				currentPage, totalItems, totalItems > 0, true);
+				currentPage, totalItems, currentPage.HasValue, true);
 		}
 	}
 }
